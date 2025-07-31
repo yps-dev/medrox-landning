@@ -10,10 +10,15 @@ import med5 from "../assets/med5.png";
 import med6 from "../assets/med6.png";
 import med7 from "../assets/med7.png";
 import med8 from "../assets/med8.png";
-
+import med9 from "../assets/med9.png";
+import med11 from "../assets/med11.png";
+import med10 from "../assets/med10.png";
+import med12 from "../assets/med12.png";
+import med13 from "../assets/med13.png";
 const images = [
-  med1,
+
   med2,
+  med10,
   {
     type: "text",
     title: "Impressed?",
@@ -22,14 +27,17 @@ const images = [
   med3,
   med4,
   med2,
+  med9,
   med8,
+  med13,
   med5,
   {
     type: "text",
-    title: "10+ Screens.",
-    subtitle: "Unlimited features. Seamless experience.",
+    title: "30+ Features.",
+    subtitle: "Unlimited Access. Seamless experience.",
   },
   med6,
+  med1,
   med7,
   {
     type: "text",
@@ -37,7 +45,9 @@ const images = [
     subtitle: "Join & pay to unlock full access.",
   },
   med4,
-  med8,
+  med1,
+  med11,
+  med10,
   // Add promo cards as objects
 
 
@@ -65,7 +75,7 @@ export const ThreeDMarquee = ({ className = "" }) => {
           title="Our Product Features"
           className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 animate-title-glow font-[Inter]"
         >
-          <span className="absolute left-1/2 bottom-0 w-32 sm:w-40 md:w-48 h-1 bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 rounded-full transform -translate-x-1/2 animate-gradient-flow" />
+          <span className="absolute left-0 bottom-0 w-32 sm:w-40 md:w-48 h-1 bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 rounded-full transform -translate-x-1/2 animate-gradient-flow" />
         </Heading>
       </div>
 
@@ -76,7 +86,7 @@ export const ThreeDMarquee = ({ className = "" }) => {
               style={{
                 transform: "rotateX(55deg) rotateY(0deg) rotateZ(-45deg)",
               }}
-              className=" absolute left-12 top-0 w-[1600px]  -translate-x-1/2 -translate-y-1/2 grid grid-cols-3 gap-8 transform-3d"
+              className=" absolute left-12 top-0 w-[1500px]  -translate-x-1/2 -translate-y-1/2 grid grid-cols-4 gap-16 transform-3d"
             >
 
 
@@ -90,7 +100,7 @@ export const ThreeDMarquee = ({ className = "" }) => {
                     repeatType: "reverse",
                   }}
                   key={`col-${colIndex}`}
-                  className="flex flex-col items-start gap-8"
+                  className="flex flex-col items-start gap-y-20 gap-x-4"
                   role="group"
                   aria-label={`Feature column ${colIndex + 1}`}
                 >
@@ -118,7 +128,7 @@ export const ThreeDMarquee = ({ className = "" }) => {
                         <motion.div
                           whileHover={{ y: -10 }}
                           transition={{ duration: 0.3, ease: "easeInOut" }}
-                          className="aspect-[970/700] w-[500px] h-[280px] flex flex-col justify-center items-center text-center bg-gradient-to-br from-cyan-500 via-teal-400 to-emerald-400 text-white rounded-lg shadow-xl ring ring-gray-950/5 p-4"
+                          className="aspect-[970/700] w-[300px] h-[280px] flex flex-col justify-center items-center text-center bg-gradient-to-br from-cyan-500 via-teal-400 to-emerald-400 text-white rounded-lg shadow-xl ring ring-gray-950/5 p-4"
                         >
                           <h3 className="text-3xl font-bold">{item.title}</h3>
                           <p className="mt-2 text-xl sm:text-base text-white/90">{item.subtitle}</p>

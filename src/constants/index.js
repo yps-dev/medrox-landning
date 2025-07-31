@@ -34,6 +34,7 @@ import {
   sliders04,
   telegram,
   twitter,
+  coins,
   yourlogo,
   logox,
 } from "../assets";
@@ -114,11 +115,11 @@ export const roadmap = [
 
   {
     id: "1",
-    title: "Integrated Appointment System",
-    text: "Allow patients to schedule and manage appointments across clinics and hospitals effortlessly.",
+    title: "Integrated Financial System",
+    text: "Allow patients to schedule and manage appointments across Healthcares and hospitals effortlessly.",
     date: "Q2 2024",
     status: "done",
-    imageUrl: roadmap2,
+    imageUrl: coins,
   },
   {
     id: "2",
