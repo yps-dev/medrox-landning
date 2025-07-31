@@ -37,6 +37,11 @@ import {
   yourlogo,
   logox,
 } from "../assets";
+import card8 from '../assets/benefits/card-8.png';
+import card2 from '../assets/benefits/card-2.jpg';
+import card3 from '../assets/benefits/card-3.avif';
+import card9 from '../assets/benefits/card-9.avif';
+import card10 from '../assets/benefits/card-10.png';
 
 export const navigation = [
   {
@@ -241,15 +246,12 @@ export const pricing = [
   },
 
 ];
-
 export const benefits = [
   {
     id: "0",
     title: "Precision & Efficiency at Scale",
-    text:
-      "Automated Appointment Mastery — AI-driven scheduling that slashes wait times and boosts clinic efficiency.24/7 Secure Operations — Offline-safe and encrypted, ensuring reliability even in non-stop care environments.",
-
-    backgroundUrl: "./src/assets/benefits/card-8.png",
+    text: "Automated Appointment Mastery — AI-driven scheduling that slashes wait times and boosts clinic efficiency.24/7 Secure Operations — Offline-safe and encrypted, ensuring reliability even in non-stop care environments.",
+    backgroundUrl: card8,
     iconUrl: benefitIcon1,
     imageUrl: benefitImage2,
     light: false,
@@ -257,12 +259,8 @@ export const benefits = [
   {
     id: "1",
     title: "Intelligent Tools for Smart Specialists",
-    text:
-      "Smart Specialist Dashboards — Real-time access to critical insights for optimized patient care  Analytics-Powered Admin — Financial and operational analytics to drive smart decisions   AI- Driven Diagnosis — Predictive precision with advanced data analysis",
-
-
-
-    backgroundUrl: "./src/assets/benefits/card-2.jpg",
+    text: "Smart Specialist Dashboards — Real-time access to critical insights for optimized patient care  Analytics-Powered Admin — Financial and operational analytics to drive smart decisions   AI- Driven Diagnosis — Predictive precision with advanced data analysis",
+    backgroundUrl: card2,
     iconUrl: benefitIcon2,
     imageUrl: benefitImage2,
     light: true,
@@ -270,11 +268,8 @@ export const benefits = [
   {
     id: "2",
     title: "Real-Time Patient Engagement",
-    text:
-      "Live Patient Monitoring — Track vitals in real-time to ensure fast interventions.Digital Records & E-Prescriptions — Seamless and secure access to documentation and meds.Full Medical History Access — Empower staff with instant insights into patient journeys.",
-
-
-    backgroundUrl: "./src/assets/benefits/card-3.avif",
+    text: "Live Patient Monitoring — Track vitals in real-time to ensure fast interventions.Digital Records & E-Prescriptions — Seamless and secure access to documentation and meds.Full Medical History Access — Empower staff with instant insights into patient journeys.",
+    backgroundUrl: card3,
     iconUrl: benefitIcon3,
     imageUrl: benefitImage2,
     light: false,
@@ -282,11 +277,8 @@ export const benefits = [
   {
     id: "3",
     title: "Visibility & Reputation Building",
-    text:
-      "Popularity Tracking — Showcase top-performing staff and sentiment metrics.Global Healthcare Branding — Extend reach with targeted advertising and a trusted digital presence.",
-
-
-    backgroundUrl: "./src/assets/benefits/card-9.avif",
+    text: "Popularity Tracking — Showcase top-performing staff and sentiment metrics.Global Healthcare Branding — Extend reach with targeted advertising and a trusted digital presence.",
+    backgroundUrl: card9,
     iconUrl: benefitIcon2,
     imageUrl: benefitImage2,
     light: true,
@@ -294,11 +286,8 @@ export const benefits = [
   {
     id: "4",
     title: "Healthcare in Every Hand",
-    text:
-      "Mobile Access — Empower users with healthcare on-the-go, anytime, anywhere.Familier UI — Crisp, safe- feeling design with human - forward aesthetics.",
-
-
-    backgroundUrl: "./src/assets/benefits/card-10.png",
+    text: "Mobile Access — Empower users with healthcare on-the-go, anytime, anywhere.Familier UI — Crisp, safe- feeling design with human - forward aesthetics.",
+    backgroundUrl: card10,
     iconUrl: benefitIcon2,
     imageUrl: benefitImage2,
     light: true,

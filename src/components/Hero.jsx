@@ -215,20 +215,15 @@ const Hero = () => {
     }
 
     // Logo (curve) animation
-
-    if (robotRef.current) {
-      gsap.from(robotRef.current, {
+    if (logoRef.current) {
+      gsap.from(logoRef.current, {
         opacity: 0,
-        y: 50,
-        duration: 1,
+        scale: 0.8,
+        duration: 1.2,
         ease: 'power2.out',
-        delay: 0.8,
-        onComplete: () => {
-          gsap.set(robotRef.current, { opacity: 1 }); // Lock opacity to 1
-        },
+        delay: 0.3,
       });
     }
-
 
     // Robot image animation
     if (robotRef.current) {
@@ -388,20 +383,19 @@ const Hero = () => {
           </Button>
         </div>
         <div className="relative max-w-[50rem] mx-auto md:max-w-5xl xl:mb-24">
-          <div className="relative z-10 p-0.5 rounded-2xl bg-conic-gradient">
+          <div className="relative z-2 p-0.5 rounded-2xl bg-conic-gradient">
             <div className="relative bg-n-8 rounded-[1rem]">
               <div className="h-[1.4rem] bg-n-10 rounded-t-[0.9rem]" />
-              <div className="aspect-[33/40] rounded-b-[0.9rem] overflow-hidden md:aspect-[688/490] lg:aspect-[1024/490] p-2">
+              <div className="aspect-[33/40] rounded-b-[0.9rem] overflow-hidden md:aspect-[688/490] lg:aspect-[1024/490]">
                 <img
                   ref={robotRef}
                   src={medical}
-                  className="w-full scale-100 translate-y-0 md:scale-100 md:-translate-y-[10%] lg:-translate-y-[20%] will-change-transform will-change-opacity"
+                  className="relative z-10 w-full scale-[1.7] translate-y-[8%] md:scale-[1] md:-translate-y-[10%] lg:-translate-y-[23%]"
                   width={1024}
                   height={700}
                   alt="AI"
-                  onError={() => console.error("Failed to load image")}
-                  onLoad={() => console.log("Image loaded successfully")}
                 />
+
                 <ScrollParallax isAbsolutelyPositioned>
                   <ul ref={iconsRef} className="hidden absolute -left-[5.5rem] bottom-[7.5rem] px-1 py-1 bg-n-9/40 backdrop-blur border border-n-1/10 rounded-2xl xl:flex">
                     {heroIcons.map((icon, index) => (
@@ -411,6 +405,7 @@ const Hero = () => {
                     ))}
                   </ul>
                 </ScrollParallax>
+
               </div>
             </div>
             <Gradient />
