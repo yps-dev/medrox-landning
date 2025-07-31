@@ -27,7 +27,7 @@ import H1 from "./services/H1.jpg";
 import Hq from "./services/Hq.jpg";
 import curve from "./hero/curve.png";
 import robot from "./hero/robot.png";
-import heroBackground from "./hero/hero-background.jpg";
+import heroBackground from "./hero/robot.jpg";
 
 import curve1 from "./collaboration/curve-1.svg";
 import curve2 from "./collaboration/curve-2.svg";

@@ -98,7 +98,17 @@ const Services = () => {
               className="relative min-h-[39rem] border border-n-1/10 rounded-3xl overflow-hidden"
               variants={fadeInUp}
             >
+              <div className="absolute inset-0">
+                <img
+                  src={service2}
+                  className="h-full w-full object-cover"
+                  width={630}
+                  height={750}
+                  alt="robot"
+                />
+              </div>
               <div className="absolute inset-0 flex flex-col justify-end p-8 bg-gradient-to-b from-n-8/0 to-n-8/90 lg:p-15">
+
                 <h4 className="h4 mb-4">Smart Diagnostic Tool </h4>
                 <p className="body-2 mb-[3rem] text-n-3">
                   Medrox includes a smart diagnostic assistant designed for specialists—helping support high medical decisions faster and more accurately.

@@ -91,7 +91,7 @@ export default function SignupModal({ show, onClose }) {
             await databases.createDocument(databaseId, collectionId, ID.unique(), {
                 email,
                 role,
-                createdAt: new Date().toISOString(),
+
             });
             setSuccess(true);
             setTimeout(() => {
