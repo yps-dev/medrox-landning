@@ -1,8 +1,9 @@
 import { check } from "../assets";
 import { pricing } from "../constants";
 import Button from "./Button";
-
+import ContactModal, { useModal } from "./contact";
 const PricingList = () => {
+  const { isOpen, openModal, closeModal } = useModal();
   return (
     <div className="flex gap-[1.5rem] max-lg:flex-wrap pricing-container">
       {pricing.map((item, index) => (
@@ -48,13 +49,13 @@ const PricingList = () => {
 
           <Button
             className="w-full mb-6 bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-700 hover:to-emerald-700 text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 animate-button-pulse relative overflow-hidden group"
-            href={item.price ? "/pricing" : "mailto:medrox23@gmail.com"}
+            onClick={openModal}
             aria-label={item.price ? `Get started with ${item.title} plan` : "Contact Medrox"}
           >
             <span className="relative z-10">{item.price ? "Get started" : "Contact us"}</span>
             <span className="absolute inset-0 bg-white/30 opacity-0 group-hover:opacity-100 scale-0 group-hover:scale-150 rounded-full transition-transform duration-500 origin-center"></span>
           </Button>
-
+          <ContactModal isOpen={isOpen} closeModal={closeModal} />
           <ul>
             {item.features.map((feature, featureIndex) => (
               <li
@@ -96,15 +97,15 @@ const PricingList = () => {
   content: '';
   position: absolute;
   inset: -50%;
-  background: conic-gradient(
+background: conic-gradient(
   from 0deg,
-  #e0f7fa,  /* soft light cyan */
-  #80deea,  /* breezy teal */
-  #b0bec5,  /* silvery steel */
-  #26c6da,  /* vibrant teal */
-
-  #e0f7fa
+  #0d0d0d,    /* rich black */
+  #6a0dad,    /* royal purple */
+  #00ffff,    /* vibrant cyan */
+#f5bc42,
+  #0d0d0d     /* loop back to black */
 );
+
 
   animation: rotateGradient 12s linear infinite;
   z-index: -2;

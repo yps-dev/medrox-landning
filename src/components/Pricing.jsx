@@ -4,8 +4,10 @@ import Heading from "./Heading";
 import PricingList from "./PricingList";
 import { LeftLine, RightLine } from "./design/Pricing";
 import { motion } from "framer-motion";
+import ContactModal, { useModal } from "./contact";
 
 const Pricing = () => {
+  const { isOpen, openModal, closeModal } = useModal();
   return (
     <Section
       className="relative overflow-hidden bg-gradient-to-b from-teal-200 via-sky-50 to-white/80 backdrop-blur-2xl py-20"
@@ -68,16 +70,18 @@ const Pricing = () => {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
+
           transition={{ duration: 0.6, delay: 0.6 }}
           className="flex justify-center mt-10"
         >
           <a
             className="text-sm font-bold font-mono tracking-widest uppercase border-b border-sky-500 hover:text-sky-700 transition"
-            href="/pricing"
+            onClick={openModal}
           >
             See full details
           </a>
         </motion.div>
+        <ContactModal isOpen={isOpen} closeModal={closeModal} />
       </div>
     </Section>
   );
