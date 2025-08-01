@@ -77,7 +77,7 @@ const Header = ({ openModal }) => {
         </nav>
 
         <a
-          href="#signup"
+          onClick={openModal}
           className="button hidden mr-8 text-n-1/50 transition-all duration-500 hover:text-n-1 lg:block animate-nav-glow"
         >
           Join US

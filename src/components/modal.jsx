@@ -1,25 +1,27 @@
-"use client";
 
+"use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { disablePageScroll, enablePageScroll } from "scroll-lock";
 import { useEffect, useState, useRef } from "react";
 import { Client, Databases, ID } from "appwrite";
 
 export default function SignupModal({ show, onClose }) {
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("Any");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
+    const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
     const canvasRef = useRef(null);
 
-    // Appwrite setup (replace with your credentials)
+    // Appwrite setup
     const client = new Client()
-        .setEndpoint("https://cloud.appwrite.io/v1") // Your Appwrite endpoint
-        .setProject("66bc6d46003466fad5b9"); // Replace with your Appwrite Project ID
+        .setEndpoint("https://cloud.appwrite.io/v1")
+        .setProject("66bc6d46003466fad5b9");
     const databases = new Databases(client);
-    const databaseId = "67a081e10018a7e7ec5a"; // Replace with your Database ID
-    const collectionId = "user_specality"; // Replace with your Collection ID
+    const databaseId = "67a081e10018a7e7ec5a";
+    const collectionId = "user_specality";
 
     // Scroll lock
     useEffect(() => {
@@ -43,7 +45,7 @@ export default function SignupModal({ show, onClose }) {
             size: Math.random() * 6 + 3,
             speedX: Math.random() * 10 - 5,
             speedY: Math.random() * -12 - 6,
-            color: `hsl(${Math.random() * 60 + 240}, 80%, 60%)`,
+            color: `hsl(180, 20 %, 60 %)`, // Grayscale with teal tint
             rotation: Math.random() * 360,
         }));
 
@@ -79,23 +81,16 @@ export default function SignupModal({ show, onClose }) {
         setError("");
         setIsSubmitting(true);
 
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            setError("Please enter a valid email address");
-            setIsSubmitting(false);
-            return;
-        }
-
         try {
             await databases.createDocument(databaseId, collectionId, ID.unique(), {
+                name,
                 email,
                 role,
-
             });
             setSuccess(true);
             setTimeout(() => {
                 setSuccess(false);
+                setName("");
                 setEmail("");
                 setRole("Any");
                 onClose();
@@ -130,14 +125,13 @@ export default function SignupModal({ show, onClose }) {
         >
             <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" aria-hidden="true" />
             <motion.div
-                className="relative bg-gradient-to-br from-gray-900/90 via-teal-900/80 to-blue-900/80 backdrop-blur-2xl rounded-3xl p-8 sm:p-10 max-w-lg w-full mx-4 shadow-2xl border border-teal-500/30"
+                className="relative bg-gradient-to-br from-black/90 via-gray-900/80 to-black/80 backdrop-blur-2xl rounded-3xl p-8 sm:p-10 max-w-lg w-full mx-4 shadow-2xl border border-teal-500/30"
                 initial={{ scale: 0.7, opacity: 0, rotateX: 20 }}
                 animate={{ scale: 1, opacity: 1, rotateX: 0 }}
                 exit={{ scale: 0.7, opacity: 0, rotateX: 20 }}
                 transition={{ type: "spring", stiffness: 350, damping: 25 }}
             >
-                <div className="absolute inset-0 rounded-3xl border-2 border-transparent bg-gradient-to-r from-teal-500/50 via-blue-400/50 to-cyan-400/50 animate-glow-pulse pointer-events-none" />
-
+                <div className="absolute inset-0 rounded-3xl border-2 border-transparent bg-gradient-to-r from-teal-500/30 via-teal-500/20 to-teal-500/30 animate-glow-pulse pointer-events-none" />
                 <AnimatePresence mode="wait">
                     {success ? (
                         <motion.div
@@ -148,18 +142,18 @@ export default function SignupModal({ show, onClose }) {
                             transition={{ duration: 0.5, ease: "easeOut" }}
                             className="text-center"
                         >
-                            <h2 id="modal-title" className="text-3xl sm:text-4xl font-extrabold text-white mb-4 font-[Inter]">
+                            <h2 id="modal-title" className="text-3xl sm:text-4xl font-extrabold text-white mb-4 font-[Inter] tracking-tight">
                                 Thank You for Joining!
                             </h2>
-                            <p className="text-base sm:text-lg text-gray-200 mb-6 font-[Inter]">
-                                We will update you—Medrox is going to launch soon!
+                            <p className="text-lg text-gray-300 mb-6 font-[Inter]">
+                                We’ll keep you updated—Medrox is launching soon!
                             </p>
                             <motion.div
                                 className="w-20 h-20 mx-auto mb-6"
                                 animate={{ rotate: 360 }}
                                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                             >
-                                <svg viewBox="0 0 24 24" className="w-full h-full fill-cyan-400">
+                                <svg viewBox="0 0 24 24" className="w-full h-full fill-teal-500">
                                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                                 </svg>
                             </motion.div>
@@ -172,54 +166,179 @@ export default function SignupModal({ show, onClose }) {
                             exit={{ opacity: 0, y: 20 }}
                             transition={{ duration: 0.5, ease: "easeOut" }}
                         >
-                            <h2 id="modal-title" className="text-3xl sm:text-4xl font-extrabold text-center mb-4 text-white font-[Inter]">
+                            <h2 id="modal-title" className="text-3xl sm:text-4xl font-extrabold text-center mb-4 text-white font-[Inter] tracking-tight">
                                 Join the Medrox Revolution
                             </h2>
-                            <p className="text-base sm:text-lg text-gray-300 text-center mb-6 font-[Inter]">
-                                Be the first to experience Medrox’s futuristic healthcare platform!
+                            <p className="text-lg text-gray-300 text-center mb-8 font-[Inter]">
+                                Be the first to experience Medrox’s cutting-edge healthcare platform!
                             </p>
                             <form onSubmit={handleSubmit}>
-                                {/* Custom Selector */}
-                                <div className="mb-6 grid grid-cols-2 gap-2 sm:gap-4">
-                                    {roles.map((r) => (
-                                        <motion.button
-                                            key={r.value}
-                                            type="button"
-                                            onClick={() => setRole(r.value)}
-                                            className={`flex items-center justify-center gap-2 px-4 py-3 rounded-lg transition-all duration-300 font-[Inter] text-sm sm:text-base ${role === r.value
-                                                ? "bg-teal-500/50 text-white border-teal-400 shadow-lg"
-                                                : "bg-white/10 text-gray-300 border-gray-500/50 hover:bg-teal-500/30 hover:text-white"
-                                                }`}
-                                            whileHover={{ scale: 1.05, rotate: 2 }}
-                                            whileTap={{ scale: 0.95 }}
-                                            transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                                            aria-label={`Select role: ${r.label}`}
-                                        >
-                                            <span className="text-lg">{r.icon}</span>
-                                            <span>{r.label}</span>
-                                        </motion.button>
-                                    ))}
-                                </div>
-                                {/* Animated Input */}
-                                <div className="relative mb-6">
-                                    <motion.input
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="Your email address"
-                                        className={`w-full px-4 py-3 rounded-lg bg-white/10 backdrop-blur-sm text-white border ${error ? "border-red-400" : "border-gray-500/50"
-                                            } focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-300 font-[Inter] placeholder:text-gray-400/70`}
-                                        initial={{ x: -20, opacity: 0 }}
-                                        animate={{ x: 0, opacity: 1 }}
-                                        transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
-                                        aria-label="Email address"
-                                        required
-                                    />
+                                {/* Name Input */}
+                                <div className="relative mb-6 w-full max-w-xl mx-auto">
+                                    <motion.label
+                                        htmlFor="name"
+                                        className="text-sm font-bold text-white mb-2 block font-[Inter]"
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.2, duration: 0.4 }}
+                                    >
+                                        Your Name
+                                    </motion.label>
                                     <motion.div
-                                        className="absolute inset-0 rounded-lg bg-gradient-to-r from-teal-400/20 to-blue-400/20 pointer-events-none"
-                                        animate={{ opacity: [0.5, 1, 0.5] }}
-                                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ type: "spring", stiffness: 300 }}
+                                        className="flex items-center border border-teal-500/30 rounded-xl bg-black/30 backdrop-blur-md px-4 py-3 focus-within:ring-4 focus-within:ring-teal-500/50 transition-all duration-300"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="w-6 h-6 text-teal-500 mr-3 flex-shrink-0"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            strokeWidth={1.5}
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M12 4a4 4 0 100 8 4 4 0 000-8zm-7 8c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.24-.82-4.29-2.17-5.86"
+                                            />
+                                        </svg>
+                                        <motion.input
+                                            id="name"
+                                            type="text"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                            placeholder="Enter your name"
+                                            className="w-full text-lg text-white bg-transparent placeholder:text-gray-400 outline-none font-[Inter] placeholder:transition-all placeholder:duration-300 focus:placeholder:opacity-0"
+                                            aria-label="Name input"
+                                            required
+                                        />
+                                    </motion.div>
+                                    <motion.div
+                                        className="absolute inset-0 rounded-xl z-[-1] pointer-events-none bg-gradient-to-r from-teal-500/10 via-black/10 to-teal-500/10"
+                                        animate={{ opacity: [0.3, 0.7, 0.3] }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                                     />
+                                </div>
+                                {/* Email Input */}
+                                <div className="relative mb-6 w-full max-w-xl mx-auto">
+                                    <motion.label
+                                        htmlFor="contact"
+                                        className="text-sm font-bold text-white mb-2 block font-[Inter]"
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.3, duration: 0.4 }}
+                                    >
+                                        Email or Phone
+                                    </motion.label>
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ type: "spring", stiffness: 300 }}
+                                        className="flex items-center border border-teal-500/30 rounded-xl bg-black/30 backdrop-blur-md px-4 py-3 focus-within:ring-4 focus-within:ring-teal-500/50 transition-all duration-300"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="w-6 h-6 text-teal-500 mr-3 flex-shrink-0"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            strokeWidth={1.5}
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M16 12a4 4 0 01-8 0m8 0v2m0-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2m-8-4V12m0 0H6a2 2 0 00-2 2v2a2 2 0 002 2h2"
+                                            />
+                                        </svg>
+                                        <motion.input
+                                            id="contact"
+                                            type="text"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="Enter email or phone number"
+                                            className="w-full text-lg text-white bg-transparent placeholder:text-gray-400 outline-none font-[Inter] placeholder:transition-all placeholder:duration-300 focus:placeholder:opacity-0"
+                                            aria-label="Contact input"
+                                            required
+                                        />
+                                    </motion.div>
+                                    <motion.div
+                                        className="absolute inset-0 rounded-xl z-[-1] pointer-events-none bg-gradient-to-r from-teal-500/10 via-black/10 to-teal-500/10"
+                                        animate={{ opacity: [0.3, 0.7, 0.3] }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                                    />
+                                </div>
+                                {/* Role Selector */}
+                                <div className="relative mb-8 w-full max-w-xl mx-auto">
+                                    <motion.label
+                                        htmlFor="role"
+                                        className="text-sm font-bold text-white mb-2 block font-[Inter]"
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.4, duration: 0.4 }}
+                                    >
+                                        Your Role
+                                    </motion.label>
+                                    <motion.div
+                                        className="relative"
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ type: "spring", stiffness: 300 }}
+                                    >
+                                        <motion.button
+                                            type="button"
+                                            onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
+                                            className="flex items-center justify-between w-full border border-teal-500/30 rounded-xl bg-black/30 backdrop-blur-md px-4 py-3 text-lg text-white font-[Inter]"
+                                            whileHover={{ scale: 1.02 }}
+                                            transition={{ type: "spring", stiffness: 400 }}
+                                        >
+                                            <span className="flex items-center">
+                                                <span className="mr-3 text-teal-500">
+                                                    {roles.find((r) => r.value === role)?.icon}
+                                                </span>
+                                                {roles.find((r) => r.value === role)?.label}
+                                            </span>
+                                            <svg
+                                                className="w-5 h-5 text-teal-500"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                                strokeWidth={2}
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </motion.button>
+                                        <AnimatePresence>
+                                            {isRoleDropdownOpen && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: -10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -10 }}
+                                                    transition={{ duration: 0.3 }}
+                                                    className="absolute z-10 w-full mt-2 bg-black/95 backdrop-blur-md rounded-xl shadow-lg border border-teal-500/30"
+                                                >
+                                                    {roles.map((r) => (
+                                                        <motion.button
+                                                            key={r.value}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setRole(r.value);
+                                                                setIsRoleDropdownOpen(false);
+                                                            }}
+                                                            className={`flex items - center w - full px - 4 py - 3 text - lg text - white font - [Inter] hover: bg - gray - 800 / 50 transition - all duration - 200 ${role === r.value ? "bg-gray-800/50 border-l-2 border-teal-500" : ""
+                                                                } `}
+                                                            whileHover={{ x: 5 }}
+                                                            transition={{ type: "spring", stiffness: 400 }}
+                                                        >
+                                                            <span className="mr-3 text-teal-500">{r.icon}</span>
+                                                            {r.label}
+                                                        </motion.button>
+                                                    ))}
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </motion.div>
                                 </div>
                                 {error && (
                                     <motion.p
@@ -231,12 +350,12 @@ export default function SignupModal({ show, onClose }) {
                                         {error}
                                     </motion.p>
                                 )}
-                                {/* Animated Button */}
+                                {/* Submit Button */}
                                 <motion.button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="relative w-full py-4 rounded-lg bg-gradient-to-r from-teal-600 to-blue-600 text-white font-semibold shadow-xl disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
-                                    whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(147, 51, 234, 0.7)" }}
+                                    className="relative w-full py-4 rounded-xl bg-gradient-to-r from-black to-teal-600 text-white text-lg font-semibold shadow-xl disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
+                                    whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(0, 206, 209, 0.7)" }}
                                     whileTap={{ scale: 0.95 }}
                                     transition={{ type: "spring", stiffness: 400, damping: 15 }}
                                 >
@@ -244,7 +363,7 @@ export default function SignupModal({ show, onClose }) {
                                         {isSubmitting ? "Joining..." : "Join the Future"}
                                     </span>
                                     <motion.div
-                                        className="absolute inset-0 bg-gradient-to-r from-teal-500/50 to-blue-500/50"
+                                        className="absolute inset-0 bg-gradient-to-r from-teal-500/30 to-black/30"
                                         animate={{ x: ["-100%", "100%"] }}
                                         transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
                                     />
@@ -252,7 +371,7 @@ export default function SignupModal({ show, onClose }) {
                                 <motion.button
                                     type="button"
                                     onClick={onClose}
-                                    className="mt-4 block mx-auto text-sm text-gray-300 hover:text-blue-300 hover:underline font-[Inter]"
+                                    className="mt-4 block mx-auto text-sm text-gray-300 hover:text-teal-500 hover:underline font-[Inter]"
                                     whileHover={{ scale: 1.1 }}
                                     transition={{ type: "spring", stiffness: 400, damping: 15 }}
                                 >
@@ -265,44 +384,39 @@ export default function SignupModal({ show, onClose }) {
             </motion.div>
 
             <style jsx>{`
-        /* Glowing Gradient Animation */
-        .animate-glow-pulse {
-          animation: glow-pulse 2.5s ease-in-out infinite;
+    .animate - glow - pulse {
+    animation: glow - pulse 2.5s ease -in -out infinite;
+}
+
+@keyframes glow - pulse {
+    0 %, 100 % {
+        box- shadow: 0 0 15px rgba(0, 206, 209, 0.3), 0 0 30px rgba(0, 206, 209, 0.2);
+}
+50 % {
+    box- shadow: 0 0 25px rgba(0, 206, 209, 0.5), 0 0 50px rgba(0, 206, 209, 0.4);
+          }
         }
 
-        @keyframes glow-pulse {
-          0%, 100% {
-            box-shadow: 0 0 15px rgba(147, 51, 234, 0.4), 0 0 30px rgba(59, 130, 246, 0.3);
-          }
-          50% {
-            box-shadow: 0 0 25px rgba(147, 51, 234, 0.7), 0 0 50px rgba(59, 130, 246, 0.5);
-          }
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 640px) {
-          .max-w-lg {
-            max-width: 90vw;
-          }
-          .text-3xl {
-            font-size: 1.75rem;
-          }
-          .text-base {
-            font-size: 0.9rem;
-          }
-          .p-10 {
-            padding: 1.5rem;
-          }
-          .grid-cols-2 {
-            grid-template-columns: 1fr;
-          }
-        }
-        @media (min-width: 641px) and (max-width: 1024px) {
-          .max-w-lg {
-            max-width: 80vw;
-          }
-        }
-      `}</style>
+@media(max - width: 640px) {
+          .max - w - lg {
+        max - width: 90vw;
+    }
+          .text - 3xl {
+        font - size: 1.75rem;
+    }
+          .text - lg {
+        font - size: 1rem;
+    }
+          .p - 10 {
+        padding: 1.5rem;
+    }
+}
+@media(min - width: 641px) and(max - width: 1024px) {
+          .max - w - lg {
+        max - width: 80vw;
+    }
+}
+`}</style>
         </motion.div>
     );
 }

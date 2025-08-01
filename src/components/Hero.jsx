@@ -13,7 +13,8 @@ import { heroIcons } from '../constants';
 import Generating from './Generating';
 import Notification from './Notification';
 import CompanyLogos from './CompanyLogos';
-import medical from "../assets/notification/xr.png";;
+import medical from "../assets/notification/xr.png";
+import ContactModal, { useModal } from "./contact";
 // Register GSAP plugin
 gsap.registerPlugin(SplitText);
 
@@ -328,7 +329,7 @@ const Hero = () => {
       document.body.removeChild(cursorOuter);
     };
   }, []);
-
+  const { isOpen, openModal, closeModal } = useModal();
   return (
     <Section
       className="pt-[2rem] -mt-[5.25rem] relative"
@@ -370,7 +371,7 @@ const Hero = () => {
           </p>
           <Button
             ref={buttonRef}
-            href="/pricing"
+            onClick={openModal}
             white
             className="relative overflow-hidden"
             style={{
@@ -382,6 +383,7 @@ const Hero = () => {
             Get started
           </Button>
         </div>
+        <ContactModal isOpen={isOpen} closeModal={closeModal} />
         <div className="relative max-w-[50rem] mx-auto md:max-w-5xl xl:mb-24">
           <div className="relative z-2 p-0.5 rounded-2xl bg-conic-gradient">
             <div className="relative bg-n-8 rounded-[1rem]">
