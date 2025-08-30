@@ -6,28 +6,7 @@ const AutoScrollWhoIsItFor = ({ whoIsItFor }) => {
     const [isPaused, setIsPaused] = useState(false);
 
     // Auto-scroll logic
-    useEffect(() => {
-        const container = scrollRef.current;
-        if (!container) return;
 
-        let scrollAmount = 0;
-        let animationFrame;
-
-        const scroll = () => {
-            if (!isPaused) {
-                scrollAmount += 0.5;
-                if (container.scrollLeft >= container.scrollWidth - container.clientWidth) {
-                    scrollAmount = 0;
-                }
-                container.scrollLeft = scrollAmount;
-            }
-            animationFrame = requestAnimationFrame(scroll);
-        };
-
-        animationFrame = requestAnimationFrame(scroll);
-
-        return () => cancelAnimationFrame(animationFrame);
-    }, [isPaused]);
 
     return (
         <div className="relative mt-24 px-4 md:px-8">
@@ -38,7 +17,6 @@ const AutoScrollWhoIsItFor = ({ whoIsItFor }) => {
 
             {/* Auto-scrolling row */}
             <div
-                ref={scrollRef}
                 className="mt-12 flex overflow-x-auto gap-8 max-w-6xl mx-auto no-scrollbar scroll-smooth py-4 px-1"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}

@@ -45,8 +45,8 @@ const contactDetails = [
     {
         id: "1",
         type: "Email",
-        value: "contact@medrox.ai",
-        href: "mailto:contact@medrox.ai",
+        value: "contact@medrox.Helath",
+        href: "mailto:yordanossisay198@gmail.com",
         icon: (
             <svg
                 className="w-8 h-8 text-cyan-600"
@@ -64,8 +64,8 @@ const contactDetails = [
     {
         id: "2",
         type: "Telegram",
-        value: "@MedroxAI",
-        href: "https://t.me/MedroxAI",
+        value: "@Medrox",
+        href: "https://t.me/Madrox4544",
         icon: (
             <svg
                 className="w-8 h-8 text-cyan-600"
@@ -82,8 +82,8 @@ const contactDetails = [
     {
         id: "3",
         type: "X Account",
-        value: "@MedroxAI",
-        href: "https://x.com/MedroxAI",
+        value: "@Medrox",
+        href: "https://x.com/yordanossi21083",
         icon: (
             <svg
                 className="w-8 h-8 text-cyan-600"
@@ -106,6 +106,43 @@ const ContactModal = ({ isOpen, closeModal }) => {
     const titleRef = useRef(null);
     const contactRefs = useRef([]);
     const ctaButtonRef = useRef(null);
+
+
+
+
+
+    // Lock body scroll when modal is open
+    useEffect(() => {
+        if (isOpen) {
+            // Save current scroll position
+            const scrollY = window.scrollY;
+            document.body.style.position = "fixed";
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.left = "0";
+            document.body.style.right = "0";
+            document.body.style.overflow = "hidden";
+        } else {
+            // Restore scroll position
+            const scrollY = document.body.style.top;
+            document.body.style.position = "";
+            document.body.style.top = "";
+            document.body.style.left = "";
+            document.body.style.right = "";
+            document.body.style.overflow = "";
+            window.scrollTo(0, parseInt(scrollY || "0") * -1);
+        }
+        return () => {
+            // Cleanup in case modal unmounts unexpectedly
+            document.body.style.position = "";
+            document.body.style.top = "";
+            document.body.style.left = "";
+            document.body.style.right = "";
+            document.body.style.overflow = "";
+        };
+    }, [isOpen]);
+
+
+
 
     // Particle background animation
     useEffect(() => {
@@ -341,7 +378,7 @@ const ContactModal = ({ isOpen, closeModal }) => {
                         Join the Medrox Revolution
                     </h2>
                     <p className="text-lg text-gray-600 mb-8 text-center">
-                        Connect with us to transform healthcare with cutting-edge AI solutions.
+                        Connect with us to transform your Health Secter,Phrmacy and life  with cutting-edge Tech solutions.
                     </p>
                     <div className="grid grid-cols-1 gap-4 w-full">
                         {contactDetails.map((item, index) => (

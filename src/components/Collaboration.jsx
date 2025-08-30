@@ -10,7 +10,7 @@ import AutoScrollWhoIsItFor from './design/auto';
 gsap.registerPlugin(SplitText);
 
 const collabText =
-  "Transform healthcare with AI-driven automation and real-time connectivity for unparalleled efficiency.";
+  "Transform healthcare with Advance  automation and real-time connectivity for unparalleled efficiency.";
 
 const collabContent = [
   {
@@ -329,7 +329,7 @@ const Collaboration = React.forwardRef(({ crosses, ...props }, ref) => {
             clearTimeout(timeoutId);
             timeoutId = setTimeout(() => {
               entry.target.classList.add("animate-in");
-              entry.target.classList.remove("animate-out");
+              entry.target.classList.remove("animate");
               apps.forEach((app, index) => {
                 app.style.setProperty("--app-delay", `${index * 0.1}s`);
                 app.classList.add("animate-app-in");
@@ -350,13 +350,11 @@ const Collaboration = React.forwardRef(({ crosses, ...props }, ref) => {
               });
               if (content) {
                 content.classList.add("animate-content-in");
-                content.classList.remove("animate-out");
               }
             }, 50);
           } else {
             clearTimeout(timeoutId);
             timeoutId = setTimeout(() => {
-              entry.target.classList.add("animate-out");
               entry.target.classList.remove("animate-in");
               apps.forEach((app) => app.classList.remove("animate-app-in"));
               whoIsItForItems.forEach((item) => {
@@ -369,7 +367,7 @@ const Collaboration = React.forwardRef(({ crosses, ...props }, ref) => {
                 });
               });
               if (content) {
-                content.classList.add("animate-out");
+
                 content.classList.remove("animate-content-in");
               }
             }, 50);
@@ -387,23 +385,7 @@ const Collaboration = React.forwardRef(({ crosses, ...props }, ref) => {
   }, []);
 
   // Interactive mouse movement for background with throttling
-  useEffect(() => {
-    let lastUpdate = 0;
-    const handleMouseMove = (e) => {
-      const now = Date.now();
-      if (now - lastUpdate < 16) return; // Throttle to ~60fps
-      lastUpdate = now;
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      sectionRef.current.style.setProperty("--mx", `${x}%`);
-      sectionRef.current.style.setProperty("--my", `${y}%`);
-    };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
 
   return (
     <div
@@ -415,8 +397,7 @@ const Collaboration = React.forwardRef(({ crosses, ...props }, ref) => {
     >
       <div className="absolute inset-0 -z-10 pointer-events-none bg-animation">
         <div className="wave-layer wave-1"></div>
-        <div className="wave-layer wave-2"></div>
-        <div className="wave-layer wave-3"></div>
+
         <div className="glow-orb"></div>
       </div>
 
@@ -425,9 +406,7 @@ const Collaboration = React.forwardRef(({ crosses, ...props }, ref) => {
           <h2 className="text-5xl md:text-7xl font-extrabold mb-10 md:mb-14 text-teal-900 tracking-tight animate-header-glow">
             What Makes Medrox Different?
           </h2>
-          <p className="text-xl md:text-2xl text-gray-700 mb-12 max-w-[30rem] animate-text-flow">
-            Redefining healthcare with cutting-edge AI automation and real-time connectivity.
-          </p>
+
 
           <ul className="max-w-[22rem] mb-10 md:mb-14 gap-6">
             {collabContent.map((item) => (
@@ -464,8 +443,8 @@ const Collaboration = React.forwardRef(({ crosses, ...props }, ref) => {
 
         <div
           className="relative mt-8 lg:mt-0 
-             lg:ml-auto xl:w-[40rem] 
-             lg:right-72 lg:top-64 
+             lg:ml-auto xl:w-[52rem] 
+             lg:right-96 lg:top-64 
              sm:right-0 sm:top-0 
              px-4 sm:px-6 md:px-8"
         >

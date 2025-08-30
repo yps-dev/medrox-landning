@@ -140,7 +140,7 @@ const Services = () => {
               variants={fadeInUp}
             >
               <div className="py-12 px-4 xl:px-8">
-                <h4 className="h4 mb-4">Smart Staff & Medical Record and Medicine Management</h4>
+                <h4 class="h4 mb-4">Smarter Pharmacy Operations with Full Product Lifecycle Management</h4>
                 <p className="body-2 mb-[2rem] text-n-3">
                   Manage your staff, shifts, inventory, and prescriptions all in one dashboard. Medrox empowers your healthcare team with the tools they need.
                 </p>

@@ -107,7 +107,8 @@ export default function SignupModal({ show, onClose }) {
         { value: "Specialist", label: "Specialist", icon: "🩺" },
         { value: "Owner", label: "Owner", icon: "🏢" },
         { value: "Staff", label: "Staff", icon: "👩‍⚕️" },
-        { value: "Any", label: "Any", icon: "🌟" },
+        { value: "Pharmacy", label: "pharmacy", icon: "💊" },
+        { value: "Any", label: "Any", icon: "✨" },
     ];
 
     if (!show) return null;

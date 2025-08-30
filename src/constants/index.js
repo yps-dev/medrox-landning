@@ -43,7 +43,8 @@ import card2 from '../assets/benefits/card-2.jpg';
 import card3 from '../assets/benefits/card-3.avif';
 import card9 from '../assets/benefits/card-9.avif';
 import card10 from '../assets/benefits/card-10.png';
-
+import card11 from '../assets/services/service--1.jpg';
+import dev from '../assets/notification/image-1.png';
 export const navigation = [
   {
     id: "0",
@@ -124,11 +125,12 @@ export const roadmap = [
   {
     id: "2",
     title: "Pharmacy Stock Automation",
-    text: "Track medicine inventory, set expiration alerts, and automate reordering for partner pharmacies.",
+    text: "Track medicine inventory, set expiration alerts,  Sales and pos Customers controll Inevntory mangment automate dproduct seeing fiancial ayltics and automate reordering for partner pharmacies.",
     date: "Q3 2024",
-    status: "progress",
+    status: "done",
     imageUrl: roadmap3,
   },
+
   {
     id: "3",
     title: "Full Ai Integration & Cross-Facility Specialist Tracking",
@@ -145,6 +147,14 @@ export const roadmap = [
     date: "Q4 2024",
     status: "done",
     imageUrl: roadmap2,
+  },
+  {
+    id: "2",
+    title: "Medicne Delivary",
+    text: "To Delivare Products with sync Adnvce gps system to  deliver in minutes and safely for partner pharmacies.",
+    date: "Q3 2024",
+    status: "progress",
+    imageUrl: dev,
   },
 ];
 
@@ -230,21 +240,44 @@ export const pricing = [
 
   {
     id: "1",
-    title: "Premium",
+    title: "Health Secter",
     description: "Advanced appointments, diagnose port, priority support, analytics dashboard",
-    price: "3000",
+    price: "3200",
     features: [
       "1 Weak Free Trial Period",
-      " Seperated portals for all with maxium ui and security and Speed",
+      " Seperated portals for all with maxium ui and security & Speed",
       "An advanced controll over records appointments ",
       "An analytics dashboard to track your conversations",
       "Priority support to solve issues quickly",
-      "Advanced diagnostings tools  and comming soon ai Integration ",
+      "Advanced Diagnostic tools and comming soon AI Integration ",
       "Personalized recommendations based on your preferences",
       "Access to more then 10+  features ",
       "Ability to explore the site and its features without any cost",
+      "Offline operation with  sync & lifetime Support and Service",
     ],
+
   },
+  {
+    id: "2",
+    title: "pharmacy",
+    description:
+      "Elite, all‑in‑one pharmacy control — fast, secure, and built to automate everything.",
+    price: "2000",
+    features: [
+      "1 Weak Free Trial Period  ",
+      "Full Inventory Stock ,Bin ,Product ,expiry Mangment ",
+      "Role‑based portals for pharmacists, staff, and admins",
+      "FEFO inventory automation with expiry alerts",
+      "Integrated sales & POS with multi‑payment support",
+      "Prescription tracking with patient linkage",
+      "AI‑powered Sales and stock forecasting",
+      "Analytics for sales, stock, and performance",
+      "Automated audit trails and compliance reports",
+      "Offline operation with  sync & lifetime Support and Service",
+    ]
+  }
+
+
 
 ];
 export const benefits = [
@@ -293,6 +326,16 @@ export const benefits = [
     imageUrl: benefitImage2,
     light: true,
   },
+  {
+    id: "5",
+    title: "Pharmacy Management",
+    text: "Seamlessly unite inventory control, sales tracking, POS operations, prescription handling, and customer care in one intelligent, intuitive platform — built for speed, accuracy, and effortless growth.",
+    backgroundUrl: card11,
+    iconUrl: benefitIcon2,
+    imageUrl: benefitImage2,
+    light: true,
+  }
+
 ];
 
 
