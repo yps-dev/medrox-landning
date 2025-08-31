@@ -491,10 +491,11 @@ export default function UltraHeroSwitcher({ pharmacyImg, doctorImg }) {
   };
 
   // Scroll / wheel handler with hold requirement
+  // Scroll / wheel handler with big delay
   useEffect(() => {
     const onWheel = (e) => {
       const now = Date.now();
-      if (now - lastInteractionTime.current < 2000) return; // 1s hold
+      if (now - lastInteractionTime.current < 8000) return; // 8s delay
       if (e.deltaY > 30) {
         triggerSwitch(view === "health" ? "pharmacy" : "health");
       }
@@ -503,7 +504,7 @@ export default function UltraHeroSwitcher({ pharmacyImg, doctorImg }) {
     return () => window.removeEventListener("wheel", onWheel);
   }, [view]);
 
-  // Touch swipe handler
+  // Touch swipe handler with big delay
   useEffect(() => {
     let startY = null;
     const onTouchStart = (e) => {
@@ -512,7 +513,7 @@ export default function UltraHeroSwitcher({ pharmacyImg, doctorImg }) {
     const onTouchEnd = (e) => {
       if (startY == null) return;
       const delta = startY - (e.changedTouches[0]?.clientY ?? 0);
-      if (Math.abs(delta) > 50 && Date.now() - lastInteractionTime.current >= 2000) {
+      if (Math.abs(delta) > 50 && Date.now() - lastInteractionTime.current >= 8000) {
         triggerSwitch(view === "health" ? "pharmacy" : "health");
       }
       startY = null;
@@ -525,10 +526,10 @@ export default function UltraHeroSwitcher({ pharmacyImg, doctorImg }) {
     };
   }, [view]);
 
-  // Keyboard handler
+  // Keyboard handler with big delay
   useEffect(() => {
     const onKey = (e) => {
-      if (Date.now() - lastInteractionTime.current < 2000) return;
+      if (Date.now() - lastInteractionTime.current < 8000) return; // 8s delay
       if (["ArrowDown", "PageDown", "ArrowUp", "PageUp"].includes(e.key)) {
         triggerSwitch(view === "health" ? "pharmacy" : "health");
       }
@@ -622,7 +623,7 @@ export default function UltraHeroSwitcher({ pharmacyImg, doctorImg }) {
               exit="exit"
               className="rounded-4xl overflow-hidden shadow-3xl bg-white/20 backdrop-blur-xl"
             >
-              <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-20">
+              <div className="hidden md:grid grid-cols-2 items-center gap-20">
                 <motion.div
                   initial={{ opacity: 0, x: -200, rotate: -10 }}
                   animate={{ opacity: 1, x: 0, rotate: 0 }}
@@ -664,8 +665,9 @@ export default function UltraHeroSwitcher({ pharmacyImg, doctorImg }) {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="rounded-4xl overflow-hidden shadow-3xl bg-white/20 backdrop-blur-xl"
+              className=" hidden md:grid  gap-20 items-center rounded-4xl overflow-hidden shadow-3xl bg-white/20 backdrop-blur-xl"
             >
+
               <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-20">
                 <motion.div
                   initial={{ opacity: 0, x: -200, rotate: -10 }}
@@ -704,6 +706,102 @@ export default function UltraHeroSwitcher({ pharmacyImg, doctorImg }) {
 
             </motion.div>
           )}
+
+          {view === "health" && (
+            <motion.div
+              key="health-mobile"
+              variants={containerVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="md:hidden relative flex flex-col items-center text-center px-1 py-4 gap-6 overflow-hidden"
+            >
+              {/* Animated gradient background */}
+              <div className="absolute inset-0 animate-pulse-slow"></div>
+
+              {/* Image with floating effect */}
+              <motion.img
+                src={doc}
+                alt="AI Medical Innovation"
+                className="w-full object-contain h-full rounded-3xl shadow-2xl relative z-10"
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 1 }}
+              />
+
+              {/* Tag */}
+              <p className="text-xs font-semibold uppercase tracking-wide text-blue-800 bg-blue-100/70 px-4 py-2 rounded-full shadow-sm relative z-10">
+                Medrox MEDICAL
+              </p>
+
+              {/* Heading with gradient text */}
+              <h1 className="text-4xl font-extrabold leading-snug bg-gradient-to-r from-blue-900 via-blue-700 to-cyan-600 bg-clip-text text-transparent relative z-10">
+                Revolutionizing Health Care
+              </h1>
+
+              {/* Description */}
+              <p className="text-base text-blue-800/80 leading-relaxed max-w-md relative z-10">
+                The first, most powerful healthcare platform for health sectors—built for specialists and staff—patient diagnosis, appointments, history, operations—30+ approved features.
+              </p>
+
+              {/* Premium button */}
+              <button
+                onClick={openModal}
+                className="w-full max-w-xs bg-gradient-to-r from-blue-700 to-cyan-600 text-white px-8 py-4 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 relative z-10"
+              >
+                Explore Medrox
+              </button>
+            </motion.div>
+          )}
+
+          {view === "pharmacy" && (
+            <motion.div
+              key="pharmacy-mobile"
+              variants={containerVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="md:hidden  w-full relative flex flex-col items-center text-center px-1 py-4 gap-6 overflow-hidden"
+            >
+              {/* Animated gradient background */}
+              <div className="absolute inset-0 animate-pulse-slow"></div>
+
+              {/* Image with floating effect */}
+              <motion.img
+                src={ph}
+                alt="AI Pharmacy Innovation"
+                className="w-full   object-contain rounded-3xl shadow-2xl relative z-10"
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 1 }}
+              />
+
+              {/* Tag */}
+              <p className="text-xs font-semibold uppercase tracking-wide text-teal-800 bg-teal-100/70 px-4 py-2 rounded-full shadow-sm relative z-10">
+                Medrox PHARMACY
+              </p>
+
+              {/* Heading with gradient text */}
+              <h1 className="text-4xl font-extrabold leading-snug bg-gradient-to-r from-teal-900 via-green-700 to-emerald-500 bg-clip-text text-transparent relative z-10">
+                Transforming Pharmacy Management
+              </h1>
+
+              {/* Description */}
+              <p className="text-base text-teal-800/80 leading-relaxed max-w-md relative z-10">
+                World’s first, fastest, and easiest all‑in‑one pharmacy platform — from inventory, sales & POS to prescriptions to customer care & More.
+              </p>
+
+              {/* Premium button */}
+              <button
+                onClick={openModal}
+                className="w-full max-w-xs bg-gradient-to-r from-green-700 to-teal-500 text-white px-8 py-4 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 relative z-10"
+              >
+                Discover
+              </button>
+            </motion.div>
+          )}
+
+
         </AnimatePresence>
 
       </div>

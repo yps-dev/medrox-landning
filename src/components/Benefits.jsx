@@ -8,21 +8,6 @@ import { GradientLight } from "./design/Benefits";
 export default function Benefits() {
   const cardsRef = useRef([]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-fadeInUp");
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-
-    cardsRef.current.forEach((card) => observer.observe(card));
-    return () => cardsRef.current.forEach((card) => observer.unobserve(card));
-  }, []);
 
   return (
     <section className="relative text-slate-800 py-20 md:py-28 overflow-hidden">
@@ -67,11 +52,9 @@ export default function Benefits() {
           <div
             key={item.id}
             ref={(el) => (cardsRef.current[idx] = el)}
-            className="group relative w-[340px] md:w-[360px] h-[500px] 
-            rounded-3xl overflow-hidden  
-            border bg-white/40 border-white/30 shadow-xl backdrop-blur-lg
-            transition-all duration-700 hover:scale-105 hover:shadow-2xl opacity-0"
+            className="group relative w-[340px] md:w-[360px] h-[500px] rounded-3xl overflow-hidden border bg-white/40 border-white/30 shadow-xl backdrop-blur-lg transition-all duration-700 hover:scale-105 hover:shadow-2xl opacity-100"
           >
+
             {/* Hover image reveal */}
             <div className="absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-1000 scale-105 group-hover:scale-100">
               <img
@@ -240,18 +223,7 @@ export default function Benefits() {
         }
 
         /* 🚀 Card fade-in */
-        .animate-fadeInUp {
-          animation: fadeInUp 0.9s ease forwards;
-        }
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+       
         }
       `}</style>
     </section>

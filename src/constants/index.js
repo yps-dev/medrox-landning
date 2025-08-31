@@ -242,7 +242,7 @@ export const pricing = [
     id: "1",
     title: "Health Secter",
     description: "Advanced appointments, diagnose port, priority support, analytics dashboard",
-    price: "3200",
+    price: "3500",
     features: [
       "1 Weak Free Trial Period",
       " Seperated portals for all with maxium ui and security & Speed",
