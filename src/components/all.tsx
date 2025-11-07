@@ -94,7 +94,7 @@ const AllInOneHero = ({ openInfo }) => {
             <motion.section
                 ref={containerRef}
                 style={{ opacity, scale }}
-                className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-white via-gray-50 to-blue-50/30"
+                className="relative h-[155vh] w-full overflow-hidden bg-gradient-to-br from-white via-gray-50 to-blue-50/30"
             >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.05),transparent_50%)]" />
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(14,165,233,0.04),transparent_50%)]" />
