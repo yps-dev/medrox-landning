@@ -903,58 +903,58 @@ export default function UltraHeroSwitcher() {
     }, 800);
   };
 
-  useEffect(() => {
-    const onWheel = (e) => {
-      const now = Date.now();
-      if (now - lastInteractionTime.current < getDelay(view)) return;
-      if (Math.abs(e.deltaY) > 30) {
-        const nextView =
-          view === "health"
-            ? "pharmacy"
-            : view === "pharmacy"
-              ? "all-in-one"
-              : "health";
-        triggerSwitch(nextView);
-      }
-    };
-    window.addEventListener("wheel", onWheel, { passive: true });
-    return () => window.removeEventListener("wheel", onWheel);
-  }, [view]);
+  // useEffect(() => {
+  //   const onWheel = (e) => {
+  //     const now = Date.now();
+  //     if (now - lastInteractionTime.current < getDelay(view)) return;
+  //     if (Math.abs(e.deltaY) > 30) {
+  //       const nextView =
+  //         view === "health"
+  //           ? "pharmacy"
+  //           : view === "pharmacy"
+  //             ? "all-in-one"
+  //             : "health";
+  //       triggerSwitch(nextView);
+  //     }
+  //   };
+  //   window.addEventListener("wheel", onWheel, { passive: true });
+  //   return () => window.removeEventListener("wheel", onWheel);
+  // }, [view]);
 
 
-  useEffect(() => {
-    let startY = null;
+  // useEffect(() => {
+  //   let startY = null;
 
-    const onTouchStart = (e) => {
-      startY = e.touches[0]?.clientY ?? null;
-    };
+  //   const onTouchStart = (e) => {
+  //     startY = e.touches[0]?.clientY ?? null;
+  //   };
 
-    const onTouchEnd = (e) => {
-      if (startY == null) return;
-      const delta = startY - (e.changedTouches[0]?.clientY ?? 0);
-      if (
-        Math.abs(delta) > 60 &&
-        Date.now() - lastInteractionTime.current >= getDelay(view)
-      ) {
-        const nextView =
-          view === "health"
-            ? "pharmacy"
-            : view === "pharmacy"
-              ? "all-in-one"
-              : "health";
-        triggerSwitch(nextView);
-      }
-      startY = null;
-    };
+  //   const onTouchEnd = (e) => {
+  //     if (startY == null) return;
+  //     const delta = startY - (e.changedTouches[0]?.clientY ?? 0);
+  //     if (
+  //       Math.abs(delta) > 60 &&
+  //       Date.now() - lastInteractionTime.current >= getDelay(view)
+  //     ) {
+  //       const nextView =
+  //         view === "health"
+  //           ? "pharmacy"
+  //           : view === "pharmacy"
+  //             ? "all-in-one"
+  //             : "health";
+  //       triggerSwitch(nextView);
+  //     }
+  //     startY = null;
+  //   };
 
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
+  //   window.addEventListener("touchstart", onTouchStart, { passive: true });
+  //   window.addEventListener("touchend", onTouchEnd, { passive: true });
 
-    return () => {
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchend", onTouchEnd);
-    };
-  }, [view]);
+  //   return () => {
+  //     window.removeEventListener("touchstart", onTouchStart);
+  //     window.removeEventListener("touchend", onTouchEnd);
+  //   };
+  // }, [view]);
   useEffect(() => {
     const onKey = (e) => {
       if (Date.now() - lastInteractionTime.current < getDelay(view)) return;
