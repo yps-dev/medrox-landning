@@ -78,29 +78,29 @@ const IconResolver = ({ IconComponent, className }: any) => {
 
 const AllInOneHero = ({ openInfo }) => {
     const { isOpen, openModal, closeModal } = useModal();
-    const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ['start start', 'end start'],
-    });
-    // AFTER (Removing the fade and minimizing the shrink/move effects)
-    const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 1]); // **(1, 1) keeps opacity at 1 (fully visible)**
-    const scale = useTransform(scrollYProgress, [0, 0.5], [1, 1]); // **(1, 1) keeps scale at 1 (no shrink)**
-    const y = useTransform(scrollYProgress, [0, 1], [0, 50]); // (Optional: reduce downward movement from 200 to 50)
+    // const containerRef = useRef<HTMLDivElement>(null);
+    // const { scrollYProgress } = useScroll({
+    //     target: containerRef,
+    //     offset: ['start start', 'end start'],
+    // });
+    // // AFTER (Removing the fade and minimizing the shrink/move effects)
+    // const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 1]); // **(1, 1) keeps opacity at 1 (fully visible)**
+    // const scale = useTransform(scrollYProgress, [0, 0.5], [1, 1]); // **(1, 1) keeps scale at 1 (no shrink)**
+    // const y = useTransform(scrollYProgress, [0, 1], [0, 50]); // (Optional: reduce downward movement from 200 to 50)
     const doubledServices = [...services, ...services, ...services];
 
     return (
         <>
             <motion.section
-                ref={containerRef}
-                style={{ opacity, scale }}
+                // ref={containerRef}
+                // style={{ opacity, scale }}
                 className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-white via-gray-50 to-blue-50/30"
             >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.05),transparent_50%)]" />
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(14,165,233,0.04),transparent_50%)]" />
 
                 <motion.div
-                    style={{ y }}
+                    // style={{ y }}
                     className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 py-20"
                 >
 
