@@ -355,6 +355,8 @@ export default function DomeGallery({
 
         pointerTypeRef.current = event.pointerType || 'mouse';
         if (pointerTypeRef.current === 'touch') event.preventDefault();
+        document.body.style.overflow = "hidden";
+
         if (pointerTypeRef.current === 'touch') lockScroll();
         draggingRef.current = true;
         cancelTapRef.current = false;
@@ -433,7 +435,9 @@ export default function DomeGallery({
           if (cancelTapRef.current) setTimeout(() => (cancelTapRef.current = false), 120);
           if (movedRef.current) lastDragEndAt.current = performance.now();
           movedRef.current = false;
-          if (pointerTypeRef.current === 'touch') unlockScroll();
+          if (pointerTypeRef.current === 'touch') unlockScroll()
+          document.body.style.overflow = "";
+          ;
         }
       }
     },
@@ -459,14 +463,42 @@ export default function DomeGallery({
       stopAutoRotate(); // Also stop auto-rotate when modal opens
     } else {
       unlockScroll();
+
       if (!draggingRef.current && !hoverRef.current) {
         startAutoRotate(); // Restart auto-rotate when modal closes
       }
     }
   }, [selectedImage, lockScroll, unlockScroll, startAutoRotate, stopAutoRotate]);
 
+
+
+
+  useEffect(() => {
+    const preventScroll = (e) => {
+      if (scrollLockedRef.current) e.preventDefault();
+    };
+
+    document.addEventListener("touchmove", preventScroll, { passive: false });
+    return () => document.removeEventListener("touchmove", preventScroll);
+  }, []);
+
+
+
+
+
   // **FIX 3: Responsive Spacing**
   const cssStyles = `
+  html, body {
+  overscroll-behavior: none !important;
+}
+
+.dg-scroll-lock {
+  touch-action: none !important;
+  overscroll-behavior: none !important;
+  position: fixed !important;
+  width: 100% !important;
+}
+
     .sphere-root {
       --radius: 520px;
       --viewer-pad: 72px;
@@ -664,9 +696,12 @@ export default function DomeGallery({
           // **FIX 4: Responsive Layout**
           className="absolute inset-0 flex flex-col lg:flex-row items-center justify-center lg:justify-between px-6 lg:px-12 overflow-hidden select-none bg-transparent"
           style={{
-            touchAction: 'none',
-            WebkitUserSelect: 'none'
+            touchAction: 'none !important',
+            WebkitTouchCallout: 'none',
+            WebkitUserSelect: 'none',
+            userSelect: 'none'
           }}
+
         >
 
           {/* **FIX 4: Responsive Text Wrapper** */}
