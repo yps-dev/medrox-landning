@@ -1,231 +1,276 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+
+import Section from "./Section";
+
 import { benefits } from "../constants";
 import ClipPath from "../assets/svg/ClipPath";
 import Arrow from "../assets/svg/Arrow";
 import { GradientLight } from "./design/Benefits";
 
-export default function Benefits() {
-  const cardsRef = useRef([]);
 
+export default function Benefits() {
+  const containerRef = useRef(null);   // no <HTMLDivElement>
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [activeCard, setActiveCard] = useState(null); // no <number | null>
+  const [expandedCard, setExpandedCard] = useState(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const scrollPercent = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / (window.innerHeight + rect.height)));
+        setScrollPosition(scrollPercent);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <section className="relative text-slate-800 py-20 md:py-28 overflow-hidden">
-      {/* 🔥 Ultra Premium Animated Background */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        {/* Smooth shifting gradient */}
-        <div className="absolute inset-0 animate-gradientShift bg-gradient-to-br from-[#f5fcff] via-[#e6f3fa] to-[#d9f1ff]" />
+    <Section id="Services">
+      <section ref={containerRef} className="relative w-full py-20 md:py-32 overflow-hidden bg-white">
+        <div className="absolute inset-0 -z-10 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-cyan-50" />
 
-        {/* Aurora beams */}
-        <div className="aurora aurora-1"></div>
-        <div className="aurora aurora-2"></div>
+          <motion.div
+            animate={{
+              rotate: 360,
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{
+              rotate: { duration: 40, repeat: Infinity, ease: 'linear' },
+              opacity: { duration: 8, repeat: Infinity },
+            }}
+            className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-blue-200/30 to-cyan-200/20 rounded-full blur-3xl"
+          />
 
-        {/* Floating Glow Orbs */}
-        <div className="glow-orb orb-1"></div>
-        <div className="glow-orb orb-2"></div>
+          <motion.div
+            animate={{
+              rotate: -360,
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{
+              rotate: { duration: 50, repeat: Infinity, ease: 'linear' },
+              opacity: { duration: 10, repeat: Infinity, delay: 2 },
+            }}
+            className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-tl from-cyan-200/30 to-blue-200/20 rounded-full blur-3xl"
+          />
 
-        {/* Dynamic fluid waves */}
-        <div className="wave-layer wave-1"></div>
+          <motion.div
+            animate={{
+              y: [0, -30, 0],
+              x: [0, 20, 0],
+            }}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+            className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-br from-teal-200/20 to-transparent rounded-full blur-3xl"
+          />
+        </div>
 
-      </div>
+        <div className=" mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <AnimatedHeading />
+            <p className="text-xl sm:text-2xl text-gray-600 max-w-2xl mx-auto mt-6">
+              Purpose-built for healthcare excellence with cutting-edge technology
+            </p>
+          </motion.div>
 
-      {/* Heading */}
-      <div className="text-center mb-20 relative group">
-        <h1
-          className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight 
-          bg-clip-text text-transparent 
-          bg-gradient-to-r from-teal-600 via-cyan-600 to-sky-500
-          transition-all duration-700 ease-in-out
-          group-hover:scale-[1.02] group-hover:saturate-[1.25]"
-        >
-          Smarter, Smoother, Sleeker Healthcare
-        </h1>
-        <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-slate-600/80">
-          Redefining the way pharmacies & healthcare systems work — built with elegance,
-          powered by innovation.
-        </p>
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {benefits.map((benefit, idx) => (
+              <motion.div
+                key={benefit.id}
+                initial={{ opacity: 0, y: 40, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                viewport={{ once: true }}
+                onHoverStart={() => setActiveCard(benefit.id)}
+                onHoverEnd={() => setActiveCard(null)}
+                className="group relative h-96 rounded-3xl overflow-hidden cursor-pointer"
+              >
+                <motion.div
+                  className="absolute inset-0"
+                  animate={{
+                    scale: activeCard === benefit.id ? 1.1 : 1,
+                  }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <img
+                    src={benefit.backgroundUrl}
+                    alt={benefit.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                </motion.div>
 
-      {/* Cards */}
-      <div className="flex flex-wrap justify-center gap-12">
-        {benefits.map((item, idx) => (
-          <div
-            key={item.id}
-            ref={(el) => (cardsRef.current[idx] = el)}
-            className="group relative w-[340px] md:w-[360px] h-[500px] rounded-3xl overflow-hidden border bg-white/40 border-white/30 shadow-xl backdrop-blur-lg transition-all duration-700 hover:scale-105 hover:shadow-2xl opacity-100"
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-cyan-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                />
+
+                <div className="relative z-10 flex flex-col justify-between h-full p-8 text-white">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: idx * 0.1 + 0.2 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300">
+                      <span className="text-3xl font-bold text-cyan-300">{idx + 1}</span>
+                    </div>
+                  </motion.div>
+
+                  <div>
+                    <motion.h3
+                      className="text-2xl md:text-3xl font-extrabold mb-3"
+                      animate={{
+                        y: activeCard === benefit.id ? -10 : 0,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {benefit.title}
+                    </motion.h3>
+
+                    <motion.p
+                      className={`text-base md:text-lg text-white/90 leading-relaxed transition-all duration-500 ${expandedCard === benefit.id
+                        ? "line-clamp-none max-h-96"
+                        : "line-clamp-2 max-h-16"
+                        }`}
+                      animate={{
+                        opacity: activeCard === benefit.id ? 1 : 0.8,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {benefit.text}
+                    </motion.p>
+
+                    <motion.div
+                      className="mt-4 flex items-center space-x-2 cursor-pointer text-cyan-300 hover:text-white transition-colors"
+                      onClick={() =>
+                        setExpandedCard(expandedCard === benefit.id ? null : benefit.id)
+                      }
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: activeCard === benefit.id ? 1 : 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <span className="text-sm font-semibold">
+                        {expandedCard === benefit.id ? "Show Less" : "Learn More"}
+                      </span>
+                      <motion.svg
+                        className="w-5 h-5"
+                        animate={{
+                          rotate: expandedCard === benefit.id ? 90 : 0,
+                        }}
+                        transition={{ duration: 0.3 }}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </motion.svg>
+                    </motion.div>
+
+                  </div>
+                </div>
+
+                <motion.div
+                  className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-cyan-400/30 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  animate={{
+                    scale: activeCard === benefit.id ? [1, 1.2, 1] : 1,
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: activeCard === benefit.id ? Infinity : 0,
+                  }}
+                />
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="mt-3 text-center"
           >
 
-            {/* Hover image reveal */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-70 transition-opacity duration-1000 scale-105 group-hover:scale-100">
-              <img
-                src={item.backgroundUrl || "/assets/images/fallback.png"}
-                alt={item.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            {/* Content */}
-            <div className="relative z-20 flex flex-col h-full p-8 bg-gradient-to-b from-white/70 via-white/40 to-transparent backdrop-blur-sm">
-              <h3 className="text-2xl font-extrabold mb-3 text-slate-800 drop-shadow-sm">
-                {item.title}
-              </h3>
-              <p className="text-sm text-slate-600 mb-auto font-medium opacity-90 leading-relaxed">
-                {item.text}
-              </p>
-              <div className="flex items-center mt-6">
-                <img
-                  src={item.iconUrl || "/assets/images/fallback.png"}
-                  alt={item.title}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <p className="ml-auto text-xs uppercase font-semibold tracking-wider text-slate-700">
-                  Learn more
-                </p>
-                <Arrow className="ml-2" />
-              </div>
-            </div>
-
-            {item.light && <GradientLight />}
-            <ClipPath />
-          </div>
-        ))}
-      </div>
-
-      {/* Local styles */}
-      <style jsx>{`
-        /* 🌊 Premium fluid wave animation */
-        .wave-layer {
-          position: absolute;
-          width: 200%;
-          height: 400px;
-          background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%2326C6DA' fill-opacity='0.25' d='M0,160C240,80,480,280,720,260C960,240,1200,100,1440,180L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E")
-            repeat-x;
-          animation: waveFlow 22s cubic-bezier(0.55, 0.5, 0.45, 0.95) infinite;
-          top: -60px;
-        }
-        .wave-1 {
-          animation-delay: 0s;
-          opacity: 0.55;
-        }
-        .wave-2 {
-          animation-delay: -8s;
-          opacity: 0.35;
-          top: 100px;
-        }
-        .wave-3 {
-          animation-delay: -14s;
-          opacity: 0.25;
-          top: 180px;
-        }
-
-        /* 🌌 Aurora light beams */
-        .aurora {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          background: conic-gradient(
-            from 180deg at 50% 50%,
-            rgba(0, 255, 200, 0.12),
-            rgba(0, 180, 255, 0.08),
-            transparent 70%
-          );
-          mix-blend-mode: screen;
-          filter: blur(120px);
-          animation: auroraShift 18s ease-in-out infinite;
-        }
-        .aurora-1 {
-          top: -20%;
-          left: -20%;
-        }
-        .aurora-2 {
-          bottom: -20%;
-          right: -20%;
-          animation-delay: 8s;
-        }
-
-        /* ✨ Glow orbs */
-        .glow-orb {
-          position: absolute;
-          width: 700px;
-          height: 700px;
-          border-radius: 50%;
-          background: radial-gradient(
-            circle at center,
-            rgba(38, 198, 218, 0.4) 0%,
-            transparent 70%
-          );
-          filter: blur(140px);
-          animation: glowFloat 14s ease-in-out infinite alternate;
-        }
-        .orb-1 {
-          top: 15%;
-          left: 12%;
-        }
-        .orb-2 {
-          bottom: 15%;
-          right: 18%;
-          animation-delay: 7s;
-        }
-
-        /* 🌈 Gradient shifting */
-        .animate-gradientShift {
-          background-size: 300% 300%;
-          animation: gradientShift 20s ease infinite;
-        }
-
-        /* Keyframes */
-        @keyframes waveFlow {
-          0% {
-            transform: translateX(0) translateY(0) scaleY(1);
-          }
-          50% {
-            transform: translateX(-25%) translateY(-10px) scaleY(1.05);
-          }
-          100% {
-            transform: translateX(-50%) translateY(0) scaleY(1);
-          }
-        }
-        @keyframes auroraShift {
-          0% {
-            transform: rotate(0deg) scale(1);
-          }
-          50% {
-            transform: rotate(10deg) scale(1.05);
-          }
-          100% {
-            transform: rotate(0deg) scale(1);
-          }
-        }
-        @keyframes glowFloat {
-          0% {
-            transform: translateY(0) scale(1);
-            opacity: 0.35;
-          }
-          50% {
-            transform: translateY(-40px) scale(1.08);
-            opacity: 0.55;
-          }
-          100% {
-            transform: translateY(0) scale(1);
-            opacity: 0.35;
-          }
-        }
-        @keyframes gradientShift {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-
-        /* 🚀 Card fade-in */
-       
-        }
-      `}</style>
-    </section>
+          </motion.div>
+        </div>
+      </section>
+    </Section>
   );
 }
+
+
+const AnimatedHeading = () => {
+  return (
+    <motion.h1
+      className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight mb-6"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={{
+        hidden: {},
+        visible: { transition: { staggerChildren: 0.25 } },
+      }}
+    >
+      {/* First line */}
+      <motion.span
+        className="block text-gray-900"
+        variants={{
+          hidden: { opacity: 0, y: 40, scale: 0.95 },
+          visible: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: { duration: 0.8, ease: "easeOut" },
+          },
+        }}
+      >
+        Why Medrox
+      </motion.span>
+
+      {/* Second line with gradient shimmer */}
+      <motion.span
+        className="relative block bg-gradient-to-r from-slate-200 via-cyan-500 to-teal-600 bg-clip-text text-transparent"
+        variants={{
+          hidden: { opacity: 0, y: 40, scale: 0.95 },
+          visible: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: { duration: 0.8, ease: "easeOut" },
+          },
+        }}
+      >
+        Stands Apart
+        {/* Shimmer overlay */}
+        <motion.span
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent bg-clip-text text-transparent"
+          initial={{ x: "-100%" }}
+          animate={{ x: "100%" }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        >
+          Stands Apart
+        </motion.span>
+      </motion.span>
+    </motion.h1>
+  );
+}
+

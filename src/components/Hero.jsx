@@ -435,6 +435,197 @@
 
 
 
+// import React, { useEffect, useRef, useState } from "react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import ContactModal, { useModal } from "./contact";
+// import doc from "../assets/hero/robot.png";
+// import ph from "../assets/hero/curve.png";
+// import ScrollStack, { ScrollStackItem } from './design/stack';
+
+// const containerVariants = {
+//   initial: { opacity: 0, y: 80, scale: 0.95 },
+//   animate: { opacity: 1, y: 0, scale: 1, transition: { duration: 2, ease: [0.4, 0, 0.2, 1] } },
+// };
+
+// export default function UltraHeroSwitcher({ pharmacyImg = ph, doctorImg = doc }) {
+//   const [view, setView] = useState("health");
+//   const switchingRef = useRef(false);
+//   const lastInteractionTime = useRef(0);
+//   const autoTimerRef = useRef(null);
+//   const { isOpen, openModal, closeModal } = useModal();
+
+//   const prefersReducedMotion =
+//     typeof window !== "undefined" &&
+//     window.matchMedia &&
+//     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+//   const triggerSwitch = (nextView) => {
+//     if (switchingRef.current || view === nextView) return;
+//     switchingRef.current = true;
+//     setView(nextView);
+//     lastInteractionTime.current = Date.now();
+//     setTimeout(() => {
+//       switchingRef.current = false;
+//     }, 1000);
+//   };
+
+//   useEffect(() => {
+//     const onWheel = (e) => {
+//       const now = Date.now();
+//       if (now - lastInteractionTime.current < 6000) return;
+//       if (e.deltaY > 30) {
+//         triggerSwitch(view === "health" ? "pharmacy" : "health");
+//       }
+//     };
+//     window.addEventListener("wheel", onWheel, { passive: true });
+//     return () => window.removeEventListener("wheel", onWheel);
+//   }, [view]);
+
+//   useEffect(() => {
+//     let startY = null;
+//     const onTouchStart = (e) => {
+//       startY = e.touches[0]?.clientY ?? null;
+//     };
+//     const onTouchEnd = (e) => {
+//       if (startY == null) return;
+//       const delta = startY - (e.changedTouches[0]?.clientY ?? 0);
+//       if (Math.abs(delta) > 50 && Date.now() - lastInteractionTime.current >= 6000) {
+//         triggerSwitch(view === "health" ? "pharmacy" : "health");
+//       }
+//       startY = null;
+//     };
+//     window.addEventListener("touchstart", onTouchStart, { passive: true });
+//     window.addEventListener("touchend", onTouchEnd, { passive: true });
+//     return () => {
+//       window.removeEventListener("touchstart", onTouchStart);
+//       window.removeEventListener("touchend", onTouchEnd);
+//     };
+//   }, [view]);
+
+//   useEffect(() => {
+//     const onKey = (e) => {
+//       if (Date.now() - lastInteractionTime.current < 6000) return;
+//       if (["ArrowDown", "PageDown", "ArrowUp", "PageUp"].includes(e.key)) {
+//         triggerSwitch(view === "health" ? "pharmacy" : "health");
+//       }
+//     };
+//     window.addEventListener("keydown", onKey);
+//     return () => window.removeEventListener("keydown", onKey);
+//   }, [view]);
+
+//   useEffect(() => {
+//     if (prefersReducedMotion) return;
+//     autoTimerRef.current = setInterval(() => {
+//       if (Date.now() - lastInteractionTime.current >= 8000) {
+//         triggerSwitch(view === "health" ? "pharmacy" : "health");
+//       }
+//     }, 8000);
+//     return () => {
+//       if (autoTimerRef.current) clearInterval(autoTimerRef.current);
+//     };
+//   }, [view, prefersReducedMotion]);
+
+//   return (
+//     <section
+//       aria-label="Hero showcase"
+//       className="relative isolate w-full overflow-hidden bg-gradient-to-b from-teal-50 to-cyan-100/20"
+//     >
+//       <ScrollStack className="w-full h-screen overflow-y-auto snap-y snap-mandatory">
+//         <ScrollStackItem
+//           className={`flex items-center justify-center h-[70vh] sm:h-[80vh] snap-center bg-gradient-to-br from-blue-100 to-cyan-200/90 relative transition-all duration-300 ${view !== "health" ? 'hidden' : ''}`}
+//         >
+//           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,255,0.15),transparent_50%)] animate-pulse-slow" />
+//           <div className="flex flex-col lg:flex-row items-center justify-between p-4 sm:p-8 lg:p-12 max-w-6xl mx-auto relative z-10 w-full">
+//             <motion.div
+//               variants={containerVariants}
+//               initial="initial"
+//               animate="animate"
+//               className="text-center lg:text-left mb-6 lg:mb-0 lg:w-1/2"
+//             >
+//               <p className="rounded-full bg-blue-200/50 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-medium text-blue-900 tracking-wide shadow-sm">
+//                 Medrox MEDICAL BREAKTHROUGH
+//               </p>
+//               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mt-4 sm:mt-6 text-blue-900 leading-tight">
+//                 Revolutionizing Health Care
+//               </h1>
+//               <p className="text-base sm:text-lg lg:text-xl mt-4 sm:mt-6 text-blue-800/80 max-w-md sm:max-w-lg">
+//                 The first, most powerful healthcare platform for health sectors—built for specialists and staff—patient diagnosis, appointments, history, operations—30+ approved features.
+//               </p>
+//               <motion.button
+//                 onClick={openModal}
+//                 className="mt-6 sm:mt-8 bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+//                 whileHover={{ scale: 1.1 }}
+//                 whileTap={{ scale: 0.95 }}
+//                 aria-label="Explore Medrox platform"
+//               >
+//                 Explore Medrox
+//               </motion.button>
+//             </motion.div>
+//             <motion.div
+//               initial={{ scale: 0.9, opacity: 0, rotate: -3 }}
+//               animate={{ scale: 1, opacity: 1, rotate: 0 }}
+//               transition={{ duration: 1.8, ease: [0.4, 0, 0.2, 1] }}
+//               className="w-full lg:w-1/2 relative"
+//             >
+//               <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent rounded-3xl opacity-75" />
+//               <img
+//                 src={doctorImg}
+//                 alt="AI Medical Innovation"
+//                 className="w-full h-auto max-h-[50vh] sm:max-h-[60vh] object-cover rounded-3xl shadow-2xl"
+//               />
+//             </motion.div>
+//           </div>
+//         </ScrollStackItem>
+//         <ScrollStackItem
+//           className={`flex items-center justify-center h-[70vh] sm:h-[80vh] snap-center bg-gradient-to-br from-emerald-100 to-teal-200/90 relative transition-all duration-300 ${view !== "pharmacy" ? 'hidden' : ''}`}
+//         >
+//           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,200,0.15),transparent_50%)] animate-pulse-slow" />
+//           <div className="flex flex-col lg:flex-row items-center justify-between p-4 sm:p-8 lg:p-12 max-w-6xl mx-auto relative z-10 w-full">
+//             <motion.div
+//               variants={containerVariants}
+//               initial="initial"
+//               animate="animate"
+//               className="text-center lg:text-left mb-6 lg:mb-0 lg:w-1/2"
+//             >
+//               <p className="rounded-full bg-emerald-200/50 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-medium text-emerald-900 tracking-wide shadow-sm">
+//                 Medrox PHARMACY EVOLUTION
+//               </p>
+//               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mt-4 sm:mt-6 text-emerald-900 leading-tight">
+//                 Transforming Pharmacy Management
+//               </h1>
+//               <p className="text-base sm:text-lg lg:text-xl mt-4 sm:mt-6 text-emerald-800/80 max-w-md sm:max-w-lg">
+//                 World’s first, fastest, and easiest all‑in‑one pharmacy platform — from inventory, sales & POS to prescriptions to customer care & More.
+//               </p>
+//               <motion.button
+//                 onClick={openModal}
+//                 className="mt-6 sm:mt-8 bg-gradient-to-r from-emerald-600 to-teal-500 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+//                 whileHover={{ scale: 1.1 }}
+//                 whileTap={{ scale: 0.95 }}
+//                 aria-label="Discover Medrox pharmacy platform"
+//               >
+//                 Discover
+//               </motion.button>
+//             </motion.div>
+//             <motion.div
+//               initial={{ scale: 0.9, opacity: 0, rotate: 3 }}
+//               animate={{ scale: 1, opacity: 1, rotate: 0 }}
+//               transition={{ duration: 1.8, ease: [0.4, 0, 0.2, 1] }}
+//               className="w-full lg:w-1/2 relative"
+//             >
+//               <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/20 to-transparent rounded-3xl opacity-75" />
+//               <img
+//                 src={pharmacyImg}
+//                 alt="AI Pharmacy Innovation"
+//                 className="w-full h-auto max-h-[50vh] sm:max-h-[60vh] object-cover rounded-3xl shadow-2xl"
+//               />
+//             </motion.div>
+//           </div>
+//         </ScrollStackItem>
+//       </ScrollStack>
+//       <ContactModal isOpen={isOpen} closeModal={closeModal} />
+//     </section>
+//   );
+// }
 
 
 
@@ -445,40 +636,262 @@
 
 
 
+import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform, AnimatePresence, useSpring } from "framer-motion";
+import ContactModal from "./contact";
+import { useModal } from "./contact";
+import ScrollStack, { ScrollStackItem } from './design/stack';
+import { brainwave } from "./../assets";
+import {
+  Hospital, Stethoscope, Brain, Ambulance, Pill, Syringe
+} from 'lucide-react';
+import { PersonSimpleRun, Hand } from "phosphor-react";
+import AllInOneHero from "./all";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTooth } from "@fortawesome/free-solid-svg-icons";
+
+// Create a wrapper so Tooth behaves like a React component
+const Tooth = (props) => <FontAwesomeIcon icon={faTooth} {...props} />;
+const IMAGES = {
+  doctor: "https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1280&dpr=2",
+  pharmacy: "https://images.pexels.com/photos/3873146/pexels-photo-3873146.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1280&dpr=2"
+};
+
+
+// Assume you are importing icons like this:
+// import { Hospital, Stethoscope, Tooth, Heart, Brain, Syringe, Ambulance, Pharmacy, PlusCircle } from 'lucide-react';
+// ⚠️ IMPORTANT: These gradient classes (e.g., 'bg-gradient-to-br from-red-600/20 via-red-500/10 to-transparent')
+// must be available in your Tailwind CSS configuration (e.g., main CSS file)
+
+const services = [
+  {
+    id: 'hosp', name: 'Hospitals', icon: Hospital,
+    gradient: 'bg-gradient-to-br from-red-600/20 via-red-500/10 to-transparent',
+    iconColor: 'text-red-400', glow: 'shadow-[0_0_15px_rgba(239,68,68,0.7)]'
+  },
+  {
+    id: 'clin', name: 'Clinics', icon: Stethoscope,
+    gradient: 'bg-gradient-to-br from-cyan-600/20 via-blue-500/10 to-transparent',
+    iconColor: 'text-blue-400', glow: 'shadow-[0_0_15px_rgba(59,130,246,0.7)]'
+  },
+  {
+    id: 'dent', name: 'Dental Care', icon: Tooth,
+    gradient: 'bg-gradient-to-br from-cyan-600/20 via-teal-500/10 to-transparent',
+    iconColor: 'text-teal-400', glow: 'shadow-[0_0_15px_rgba(20,184,166,0.7)]'
+  },
+  {
+    id: 'derm', name: 'Dermatology', icon: Hand,
+    gradient: 'bg-gradient-to-br from-white via-yellow-500/10 to-transparent',
+    iconColor: 'text-yellow-400', glow: 'shadow-[0_0_15px_rgba(245,158,11,0.7)]'
+  },
+  {
+    id: 'psyc', name: 'Psychiatry', icon: Brain,
+    gradient: 'bg-gradient-to-br from-purple-600/20 via-purple-500/10 to-transparent',
+    iconColor: 'text-purple-400', glow: 'shadow-[0_0_15px_rgba(168,85,247,0.7)]'
+  },
+  {
+    id: 'physio', name: 'Physiotherapy', icon: PersonSimpleRun,
+    gradient: 'bg-gradient-to-br from-green-600/20 via-green-500/10 to-transparent',
+    iconColor: 'text-green-400', glow: 'shadow-[0_0_15px_rgba(34,197,94,0.7)]'
+  },
+  {
+    id: 'ems', name: 'Emergency Centers', icon: Ambulance,
+    gradient: 'bg-gradient-to-br from-pink-700/20 via-pink-600/10 to-transparent',
+    iconColor: 'text-pink-400', glow: 'shadow-[0_0_15px_rgba(219,39,119,0.7)]'
+  },
+  {
+    id: 'pharm', name: 'Pharmacies', icon: Pill,
+    gradient: 'bg-gradient-to-br from-cyan-600/20 via-cyan-500/10 to-transparent',
+    iconColor: 'text-cyan-400', glow: 'shadow-[0_0_15px_rgba(6,182,212,0.7)]'
+  },
+  {
+    id: 'med', name: 'Medical Services', icon: Syringe,
+    gradient: 'bg-gradient-to-br from-indigo-600/20 via-indigo-500/10 to-transparent',
+    iconColor: 'text-indigo-400', glow: 'shadow-[0_0_15px_rgba(99,102,241,0.7)]'
+  },
+];
+
+// Re-using IconResolver
+const IconResolver = ({ IconComponent, className }) => {
+  if (!IconComponent) return null;
+  return <IconComponent className={className} />;
+};
 
 
 
+const MarqueeItem = ({ service, index }) => (
+  <motion.div
+    initial={{ y: 50, opacity: 0, rotateZ: 0 }}
+    animate={{ y: 0, opacity: 1 }}
+    transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+
+    // --- ULTRA HOVER EFFECT ---
+    whileHover={{
+      scale: 1.05,
+      rotateY: 5, // Subtle 3D tilt
+      rotateX: 5,
+      boxShadow: `0 25px 50px -12px rgba(0, 0, 0, 0.5), ${service.glow.replace('shadow-[', '').replace(']', '')}`, // Deep shadow + color glow
+      transition: { duration: 0.3 }
+    }}
+
+    // --- ULTRA CARD STYLES ---
+    className={`flex items-center justify-center p-6 w-64 min-w-[16rem] h-36 
+                   rounded-3xl cursor-pointer transform-gpu overflow-hidden relative 
+                   ${service.gradient} 
+                   border border-white/20 dark:border-gray-700/50 
+                   shadow-lg transition-all duration-300 backdrop-blur-md`}
+  >
+
+    {/* Decorative Inner Ring (Pulsating Glow Layer) */}
+    <motion.div
+      initial={{ scale: 0.8 }}
+      animate={{ scale: 1.2, opacity: [0.2, 0.4, 0.2] }}
+      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      className={`absolute h-40 w-40 rounded-full ${service.iconColor.replace('text-', 'bg-')}/50 blur-xl opacity-30`}
+    />
+
+    {/* Content Container (z-index ensures it's above the decorative layer) */}
+    <div className="flex flex-col items-center z-10 text-center">
+
+      {/* The Icon & Circle Wrapper */}
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 12, delay: index * 0.1 + 0.3 }}
+        className={`flex items-center justify-center h-16 w-16 rounded-full 
+                           ${service.iconColor.replace('text-', 'bg-')}/20 
+                           border border-white/30 dark:border-gray-600/30 
+                           animate-icon-pulse`}
+      >
+        <IconResolver
+          IconComponent={service.icon}
+          className={`text-3xl ${service.iconColor}`}
+        />
+      </motion.div>
+
+      {/* Service Name */}
+      <p className="mt-4 text-xl font-extrabold tracking-tight text-white dark:text-gray-100 whitespace-nowrap text-shadow-md">
+        {service.name}
+      </p>
+    </div>
+  </motion.div>
+);
+
+
+const ServiceMarquee = () => {
+  // ... (ServiceMarquee component remains mostly the same, just calling the new MarqueeItem)
+  const doubledServices = [...services, ...services];
+
+  return (
+    <div className="relative w-full overflow-hidden py-10 [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)] dark:[mask-image:linear-gradient(to_right,transparent,rgb(17 24 39 / 1)_20%,rgb(17 24 39 / 1)_80%,transparent)]">
+      <div className="flex w-fit marquee-track space-x-8 lg:space-x-12">
+        {doubledServices.map((service, index) => (
+          <MarqueeItem key={`${service.id}-${index}`} service={service} index={index} />
+        ))}
+      </div>
+
+      {/* Injected CSS for Ultra Animations */}
+      <style jsx global>{`
+                .marquee-track {
+                    animation: marquee 60s linear infinite; 
+                    /* Preserve-3D enables smooth 3D transform animations */
+                    transform-style: preserve-3d;
+                }
+                .marquee-track:hover {
+                    animation-play-state: paused; 
+                }
+                @keyframes marquee {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+                
+                /* Icon Pulse Keyframe for Ultra Look */
+                @keyframes icon-pulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                }
+                .animate-icon-pulse {
+                    animation: icon-pulse 2s ease-in-out infinite;
+                }
+            `}</style>
+    </div>
+  );
+};
 
 
 
+const containerVariants = {
+  initial: { opacity: 0, y: 60 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 1.2,
+      ease: [0.22, 1, 0.36, 1],
+      staggerChildren: 0.15
+    }
+  },
+};
+
+const itemVariants = {
+  initial: { opacity: 0, y: 30 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1]
+    }
+  }
+};
+
+const imageVariants = {
+  initial: { opacity: 0, scale: 0.92, rotateY: -8 },
+  animate: {
+    opacity: 1,
+    scale: 1,
+    rotateY: 0,
+    transition: {
+      duration: 1.4,
+      ease: [0.22, 1, 0.36, 1]
+    }
+  }
+};
+
+export default function UltraHeroSwitcher() {
+  const [showModal, setShowModal] = useState(false);
 
 
-
-
-
-
-
-
-
-
-
-
-import React, { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import ContactModal, { useModal } from "./contact";
-import doc from "../assets/hero/robot.png";
-import ph from "../assets/hero/curve.png";
-export default function UltraHeroSwitcher({ pharmacyImg, doctorImg }) {
+  const openModals = () => setShowModal(true);
+  const closeModals = () => setShowModal(false);
   const [view, setView] = useState("health");
   const switchingRef = useRef(false);
   const lastInteractionTime = useRef(0);
   const autoTimerRef = useRef(null);
   const { isOpen, openModal, closeModal } = useModal();
+  const [imageLoaded, setImageLoaded] = useState({ health: false, pharmacy: false });
+  const getDelay = (view) => {
+    const baseDelay = 5000;     // 10 seconds
+    const allInOneDelay = 300000; // 5 minutes
+    return view === "all-in-one" ? allInOneDelay : baseDelay;
+  };
 
   const prefersReducedMotion =
     typeof window !== "undefined" &&
     window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  useEffect(() => {
+    const img1 = new Image();
+    const img2 = new Image();
+    img1.src = IMAGES.doctor;
+    img2.src = IMAGES.pharmacy;
+    img1.onload = () => setImageLoaded(prev => ({ ...prev, health: true }));
+    img2.onload = () => setImageLoaded(prev => ({ ...prev, pharmacy: true }));
+  }, []);
+
+
 
   const triggerSwitch = (nextView) => {
     if (switchingRef.current || view === nextView) return;
@@ -487,327 +900,367 @@ export default function UltraHeroSwitcher({ pharmacyImg, doctorImg }) {
     lastInteractionTime.current = Date.now();
     setTimeout(() => {
       switchingRef.current = false;
-    }, 1200); // short lock for responsiveness
+    }, 800);
   };
 
-  // Scroll / wheel handler with hold requirement
-  // Scroll / wheel handler with big delay
   useEffect(() => {
     const onWheel = (e) => {
       const now = Date.now();
-      if (now - lastInteractionTime.current < 8000) return; // 8s delay
-      if (e.deltaY > 30) {
-        triggerSwitch(view === "health" ? "pharmacy" : "health");
+      if (now - lastInteractionTime.current < getDelay(view)) return;
+      if (Math.abs(e.deltaY) > 30) {
+        const nextView =
+          view === "health"
+            ? "pharmacy"
+            : view === "pharmacy"
+              ? "all-in-one"
+              : "health";
+        triggerSwitch(nextView);
       }
     };
     window.addEventListener("wheel", onWheel, { passive: true });
     return () => window.removeEventListener("wheel", onWheel);
   }, [view]);
 
-  // Touch swipe handler with big delay
+
   useEffect(() => {
     let startY = null;
+
     const onTouchStart = (e) => {
       startY = e.touches[0]?.clientY ?? null;
     };
+
     const onTouchEnd = (e) => {
       if (startY == null) return;
       const delta = startY - (e.changedTouches[0]?.clientY ?? 0);
-      if (Math.abs(delta) > 50 && Date.now() - lastInteractionTime.current >= 8000) {
-        triggerSwitch(view === "health" ? "pharmacy" : "health");
+      if (
+        Math.abs(delta) > 60 &&
+        Date.now() - lastInteractionTime.current >= getDelay(view)
+      ) {
+        const nextView =
+          view === "health"
+            ? "pharmacy"
+            : view === "pharmacy"
+              ? "all-in-one"
+              : "health";
+        triggerSwitch(nextView);
       }
       startY = null;
     };
+
     window.addEventListener("touchstart", onTouchStart, { passive: true });
     window.addEventListener("touchend", onTouchEnd, { passive: true });
+
     return () => {
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchend", onTouchEnd);
     };
   }, [view]);
-
-  // Keyboard handler with big delay
   useEffect(() => {
     const onKey = (e) => {
-      if (Date.now() - lastInteractionTime.current < 8000) return; // 8s delay
-      if (["ArrowDown", "PageDown", "ArrowUp", "PageUp"].includes(e.key)) {
-        triggerSwitch(view === "health" ? "pharmacy" : "health");
+      if (Date.now() - lastInteractionTime.current < getDelay(view)) return;
+
+      if (["ArrowDown", "PageDown"].includes(e.key)) {
+        const nextView =
+          view === "health"
+            ? "pharmacy"
+            : view === "pharmacy"
+              ? "all-in-one"
+              : "health";
+        triggerSwitch(nextView);
+      } else if (["ArrowUp", "PageUp"].includes(e.key)) {
+        const nextView =
+          view === "all-in-one"
+            ? "pharmacy"
+            : view === "pharmacy"
+              ? "health"
+              : "all-in-one";
+        triggerSwitch(nextView);
       }
     };
+
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [view]);
 
-  // Auto-switch back and forth
+
+  // NEW Auto-Timer Logic
   useEffect(() => {
     if (prefersReducedMotion) return;
-    autoTimerRef.current = setInterval(() => {
-      if (Date.now() - lastInteractionTime.current >= 10000) {
-        triggerSwitch(view === "health" ? "pharmacy" : "health");
+
+    // Define the base delay. All-in-one gets a longer hold.
+    const baseDelay = 10000; // 10 seconds for Health/Pharmacy views
+    const allInOneDelay = 300000; // 5 minutes
+
+    const delay = view === "all-in-one" ? allInOneDelay : baseDelay;
+
+    const autoSwitch = () => {
+      if (Date.now() - lastInteractionTime.current >= delay) {
+        const nextView = view === "health"
+          ? "pharmacy"
+          : view === "pharmacy"
+            ? "all-in-one"
+            : "health";
+        triggerSwitch(nextView);
       }
-    }, 10000);
-    return () => {
-      if (autoTimerRef.current) clearInterval(autoTimerRef.current);
     };
-  }, [view, prefersReducedMotion]);
-  const containerVariants = {
-    initial: { opacity: 0, y: 80, scale: 0.95 },
-    animate: { opacity: 1, y: 0, scale: 1, transition: { duration: 1.8, ease: [0.32, 0.02, 0.24, 1] } },
-  };
 
-  const cardVariants = {
-    enterFromTop: { opacity: 0, y: -100, scale: 0.9, rotate: -5 },
-    enter: { opacity: 1, y: 0, scale: 1, rotate: 0, transition: { duration: 1.5, ease: [0.32, 0.02, 0.24, 1] } },
-    exit: { opacity: 0, y: 100, scale: 0.92, rotate: 5, transition: { duration: 1.2, ease: [0.32, 0.02, 0.24, 1] } },
-  };
+    // Use setTimeout to run the check and schedule the next check
+    // This allows the delay value to be dynamically determined by the 'view'
+    autoTimerRef.current = setTimeout(() => {
+      autoSwitch();
+      // Since the timeout only runs once, we clear it and let the effect re-run
+      // when `view` changes, which schedules the next switch.
+    }, delay);
 
-  const bgStyle = view === "health"
-    ? { background: "linear-gradient(135deg, #f3f7fa, #e0eaf5, #c1d9f1)", minHeight: "100vh" }
-    : { background: "linear-gradient(135deg, #e6f6f1, #c2e8d8, #a3d9c1)", minHeight: "100vh" };
-
-  const textColor = view === "health" ? "text-blue-900" : "text-teal-900";
-
+    // Cleanup function
+    return () => {
+      if (autoTimerRef.current) clearTimeout(autoTimerRef.current);
+    };
+  }, [view, prefersReducedMotion, triggerSwitch]); // Ensure dependencies are correct
   return (
-    <section
-      aria-label="Hero showcase"
-      className="relative isolate w-full overflow-hidden"
-      style={bgStyle}
-    >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
-        style={{
-          background: view === "health"
-            ? "radial-gradient(circle at 15% 15%, rgba(193, 217, 241, 0.15), transparent 60%), radial-gradient(circle at 85% 85%, rgba(224, 234, 245, 0.15), transparent 60%)"
-            : "radial-gradient(circle at 15% 15%, rgba(163, 217, 193, 0.15), transparent 60%), radial-gradient(circle at 85% 85%, rgba(194, 232, 216, 0.15), transparent 60%)",
-          animation: "glow 25s infinite",
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-20"
-        style={{
-          background: "url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='20' fill='rgba(0, 255, 255, 0.05)'/%3E%3Ccircle cx='30' cy='70' r='10' fill='rgba(0, 255, 0, 0.03)'/%3E%3Ccircle cx='70' cy='30' r='15' fill='rgba(0, 191, 255, 0.04)'/%3E%3C/svg%3E')",
-          animation: "float 15s infinite linear",
-        }}
-      />
-      <style>
-        {`
-          @keyframes glow {
-            0% { opacity: 0.2; }
-            50% { opacity: 0.4; }
-            100% { opacity: 0.2; }
-          }
-          @keyframes float {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(20px, 20px); }
-            100% { transform: translate(0, 0); }
-          }
-        `}
-      </style>
+    <div className=" bg-gradient-to-b from-slate-50 to-cyan-50">
+      <section
+        aria-label="Hero showcase"
+        className="relative isolate  w-full min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-cyan-50/40 to-teal-50/60"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(6,182,212,0.08),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(20,184,166,0.06),transparent_50%)]" />
 
-      <div className="absolute top-12 left-12 z-20 flex items-center gap-8">
-        <div className="rounded-full bg-white/40 px-6 py-4 text-xl font-extrabold backdrop-blur-lg shadow-2xl" style={{ color: view === "health" ? "#1e40af" : "#047857" }}>
-          {view === "health" ? "Medical Medrox" : "Pharmacy Medrox"}
-        </div>
-      </div>
-
-      <div className="relative z-10 mx-auto max-w-10xl px-16 py-40">
-        <AnimatePresence mode="wait">
-          {view === "health" && (
-            <motion.div
-              key="health"
-              variants={containerVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="rounded-4xl overflow-hidden shadow-3xl bg-white/20 backdrop-blur-xl"
-            >
-              <div className="hidden md:grid grid-cols-2 items-center gap-20">
+        <ScrollStack className="w-full min-h-screen">
+          <AnimatePresence mode="wait">
+            {view === "health" && (
+              <ScrollStackItem key="health" itemClassName="bg-gradient-to-br from-cyan-50 to-blue-50">
                 <motion.div
-                  initial={{ opacity: 0, x: -200, rotate: -10 }}
-                  animate={{ opacity: 1, x: 0, rotate: 0 }}
-                  transition={{ duration: 1.8, ease: [0.32, 0.02, 0.24, 1] }}
-                  className="text-center lg:text-left"
+                  variants={containerVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit={{ opacity: 0, y: -40, transition: { duration: 0.5 } }}
+                  className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12 h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
                 >
-                  <p className={`rounded-full bg-blue-100/30 px-8 py-4 inline-block text-lg font-medium ${textColor} tracking-wider`}>Medrox MEDICAL BREAKTHROUGH</p>
-                  <h1 className={`text-4xl md:text-8xl font-extrabold mt-10 ${textColor} leading-snug`}>
-                    Revolutionizing Health Care
-                  </h1>
-                  <p className={`text-3xl md:text-4xl mt-8 max-w-4xl ${textColor} opacity-90`}>
-                    The first, most powerful healthcare platform for health sectors—built for specialists and staff—patient diagnosis, appointments, history, operations—30+ approved features.
-                  </p>
-
-                  <div className="mt-12 flex justify-center lg:justify-start gap-10">
-                    <button onClick={openModal} className="bg-blue-800 text-white px-12 py-6 rounded-full font-extrabold shadow-3xl hover:bg-blue-700 transition-all duration-400 hover:scale-115">
-                      Explore Medrox
-                    </button>
-                  </div>
-                </motion.div>
-                <div className="relative">
                   <motion.div
-                    initial={{ scale: 0.8, opacity: 0, rotate: 5 }}
-                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                    transition={{ duration: 1.8, ease: [0.32, 0.02, 0.24, 1] }}
-                    className="rounded-4xl overflow-hidden shadow-4xl"
+                    variants={itemVariants}
+                    className="flex-1 text-center lg:text-left space-y-4 sm:space-y-6 lg:space-y-8 z-10"
                   >
-                    <img src={doc} alt="AI Medical Innovation" className="w-full h-[700px] object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-blue-900/15 to-transparent" />
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-          {view === "pharmacy" && (
-            <motion.div
-              key="pharmacy"
-              variants={containerVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className=" hidden md:grid  gap-20 items-center rounded-4xl overflow-hidden shadow-3xl bg-white/20 backdrop-blur-xl"
-            >
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                    >
+                      <span className="inline-block rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-cyan-900 tracking-wider border border-cyan-200/50 shadow-sm">
+                        MEDROX MEDICAL BREAKTHROUGH
+                      </span>
+                    </motion.div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-20">
+                    <motion.h1
+                      variants={itemVariants}
+                      className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-cyan-900 via-blue-800 to-teal-900 leading-[1.1] tracking-tight"
+                    >
+                      Revolutionizing
+                      <br />
+                      <span className="text-cyan-600">Health Care</span>
+                    </motion.h1>
+
+                    <motion.p
+                      variants={itemVariants}
+                      className="text-sm sm:text-base lg:text-lg xl:text-xl text-slate-700 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+                    >
+                      The most powerful healthcare platform built specifically for specialists and medical staff. Medrox supports the full workflow of 60+ specializations, digitizing everything from patient diagnosis and appointments  and full  operations. It features over 30 approved, cutting-edge tools within one effortless ecosystem.                    </motion.p>
+
+                    <motion.button
+                      variants={itemVariants}
+                      onClick={openModal}
+                      className="group relative inline-flex items-center justify-center px-6 sm:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 text-sm sm:text-base lg:text-lg font-bold text-white bg-gradient-to-r from-cyan-600 via-blue-600 to-cyan-700 rounded-full shadow-lg shadow-cyan-500/30 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/40 hover:scale-105 active:scale-95"
+                      whileHover={{ y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      aria-label="Explore Medrox platform"
+                    >
+                      <span className="relative z-10">Explore Medrox</span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </motion.button>
+                  </motion.div>
+
+                  <motion.div
+                    variants={imageVariants}
+                    className="flex-1 relative w-full max-w-xl lg:max-w-none"
+                    style={{ perspective: "1200px" }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 rounded-3xl blur-3xl" />
+                    <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl shadow-cyan-900/20 border border-white/50 backdrop-blur-sm">
+                      {!imageLoaded.health && (
+                        <div className="absolute inset-0 bg-gradient-to-br from-cyan-100 to-blue-100 animate-pulse" />
+                      )}
+                      <img
+                        src={IMAGES.doctor}
+                        alt="AI Medical Innovation"
+                        className="w-full h-auto aspect-[4/3] object-cover transition-transform duration-700 hover:scale-105"
+                        loading="eager"
+                        fetchPriority="high"
+                      />
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </ScrollStackItem>
+            )}
+
+            {view === "pharmacy" && (
+              <ScrollStackItem key="pharmacy" itemClassName="bg-gradient-to-br from-teal-50 to-emerald-50">
                 <motion.div
-                  initial={{ opacity: 0, x: -200, rotate: -10 }}
-                  animate={{ opacity: 1, x: 0, rotate: 0 }}
-                  transition={{ duration: 1.8, ease: [0.32, 0.02, 0.24, 1] }}
-                  className="text-center lg:text-left"
+                  variants={containerVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit={{ opacity: 0, y: -40, transition: { duration: 0.5 } }}
+                  className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12 h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
                 >
-                  <p className={`rounded-full bg-teal-100/30 px-8 py-4 inline-block text-lg font-medium ${textColor} tracking-wider`}>Medrox PHARMACY EVOLUTION</p>
-                  <h1 className={`text-4xl md:text-8xl font-extrabold mt-10 ${textColor} leading-snug`}>
-                    Transforming Pharmacy Mangment
-                  </h1>
-                  <p className={`text-2xl md:text-3xl mt-8 max-w-4xl ${textColor} opacity-90`}>
-                    World’s first, fastest, and easiest all‑in‑one pharmacy platform — from inventory, sales & POS to prescriptions to customer care & More.
-                  </p>
-
-                  <div className="mt-12 flex justify-center lg:justify-start gap-10">
-                    <button
-
-                      onClick={openModal} className="bg-green-800 text-white px-12 py-6 rounded-full font-extrabold shadow-3xl hover:bg-green-700 transition-all duration-400 hover:scale-115">
-                      Discover
-                    </button>
-                  </div>
-                </motion.div>
-                <div className="relative">
                   <motion.div
-                    initial={{ scale: 0.8, opacity: 0, rotate: 5 }}
-                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                    transition={{ duration: 1.8, ease: [0.32, 0.02, 0.24, 1] }}
-                    className="rounded-4xl overflow-hidden shadow-4xl"
+                    variants={itemVariants}
+                    className="flex-1 text-center lg:text-left space-y-4 sm:space-y-6 lg:space-y-8 z-10"
                   >
-                    <img src={ph} alt="AI Pharmacy Innovation" className="w-full h-[700px] object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-green-900/15 to-transparent" />
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                    >
+                      <span className="inline-block rounded-full bg-gradient-to-r from-teal-500/20 to-emerald-500/20 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-teal-900 tracking-wider border border-teal-200/50 shadow-sm">
+                        MEDROX PHARMACY EVOLUTION
+                      </span>
+                    </motion.div>
+
+                    <motion.h1
+                      variants={itemVariants}
+                      className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-teal-900 via-emerald-800 to-cyan-900 leading-[1.1] tracking-tight"
+                    >
+                      Transforming
+                      <br />
+                      <span className="text-teal-600">Pharmacy Management</span>
+                    </motion.h1>
+
+                    <motion.p
+                      variants={itemVariants}
+                      className="text-sm sm:text-base lg:text-lg xl:text-xl text-slate-700 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+                    >
+                      World's first, fastest, and easiest all‑in‑one pharmacy platform — from inventory, sales & POS to prescriptions to customer care & More.
+                    </motion.p>
+
+                    <motion.button
+                      variants={itemVariants}
+                      onClick={openModal}
+                      className="group relative inline-flex items-center justify-center px-6 sm:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 text-sm sm:text-base lg:text-lg font-bold text-white bg-gradient-to-r from-teal-600 via-emerald-600 to-teal-700 rounded-full shadow-lg shadow-teal-500/30 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-teal-500/40 hover:scale-105 active:scale-95"
+                      whileHover={{ y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      aria-label="Discover Medrox pharmacy platform"
+                    >
+                      <span className="relative z-10">Discover</span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </motion.button>
                   </motion.div>
-                </div>
-              </div>
 
-            </motion.div>
-          )}
+                  <motion.div
+                    variants={imageVariants}
+                    className="flex-1 relative w-full max-w-xl lg:max-w-none"
+                    style={{ perspective: "1200px" }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-tr from-teal-500/20 to-emerald-500/20 rounded-3xl blur-3xl" />
+                    <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl shadow-teal-900/20 border border-white/50 backdrop-blur-sm">
+                      {!imageLoaded.pharmacy && (
+                        <div className="absolute inset-0 bg-gradient-to-br from-teal-100 to-emerald-100 animate-pulse" />
+                      )}
+                      <img
+                        src={IMAGES.pharmacy}
+                        alt="AI Pharmacy Innovation"
+                        className="w-full h-auto aspect-[4/3] object-cover transition-transform duration-700 hover:scale-105"
+                        loading="eager"
+                        fetchPriority="high"
+                      />
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </ScrollStackItem>
+            )}
 
-          {view === "health" && (
-            <motion.div
-              key="health-mobile"
-              variants={containerVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="md:hidden relative flex flex-col items-center text-center px-1 py-4 gap-6 overflow-hidden"
-            >
-              {/* Animated gradient background */}
-              <div className="absolute inset-0 animate-pulse-slow"></div>
+            {view === "all-in-one" && (
+              <ScrollStackItem key="all-in-one" itemClassName=" relative overflow-hidden w-full h-full">
 
-              {/* Image with floating effect */}
-              <motion.img
-                src={doc}
-                alt="AI Medical Innovation"
-                className="w-full object-contain h-full rounded-3xl shadow-2xl relative z-10"
-                initial={{ opacity: 0, y: 40, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 1 }}
-              />
-
-              {/* Tag */}
-              <p className="text-xs font-semibold uppercase tracking-wide text-blue-800 bg-blue-100/70 px-4 py-2 rounded-full shadow-sm relative z-10">
-                Medrox MEDICAL
-              </p>
-
-              {/* Heading with gradient text */}
-              <h1 className="text-4xl font-extrabold leading-snug bg-gradient-to-r from-blue-900 via-blue-700 to-cyan-600 bg-clip-text text-transparent relative z-10">
-                Revolutionizing Health Care
-              </h1>
-
-              {/* Description */}
-              <p className="text-base text-blue-800/80 leading-relaxed max-w-md relative z-10">
-                The first, most powerful healthcare platform for health sectors—built for specialists and staff—patient diagnosis, appointments, history, operations—30+ approved features.
-              </p>
-
-              {/* Premium button */}
-              <button
-                onClick={openModal}
-                className="w-full max-w-xs bg-gradient-to-r from-blue-700 to-cyan-600 text-white px-8 py-4 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 relative z-10"
-              >
-                Explore Medrox
-              </button>
-            </motion.div>
-          )}
-
-          {view === "pharmacy" && (
-            <motion.div
-              key="pharmacy-mobile"
-              variants={containerVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="md:hidden  w-full relative flex flex-col items-center text-center px-1 py-4 gap-6 overflow-hidden"
-            >
-              {/* Animated gradient background */}
-              <div className="absolute inset-0 animate-pulse-slow"></div>
-
-              {/* Image with floating effect */}
-              <motion.img
-                src={ph}
-                alt="AI Pharmacy Innovation"
-                className="w-full   object-contain rounded-3xl shadow-2xl relative z-10"
-                initial={{ opacity: 0, y: 40, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 1 }}
-              />
-
-              {/* Tag */}
-              <p className="text-xs font-semibold uppercase tracking-wide text-teal-800 bg-teal-100/70 px-4 py-2 rounded-full shadow-sm relative z-10">
-                Medrox PHARMACY
-              </p>
-
-              {/* Heading with gradient text */}
-              <h1 className="text-4xl font-extrabold leading-snug bg-gradient-to-r from-teal-900 via-green-700 to-emerald-500 bg-clip-text text-transparent relative z-10">
-                Transforming Pharmacy Management
-              </h1>
-
-              {/* Description */}
-              <p className="text-base text-teal-800/80 leading-relaxed max-w-md relative z-10">
-                World’s first, fastest, and easiest all‑in‑one pharmacy platform — from inventory, sales & POS to prescriptions to customer care & More.
-              </p>
-
-              {/* Premium button */}
-              <button
-                onClick={openModal}
-                className="w-full max-w-xs bg-gradient-to-r from-green-700 to-teal-500 text-white px-8 py-4 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 relative z-10"
-              >
-                Discover
-              </button>
-            </motion.div>
-          )}
+                <AllInOneHero openInfo={openModal} />
 
 
-        </AnimatePresence>
+              </ScrollStackItem>
+            )}
+          </AnimatePresence>
+        </ScrollStack>
 
-      </div>
-      <ContactModal isOpen={isOpen} closeModal={closeModal} />
-    </section>
+        <style dangerouslySetInnerHTML={{
+          __html: `
+          .scroll-stack-card:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 200, 150, 0.4) !important;
+            transition: box-shadow 0.3s ease;
+          }
+          .scroll-stack-inner {
+            background: linear-gradient(to bottom, rgba(0, 200, 150, 0.2), transparent 15%);
+            transform: translateZ(0);
+          }
+.all-in-one-card {
+  background: linear-gradient(
+    45deg,
+    #0f766e,   /* deep teal */
+    #F9F9F9,   /* darker cyan */
+    #E3F4F4    /* bold blue */
+     
   );
+  
+  box-shadow:
+    0 0 50px rgba(0, 200, 200, 0.7),   /* strong cyan glow */
+    0 0 30px rgba(0, 120, 150, 0.6),   /* inner teal depth */
+    0 0 70px rgba(0, 255, 255, 0.4);   /* outer aura */
+  border-radius: 1rem; /* optional: smooth corners */
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-
+.all-in-one-card:hover {
+  transform: scale(1.02);
+  box-shadow:
+    0 0 60px rgba(0, 255, 255, 0.85),
+    0 0 40px rgba(0, 180, 200, 0.7),
+    0 0 90px rgba(0, 255, 255, 0.5);
+}
+          .nav-dot-active {
+            background-color: #00ffcc !important;
+            box-shadow: 0 0 12px rgba(0, 255, 204, 0.8);
+          }
+          .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.4), transparent);
+            animation: particle-float 8s infinite ease-in-out;
+          }
+          @keyframes particle-float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; }
+            50% { transform: translateY(-30px) scale(1.3); opacity: 0.6; }
+          }
+          .beam {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(0, 255, 255, 0.7), transparent);
+            animation: beam-slide 5s infinite linear;
+          }
+          @keyframes beam-slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+          }
+          
+          .feature-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+          }
+          .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.3);
+          }
+        `
+        }} />
+        <ContactModal
+          isOpen={isOpen || showModal}          // works if either is true
+          closeModal={closeModal || closeModals} // uses whichever function is passed
+        />
+      </section>
+    </div>
+  );
+}

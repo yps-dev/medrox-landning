@@ -7,6 +7,13 @@ const Footer = () => {
     <Section crosses className="!px-0 !py-10 wave-container">
       <div className="container flex sm:justify-between justify-center items-center gap-10 max-sm:flex-col relative z-10">
         <p
+          className="text-cyan-700  lg:block animate-text-glow text-xl"
+
+        >
+          Medrox
+        </p>
+
+        <p
           className="caption text-n-4 lg:block animate-text-glow"
           style={{
             background: "linear-gradient(45deg, #26C6DA, #2ECC71, #00CED1)",
@@ -70,11 +77,7 @@ const Footer = () => {
               <stop offset="100%" style={{ stopColor: "rgba(0, 206, 209, 0.3)", stopOpacity: 1 }} />
             </linearGradient>
           </defs>
-          <path
-            className="wave-path"
-            d="M0,20 C200,0 400,40 600,20 S800,-20 1000,0 S1200,40 1440,20 V100 H0 Z"
-            fill="url(#footerWaveGradient)"
-          />
+
           <path
             className="wave-path wave-path-2"
             d="M0,30 C250,10 450,50 650,30 S850,-10 1050,10 S1250,50 1440,30 V100 H0 Z"

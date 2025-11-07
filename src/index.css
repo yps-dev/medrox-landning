@@ -40,12 +40,7 @@
     @apply font-sans text-n-1 text-base antialiased min-h-screen;
 
     /* Ambient multi-color gradient — brighter alphas */
-    background:
-      radial-gradient(1200px 800px at 12% 18%, rgb(45 212 191 / 0.26), transparent 60%),
-      radial-gradient(1000px 700px at 88% 28%, rgba(34, 211, 238, 0.24), transparent 65%),
-      radial-gradient(1200px 900px at 30% 82%, rgba(60, 169, 216, 0.22), transparent 60%),
-      /* slightly lighter base tones */
-      linear-gradient(120deg, #0b1822, #0d1d2a, #0f2738, #000000);
+
 
     background-size: 200% 200%, 220% 220%, 240% 240%, 400% 400%;
     background-position: 0% 50%, 100% 50%, 50% 0%, 0% 50%;
@@ -136,7 +131,40 @@
 
 
 
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
 
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.bg-gradient-animated {
+  background-size: 800% 800%;
+  animation: gradientShift 15s ease infinite;
+}
+
+.glow-pulse {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+  }
+}
 
 
 

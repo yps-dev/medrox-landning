@@ -34,14 +34,74 @@ const staggerContainer = {
 
 const Services = () => {
   return (
-    <Section id="how-to-use">
+    <Section id="Our-Edge" className="">
+
       <motion.div
-        className="container"
+        className="container mb-24 "
         variants={staggerContainer}
         initial="hidden"
         animate="show"
         exit="hidden"
       >
+        <div className="absolute inset-0 -z-10 pointer-events-none">
+          {/* Existing blur circles for ambience */}
+          <motion.div
+            animate={{
+              rotate: 360,
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{
+              rotate: { duration: 80, repeat: Infinity, ease: 'linear' },
+              opacity: { duration: 15, repeat: Infinity },
+            }}
+            className="absolute top-1/4 right-20 w-80 h-80 bg-gradient-to-br from-blue-200/40 to-cyan-200/20 rounded-full blur-3xl"
+          />
+
+          <motion.div
+            animate={{
+              rotate: -360,
+              opacity: [0.15, 0.35, 0.15],
+            }}
+            transition={{
+              rotate: { duration: 100, repeat: Infinity, ease: 'linear' },
+              opacity: { duration: 20, repeat: Infinity, delay: 3 },
+            }}
+            className="absolute bottom-1/4 left-20 w-96 h-96 bg-gradient-to-tl from-cyan-200/30 to-blue-200/20 rounded-full blur-3xl"
+          />
+
+          {/* New Wavy Background Animation */}
+          <motion.div
+            animate={{
+              // Move from left to right and slightly oscillate Y position for a wave effect
+              x: ['-100%', '100%'],
+              y: ['-10%', '0%', '10%', '0%', '-10%'],
+            }}
+            transition={{
+              x: { duration: 25, repeat: Infinity, ease: 'linear' },
+              y: { duration: 10, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="absolute top-1/2 left-0 w-[200%] h-32 transform -translate-y-1/2 
+                           bg-gradient-to-r from-transparent via-cyan-900/70 to-transparent 
+                           opacity-50 blur-xl"
+          />
+
+          <motion.div
+            animate={{
+              // Move from right to left and slightly oscillate Y position for a wave effect
+              x: ['100%', '-100%'],
+              y: ['10%', '0%', '-10%', '0%', '10%'],
+            }}
+            transition={{
+              x: { duration: 30, repeat: Infinity, ease: 'linear', delay: 5 },
+              y: { duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 1 },
+            }}
+            className="absolute top-1/2 left-0 w-[200%] h-24 transform -translate-y-1/2 
+                           bg-gradient-to-r from-transparent via-blue-100/80 to-transparent 
+                           opacity-40 blur-lg"
+          />
+
+        </div>
+
         <motion.div variants={fadeInUp}>
           <Heading
             title="Medrox Redefining Care "

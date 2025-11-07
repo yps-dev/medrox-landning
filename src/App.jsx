@@ -10,7 +10,7 @@ import Roadmap from "./components/Roadmap";
 import Services from "./components/Services";
 import AnimatedSection from "./components/design/AnimatedSection";
 import SignupModal from "./components/modal";
-import ThreeDMarquee from "./components/featur";
+import DomeGallery from "./components/featur";
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false };
@@ -126,30 +126,59 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <Header openModal={openModal} />
-      <div className="fixed inset-0 -z-10 pointer-events-none">
-        <canvas ref={canvasRef} id="orbCanvas" className="w-full h-full"></canvas>
+      <div className=" ">
+        <div
+
+          className=" bg-gradient-to-br from-slate-50 via-cyan-70 to-teal-600"
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(6,182,212,0.08),transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(20,184,166,0.06),transparent_50%)]" />
+
+
+          <Header openModal={openModal} />
+          <div className="fixed inset-0 -z-10 pointer-events-none">
+            <canvas ref={canvasRef} id="orbCanvas" className="w-full h-full"></canvas>
+          </div>
+
+          <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-x-hidden scroll-smooth">
+            <Hero />
+            <div className="gallery-wrapper">
+              <DomeGallery />
+            </div>
+
+            <style jsx>{`
+  .gallery-wrapper {
+    width: 100%;
+    height: auto;
+  }
+  @media (min-width: 1700px) {
+    .gallery-wrapper {
+      width: 180vw;
+      height: 100vh;
+    }
+  }
+`}</style>
+
+            <Benefits />
+            <AnimatedSection>
+              <Collaboration />
+            </AnimatedSection>
+
+
+            <AnimatedSection>
+              <Services />
+            </AnimatedSection>
+
+            <Pricing />
+            <AnimatedSection>
+              <Roadmap />
+            </AnimatedSection>
+            <Footer />
+          </div>
+          <SignupModal show={showModal} onClose={closeModal} />
+        </div>
       </div>
 
-      <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-x-hidden scroll-smooth">
-        <Hero />
-        <ThreeDMarquee />
-        <Benefits />
-        <AnimatedSection>
-          <Collaboration />
-        </AnimatedSection>
-
-        <AnimatedSection>
-          <Services />
-        </AnimatedSection>
-
-        <Pricing />
-        <AnimatedSection>
-          <Roadmap />
-        </AnimatedSection>
-        <Footer />
-      </div>
-      <SignupModal show={showModal} onClose={closeModal} />
     </ErrorBoundary>
   );
 };

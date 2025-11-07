@@ -40,21 +40,28 @@ const Header = ({ openModal }) => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-full z-50 border-b ${isDarkMode ? "bg-n-8 border-n-6" : "bg-white/90 border-gray-200"} lg:backdrop-blur-sm transition-all duration-500 wave-container sticky-header`}
+      className={`fixed top-0 left-0 w-full z-50 border-b ${isDarkMode ? " " : ""} lg:backdrop-blur-sm transition-all duration-500 bg-gradient-to-br from-slate-50 via-cyan-70 to-teal-600"  sticky-header h-28`}
     >
-      <div className="flex items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4 relative z-10">
+      <div className="flex items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4 relative z-10 ">
         <a className="block w-[12rem] xl:mr-8 flex flex-row items-center group" href="#hero">
           <img src={brainwave} className="rounded-3xl m-2" width={70} height={40} alt="Brainwave" />
           <h1
-            className="ml-3 text-3xl font-extrabold tracking-tight animate-logo-pulse"
-
+            className="ml-3 text-5xl font-extrabold tracking-tight 
+             bg-gradient-to-r from-cyan-400 via-teal-500 to-slate-600 
+             bg-clip-text text-transparent 
+             drop-shadow-[0_0_15px_rgba(6,182,212,0.5)] 
+             animate-logo-pulse"
           >
             Medrox
           </h1>
+
         </a>
 
         <nav
-          className={`${openNavigation ? "flex" : "hidden"} fixed top-[5rem] left-0 right-0 bottom-0 ${isDarkMode ? "bg-n-8" : "bg-white/95"} lg:static lg:flex lg:mx-auto lg:bg-transparent`}
+          className={`${openNavigation
+            ? "flex fixed inset-0 bg-black/70 backdrop-blur-md"
+            : "hidden"} 
+      lg:static lg:flex lg:mx-auto`}
         >
           <div className="relative z-2 flex flex-col items-center justify-center m-auto lg:flex-row">
             {navigation.map((item) => (
@@ -62,11 +69,25 @@ const Header = ({ openModal }) => {
                 key={item.id}
                 href={item.url}
                 onClick={handleClick}
-                className={`block relative font-code text-xl uppercase text-white transition-all duration-500 group hover:text-teal-600 ${item.onlyMobile ? "lg:hidden" : ""} px-6 py-6 md:py-8 lg:-mr-0.25 lg:text-sm lg:font-semibold ${item.url === pathname.hash ? "z-2 lg:text-teal-600" : isDarkMode ? "lg:text-n-1/50" : "lg:text-white"} lg:leading-5 lg:hover:text-teal-600 xl:px-12 animate-nav-float`}
+                className={`block relative font-sans uppercase 
+              text-lg xl:text-xl font-bold 
+              bg-gradient-to-r from-slate-800 via-cyan-700 to-teal-600 
+              bg-clip-text  
+              transition-all duration-500 group 
+              hover:drop-shadow-[0_0_12px_rgba(6,182,212,0.6)] 
+              ${item.onlyMobile ? "lg:hidden " : ""} 
+              px-6 py-6 md:py-8 lg:-mr-0.25 
+              ${item.url === pathname.hash ? "z-2 text-teal-600" : ""} 
+              lg:leading-6 xl:px-12 animate-nav-float`}
               >
                 <span className="relative z-10">{item.title}</span>
-                <span className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-sky-400 to-teal-500 opacity-0 group-hover:opacity-100 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></span>
+                <span className="absolute inset-x-0 bottom-0 h-1 
+                   bg-gradient-to-r from-sky-400 to-teal-500 
+                   opacity-0 group-hover:opacity-100 
+                   transform scale-x-0 group-hover:scale-x-100 
+                   transition-transform duration-500"></span>
               </a>
+
             ))}
           </div>
           <HamburgerMenu />
@@ -87,11 +108,11 @@ const Header = ({ openModal }) => {
         </Button>
 
         <Button
-          className="ml-auto lg:hidden px-3"
+          className="ml-auto lg:hidden px-3 "
           onClick={toggleNavigation}
-          aria-label={openNavigation ? "Close navigation menu" : "Open navigation menu"}
+          aria-label={openNavigation ? "Close navigation menu" : "Open navigation menu "}
         >
-          <MenuSvg openNavigation={openNavigation} className="animate-icon-spin" />
+          <MenuSvg openNavigation={openNavigation} className="animate-icon-spin bg-slate-700" />
         </Button>
       </div>
 
@@ -110,11 +131,7 @@ const Header = ({ openModal }) => {
       <style jsx>{`
         /* Wave and Background Animation */
        
-        .sticky-header {
-          position: sticky;
-          top: 0;
-        }
-       
+    
        
 
         /* Logo Animation */
@@ -129,7 +146,7 @@ const Header = ({ openModal }) => {
         .animate-logo-pulse::after {
           content: '';
           position: absolute;
-          top: 50%;
+          top: 70%;
           left: 50%;
           width: 0;
           height: 0;

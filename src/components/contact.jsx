@@ -31,7 +31,7 @@ const contactDetails = [
         href: "tel:+25949838254",
         icon: (
             <svg
-                className="w-8 h-8 text-cyan-600"
+                className="w-8 h-8 text-teal-800"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -49,7 +49,7 @@ const contactDetails = [
         href: "mailto:yordanossisay198@gmail.com",
         icon: (
             <svg
-                className="w-8 h-8 text-cyan-600"
+                className="w-8 h-8 text-red-600"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -68,7 +68,7 @@ const contactDetails = [
         href: "https://t.me/Madrox4544",
         icon: (
             <svg
-                className="w-8 h-8 text-cyan-600"
+                className="w-8 h-8 text-sky-700"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -86,15 +86,15 @@ const contactDetails = [
         href: "https://x.com/yordanossi21083",
         icon: (
             <svg
-                className="w-8 h-8 text-cyan-600"
+                className="w-8 h-8 text-black"
                 viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
             >
-                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
+                <path d="M18.244 2H21.5l-7.5 8.568L22 22h-6.656l-5.244-6.888L4.244 22H1l8.244-9.4L2 2h6.656l4.756 6.244L18.244 2z" />
             </svg>
+
         ),
     },
 ];
@@ -343,16 +343,22 @@ const ContactModal = ({ isOpen, closeModal }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md">
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-md overflow-y-auto">
             <div
                 ref={modalRef}
-                className="relative bg-white/95 rounded-3xl p-8 max-w-lg w-full mx-4 shadow-2xl overflow-hidden"
+                // --- FIX 1 & 2: Control Height and Enable Internal Scroll ---
+                className="relative bg-white/95 rounded-3xl p-8 max-w-7xl w-full mx-4 shadow-2xl 
+                           max-h-[70vh] overflow-y-auto" // Added max-h-[90vh] and overflow-y-auto
+                // -----------------------------------------------------------
                 role="dialog"
                 aria-labelledby="modal-title"
+            // The main content is now scrollable inside this box.
             >
+                {/* Removed overflow-hidden to allow internal scrolling */}
                 <canvas ref={canvasRef} className="absolute inset-0 z-0 opacity-20" />
                 <button
                     onClick={closeModal}
+                    // ... (rest of close button code)
                     className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-full p-2 z-10"
                     aria-label="Close modal"
                 >
@@ -378,39 +384,68 @@ const ContactModal = ({ isOpen, closeModal }) => {
                         Join the Medrox Revolution
                     </h2>
                     <p className="text-lg text-gray-600 mb-8 text-center">
-                        Connect with us to transform your Health Secter,Phrmacy and life  with cutting-edge Tech solutions.
+                        Connect with us to transform your Health Secter,Phrmacy and life with cutting-edge Tech solutions.
                     </p>
-                    <div className="grid grid-cols-1 gap-4 w-full">
-                        {contactDetails.map((item, index) => (
-                            <a
-                                key={item.id}
-                                href={item.href}
-                                ref={(el) => {
-                                    contactRefs.current[index] = el;
-                                    console.log(`Contact item ${item.type} ref assigned: `, el); // Debug log
-                                }}
-                                className="group relative flex items-center p-4 bg-cyan-50/50 rounded-xl hover:bg-cyan-100/70 transition-all duration-300 z-10"
-                                onClick={() => {
-                                    console.log(`Clicked contact item: ${item.type} `); // Debug log
-                                    gsap.to(contactRefs.current[index], {
-                                        scale: 0.95,
-                                        duration: 0.1,
-                                        yoyo: true,
-                                        repeat: 1,
-                                    });
-                                }}
-                            >
-                                <div className="w-8 h-8 mr-4 group-hover:scale-110 group-hover:drop-shadow-lg transition-all duration-300 animate-pulse-glow">
-                                    {item.icon}
-                                </div>
-                                <div>
-                                    <p className="text-lg font-semibold text-cyan-600">{item.type}</p>
-                                    <p className="text-base text-gray-600">{item.value}</p>
-                                </div>
-                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-100/10 to-teal-100/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            </a>
-                        ))}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+                        {contactDetails.map((item, index) => {
+                            const gradients = [
+                                "from-white via-green-50 to-emerald-50",
+                                "from-slate-50 via-blue-50 to-yellow-100",
+                                "from-white via-sky-50 to-cyan-50",
+                                "from-white via-slate-50 to-slate-100"
+                            ];
+                            const iconGradients = [
+                                "from-white to-emerald-100",
+                                "from-white to-red-100",
+                                "from-white to-cyan-100",
+                                "from-white to-black"
+                            ];
+
+                            return (
+                                <a
+                                    key={item.id}
+                                    href={item.href}
+                                    ref={(el) => (contactRefs.current[index] = el)}
+                                    onClick={() => {
+                                        gsap.to(contactRefs.current[index], {
+                                            scale: 0.95,
+                                            duration: 0.1,
+                                            yoyo: true,
+                                            repeat: 1,
+                                        });
+                                    }}
+                                    className={`group relative flex flex-col items-center justify-center 
+                        p-4 sm:p-5 rounded-xl shadow-md border border-gray-200/40 
+                        bg-gradient-to-br ${gradients[index]} 
+                        hover:shadow-xl hover:-translate-y-2 
+                        transition-all duration-500 ease-out cursor-pointer overflow-hidden`}
+                                >
+                                    {/* Icon bubble */}
+                                    <div className={`relative w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center 
+                            rounded-full bg-gradient-to-tr ${iconGradients[index]} 
+                            text-white shadow-md group-hover:scale-110 
+                            group-hover:shadow-lg transition-all duration-500`}>
+                                        {item.icon}
+                                    </div>
+
+                                    {/* Text */}
+                                    <div className="mt-2 sm:mt-3 text-center">
+                                        <p className="text-sm font-bold text-gray-800 group-hover:text-gray-900 transition-colors">
+                                            {item.type}
+                                        </p>
+                                        <p className="text-xs text-gray-600">{item.value}</p>
+                                    </div>
+
+                                    {/* Glow overlay */}
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 
+                            bg-gradient-to-r from-white/20 to-transparent 
+                            blur-xl transition-opacity duration-700"></div>
+                                </a>
+                            );
+                        })}
                     </div>
+
+
                     <button
                         ref={ctaButtonRef}
                         onClick={() => {
@@ -424,6 +459,7 @@ const ContactModal = ({ isOpen, closeModal }) => {
                     </button>
                 </div>
             </div>
+
             <style jsx>{`
     .backdrop - blur - md {
     backdrop - filter: blur(12px);

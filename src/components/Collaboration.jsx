@@ -1,858 +1,550 @@
-"use client";
-import React, { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { SplitText } from "gsap/SplitText";
-import Button from "./Button";
-import { LeftCurve, RightCurve } from "./design/Collaboration";
-import logo from "../assets/logo.png";
-import AutoScrollWhoIsItFor from './design/auto';
-// Register GSAP plugin
-gsap.registerPlugin(SplitText);
+import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Section from "./Section";
+import { brainwave } from '../assets';
 
-const collabText =
-  "Transform healthcare with Advance  automation and real-time connectivity for unparalleled efficiency.";
+import {
+  Stethoscope,
+  BarChart3,
+  Building2,
+  Users,
+  Pill,
+  FileText,
+  User,
+  Clock,
+} from 'lucide-react';
 
-const collabContent = [
+const wheelItems = [
   {
-    id: "0",
-    title: "Seamless Integration",
-    text: "Integrate to your Health sector in one click.",
+    id: '0',
+    title: 'PatientSync',
+    subtitle: 'Patient Records',
+    description:
+      'Sync patient records across all platforms instantly with real-time updates and secure cloud storage.',
+    icon: Stethoscope,
+    color: 'from-blue-500 to-cyan-500',
+    bgColor: 'bg-blue-50',
+    features: ['Instant Synchronization', 'Secure Storage', 'Real-time Updates', 'Cross-platform Access'],
   },
   {
-    id: "1",
-    title: "Real-Time Management",
-    text: "Manage appointments, data, and communications in real-time with secure cloud access.",
+    id: '1',
+    title: 'MedTrack',
+    subtitle: 'Inventory Management',
+    description:
+      'Track medical inventory and patient progress in real-time with intelligent automation and alerts.',
+    icon: BarChart3,
+    color: 'from-purple-500 to-pink-500',
+    bgColor: 'bg-purple-50',
+    features: ['Real-time Tracking', 'Smart Alerts', 'Analytics Dashboard', 'Automated Reports'],
   },
   {
-    id: "2",
-    title: "Advanced Analytics",
-    text: "Unlock predictive insights with machine learning to optimize care and operations.",
+    id: '2',
+    title: 'Hospital',
+    subtitle: 'Communication Hub',
+    description:
+      'Centralize all patient care and communications in one unified platform for seamless collaboration.',
+    icon: Building2,
+    color: 'from-green-500 to-emerald-500',
+    bgColor: 'bg-green-50',
+    features: ['Unified Platform', 'Full Autoamtion', 'Patient Portal', 'Secure work flows'],
+  },
+  {
+    id: '3',
+    title: 'CareFlow',
+    subtitle: 'Workflow Automation',
+    description:
+      'Streamline workflows for healthcare professionals with intelligent automation and task management.',
+    icon: Users,
+    color: 'from-orange-500 to-red-500',
+    bgColor: 'bg-orange-50',
+    features: ['Workflow Automation', 'Task Management', 'Team Coordination', 'Performance Tracking'],
+  },
+  {
+    id: '4',
+    title: 'ClinicPro',
+    subtitle: 'Clinic Management',
+    description:
+      'Manage clinic operations with ease using comprehensive tools for scheduling and resource management.',
+    icon: Building2,
+    color: 'from-indigo-500 to-purple-500',
+    bgColor: 'bg-indigo-50',
+    features: ['Appointment Scheduling', 'Resource Management', 'Staff Planning', 'Billing Integration'],
+  },
+  {
+    id: '5',
+    title: 'RxManager',
+    subtitle: 'Prescription Mgmt',
+    description:
+      'Optimize prescription and inventory management with intelligent forecasting and compliance tracking.',
+    icon: Pill,
+    color: 'from-teal-500 to-cyan-500',
+    bgColor: 'bg-teal-50',
+    features: ['Prescription Tracking', 'Inventory Forecasting', 'Compliance Monitoring', 'Drug Interactions'],
+  },
+  {
+    id: '6',
+    title: 'DocSync',
+    subtitle: 'Document Management',
+    description:
+      'Sync medical documents across systems with full version control and secure archival capabilities.',
+    icon: FileText,
+    color: 'from-pink-500 to-rose-500',
+    bgColor: 'bg-pink-50',
+    features: ['Version Control', 'Document Archival', 'OCR Processing', 'Secure Sharing'],
+  },
+  {
+    id: '7',
+    title: 'StaffEase',
+    subtitle: 'Staff Management',
+    description:
+      'Simplify staff scheduling and communication with intuitive tools for workforce management.',
+    icon: User,
+    color: 'from-cyan-500 to-blue-500',
+    bgColor: 'bg-cyan-50',
+    features: ['Smart Scheduling', 'Staff Directory', 'Performance Reviews', 'Communication Tools'],
   },
 ];
 
-const collabApps = [
-  {
-    id: "0",
-    title: "PatientSync",
-    description: "Sync patient records across platforms instantly.",
-    icon: (
-      <svg
-        className="w-8 h-8 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M12 2a10 10 0 0 0-10 10c0 2.76 1.12 5.26 2.93 7.07l4-4A6 6 0 0 1 18 12a10 10 0 0 0-10-10z" />
-        <path d="M12 22a10 10 0 0 0 10-10c0-2.76-1.12-5.26-2.93-7.07l-4 4a6 6 0 0 1-8 0l-4-4C3.12 6.74 2 9.24 2 12a10 10 0 0 0 10 10z" />
-      </svg>
-    ),
-    width: 32,
-    height: 32,
-  },
-  {
-    id: "1",
-    title: "MedTrack",
-    description: "Track medical inventory and patient progress in real-time.",
-    icon: (
-      <svg
-        className="w-8 h-8 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M3 3h18v18H3zM7 7h10v10H7z" />
-        <path d="M10 7v10m4-10v10" />
-      </svg>
-    ),
-    width: 32,
-    height: 32,
-  },
-  {
-    id: "2",
-    title: "HealthHub",
-    description: "Centralize patient care and communication.",
-    icon: (
-      <svg
-        className="w-8 h-8 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
-        <path d="M7 7h.01" />
-      </svg>
-    ),
-    width: 32,
-    height: 32,
-  },
-  {
-    id: "3",
-    title: "CareFlow",
-    description: "Streamline workflows for healthcare professionals.",
-    icon: (
-      <svg
-        className="w-8 h-8 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M12 2v20m10-10H2" />
-      </svg>
-    ),
-    width: 32,
-    height: 32,
-  },
-  {
-    id: "4",
-    title: "ClinicPro",
-    description: "Manage clinic operations with ease.",
-    icon: (
-      <svg
-        className="w-8 h-8 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M3 3h18v18H3z" />
-        <path d="M12 8v8m-4-4h8" />
-      </svg>
-    ),
-    width: 32,
-    height: 32,
-  },
-  {
-    id: "5",
-    title: "RxManager",
-    description: "Optimize prescription and inventory management.",
-    icon: (
-      <svg
-        className="w-8 h-8 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-        <path d="M3 6h18m-9 4v6m-3-3h6" />
-      </svg>
-    ),
-    width: 32,
-    height: 32,
-  },
-  {
-    id: "6",
-    title: "DocSync",
-    description: "Sync medical documents across systems.",
-    icon: (
-      <svg
-        className="w-8 h-8 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-        <polyline points="14 2 14 8 20 8" />
-      </svg>
-    ),
-    width: 32,
-    height: 32,
-  },
-  {
-    id: "7",
-    title: "StaffEase",
-    description: "Simplify staff scheduling and communication.",
-    icon: (
-      <svg
-        className="w-8 h-8 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    ),
-    width: 32,
-    height: 32,
-  },
-];
+// 1. **SUPER SLOW SCROLL:** Increased duration to 5.0 seconds.
+const ROTATION_DURATION = 5.0;
 
-const whoIsItFor = [
-  {
-    id: "0",
-    title: "Clinics & Health Centers",
-    description: "Streamline operations from dental to general practice with seamless patient management.",
-    icon: (
-      <svg
-        className="w-12 h-12 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16m14 0h-2m-2 0h-2m-2 0h-2m-2 0h-2" />
-        <path d="M12 3v18" />
-      </svg>
-    ),
-  },
-  {
-    id: "1",
-    title: "Pharmacies",
-    description: "Manage orders, customers, and stock in real-time with intelligent automation.",
-    icon: (
-      <svg
-        className="w-12 h-12 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-        <path d="M3 6h18m-9 4v6m-3-3h6" />
-      </svg>
-    ),
-  },
-  {
-    id: "2",
-    title: "Specialists",
-    description: "Track patients, schedules, and reports across facilities with ease.",
-    icon: (
-      <svg
-        className="w-12 h-12 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M12 2v20m10-10H2" />
-      </svg>
-    ),
-  },
-  {
-    id: "3",
-    title: "Receptionists & Staff",
-    description: "Handle appointments, patient intake, and records effortlessly.",
-    icon: (
-      <svg
-        className="w-12 h-12 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    ),
-  },
-  {
-    id: "4",
-    title: "Doctors",
-    description: "Access diagnostic suggestions and upload medical data seamlessly.",
-    icon: (
-      <svg
-        className="w-12 h-12 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M12 2a10 10 0 0 0-10 10c0 2.76 1.12 5.26 2.93 7.07l4-4A6 6 0 0 1 18 12a10 10 0 0 0-10-10z" />
-        <path d="M12 22a10 10 0 0 0 10-10c0-2.76-1.12-5.26-2.93-7.07l-4 4a6 6 0 0 1-8 0l-4-4C3.12 6.74 2 9.24 2 12a10 10 0 0 0 10 10z" />
-      </svg>
-    ),
-  },
-  {
-    id: "5",
-    title: "Owners & Admins",
-    description: "Gain insights, manage income, staff, and operations with advanced analytics.",
-    icon: (
-      <svg
-        className="w-12 h-12 text-cyan-600"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        aria-hidden="true"
-      >
-        <path d="M3 3h18v18H3zM7 7h10v10H7z" />
-        <path d="M10 7v10m4-10v10" />
-      </svg>
-    ),
-  },
-];
+export default function explore() {
+  const containerRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [rotation, setRotation] = useState(0);
+  const scrollVelocity = useRef(0);
+  // This ref controls the throttling, ensuring a slow scroll step.
+  const lastScrollTime = useRef(Date.now());
 
-const Collaboration = React.forwardRef(({ crosses, ...props }, ref) => {
-  const sectionRef = useRef(null);
-  const appsRef = useRef([]);
-  const contentRef = useRef(null);
-  const whoIsItForRefs = useRef([]);
-  const [hoveredApp, setHoveredApp] = useState(null);
-  const [hoveredCard, setHoveredCard] = useState(null);
+  const ANGLE_PER_ITEM = 360 / wheelItems.length;
 
-  // Scroll-based animation observer with debouncing
+  // Function to handle setting the active index and rotation
+  const handleNewIndex = (newIndex) => {
+    // 2. Click works: This function is the key and is used for both scroll and click.
+    const correctedIndex = (newIndex + wheelItems.length) % wheelItems.length;
+    setActiveIndex(correctedIndex);
+    const newRotation = correctedIndex * ANGLE_PER_ITEM;
+    setRotation(newRotation);
+  };
+
+  // Function for click event, using the same logic as scroll
+  const handleIconClick = (index) => {
+    handleNewIndex(index);
+  };
+
   useEffect(() => {
-    let timeoutId;
-    const section = sectionRef.current;
-    const content = contentRef.current;
-    const apps = appsRef.current.filter(Boolean);
-    const whoIsItForItems = whoIsItForRefs.current.filter(Boolean);
+    let scrollTimeout;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => {
-              entry.target.classList.add("animate-in");
-              entry.target.classList.remove("animate");
-              apps.forEach((app, index) => {
-                app.style.setProperty("--app-delay", `${index * 0.1}s`);
-                app.classList.add("animate-app-in");
-              });
-              whoIsItForItems.forEach((item, index) => {
-                gsap.fromTo(
-                  item,
-                  { opacity: 0, y: 50, scale: 0.95 },
-                  {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    duration: 0.8,
-                    ease: "power2.out",
-                    delay: index * 0.2,
-                  }
-                );
-              });
-              if (content) {
-                content.classList.add("animate-content-in");
-              }
-            }, 50);
-          } else {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => {
-              entry.target.classList.remove("animate-in");
-              apps.forEach((app) => app.classList.remove("animate-app-in"));
-              whoIsItForItems.forEach((item) => {
-                gsap.to(item, {
-                  opacity: 0,
-                  y: 50,
-                  scale: 0.95,
-                  duration: 0.5,
-                  ease: "power2.in",
-                });
-              });
-              if (content) {
+    const handleScroll = (event) => {
+      const now = Date.now();
+      const timeSinceLastScroll = now - lastScrollTime.current;
 
-                content.classList.remove("animate-content-in");
-              }
-            }, 50);
-          }
-        });
-      },
-      { threshold: 0.2, rootMargin: "0px 0px -10% 0px" }
-    );
+      // 1. **SUPER SLOW SCROLL:** Require a much longer delay between steps (1.5 seconds).
+      // This is the core change for super slow scrolling *rate*.
+      if (timeSinceLastScroll < 1500) {
+        return;
+      }
 
-    if (section) observer.observe(section);
-    return () => {
-      clearTimeout(timeoutId);
-      if (section) observer.unobserve(section);
+      lastScrollTime.current = now;
+
+      let nextIndex = activeIndex;
+
+      if (event.deltaY > 0) {
+        // Scroll down (next item)
+        nextIndex = (activeIndex + 1) % wheelItems.length;
+      } else if (event.deltaY < 0) {
+        // Scroll up (previous item)
+        nextIndex = (activeIndex - 1 + wheelItems.length) % wheelItems.length;
+      }
+
+      handleNewIndex(nextIndex);
+
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        scrollVelocity.current = 0;
+      }, 100);
     };
-  }, []);
 
-  // Interactive mouse movement for background with throttling
+    window.addEventListener('wheel', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('wheel', handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, [activeIndex, ANGLE_PER_ITEM]);
 
+  const currentItem = wheelItems[activeIndex];
 
   return (
-    <div
-      ref={sectionRef}
-      className="relative bg-gradient-to-b from-[#F5FCFF] to-[#E6F3FA] py-16"
-      {...props}
-      role="region"
-      aria-label="AI-Driven Healthcare Solutions"
-    >
-      <div className="absolute inset-0 -z-10 pointer-events-none bg-animation">
-        <div className="wave-layer wave-1"></div>
+    <Section id="explore">
+      <section
+        ref={containerRef}
+        className="relative w-full py-20 md:py-32 overflow-hidden bg-gradient-to-br from-white via-blue-50/30 to-white"
+      >
+        {/* 3. Premium Background Animation (Wave Cutting Across) */}
+        <div className="absolute inset-0 -z-10 pointer-events-none">
+          {/* Existing blur circles for ambience */}
+          <motion.div
+            animate={{
+              rotate: 360,
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{
+              rotate: { duration: 80, repeat: Infinity, ease: 'linear' },
+              opacity: { duration: 15, repeat: Infinity },
+            }}
+            className="absolute top-1/4 right-20 w-80 h-80 bg-gradient-to-br from-blue-200/40 to-cyan-200/20 rounded-full blur-3xl"
+          />
 
-        <div className="glow-orb"></div>
-      </div>
+          <motion.div
+            animate={{
+              rotate: -360,
+              opacity: [0.15, 0.35, 0.15],
+            }}
+            transition={{
+              rotate: { duration: 100, repeat: Infinity, ease: 'linear' },
+              opacity: { duration: 20, repeat: Infinity, delay: 3 },
+            }}
+            className="absolute bottom-1/4 left-20 w-96 h-96 bg-gradient-to-tl from-cyan-200/30 to-blue-200/20 rounded-full blur-3xl"
+          />
 
-      <div className="container lg:flex gap-12">
-        <div className="max-w-full" ref={contentRef}>
-          <h2 className="text-5xl md:text-7xl font-extrabold mb-10 md:mb-14 text-teal-900 tracking-tight animate-header-glow">
-            What Makes Medrox Different?
-          </h2>
+          {/* New Wavy Background Animation */}
+          <motion.div
+            animate={{
+              // Move from left to right and slightly oscillate Y position for a wave effect
+              x: ['-100%', '100%'],
+              y: ['-10%', '0%', '10%', '0%', '-10%'],
+            }}
+            transition={{
+              x: { duration: 25, repeat: Infinity, ease: 'linear' },
+              y: { duration: 10, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="absolute top-1/2 left-0 w-[200%] h-32 transform -translate-y-1/2 
+                           bg-gradient-to-r from-transparent via-cyan-900/70 to-transparent 
+                           opacity-50 blur-xl"
+          />
 
+          <motion.div
+            animate={{
+              // Move from right to left and slightly oscillate Y position for a wave effect
+              x: ['100%', '-100%'],
+              y: ['10%', '0%', '-10%', '0%', '10%'],
+            }}
+            transition={{
+              x: { duration: 30, repeat: Infinity, ease: 'linear', delay: 5 },
+              y: { duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 1 },
+            }}
+            className="absolute top-1/2 left-0 w-[200%] h-24 transform -translate-y-1/2 
+                           bg-gradient-to-r from-transparent via-blue-100/80 to-transparent 
+                           opacity-40 blur-lg"
+          />
 
-          <ul className="max-w-[22rem] mb-10 md:mb-14 gap-6">
-            {collabContent.map((item) => (
-              <li
-                className="animate-card relative bg-white mb-9 rounded-3xl p-6 shadow-xl hover:shadow-2xl hover:-translate-y-4 transition-all duration-500 group w-full"
-                key={item.id}
-                onMouseEnter={() => setHoveredCard(item.id)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <div className="flex items-center">
-                  <h6 className="text-2xl md:text-3xl font-bold text-cyan-500 animate-text-slide">{item.title}</h6>
-                </div>
-                {item.text && (
-                  <p className="text-base md:text-lg text-gray-600 mt-3 animate-text-flow delay-100">{item.text}</p>
-                )}
-                {hoveredCard === item.id && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-100/20 to-teal-100/20 rounded-3xl animate-glow"></div>
-                )}
-              </li>
-            ))}
-          </ul>
+        </div>
 
-          <Button
-            className="bg-cyan-600 hover:bg-cyan-700 text-white text-lg md:text-xl font-semibold py-4 px-10 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-400 animate-button-glow"
-            aria-label="Start exploring AI-driven healthcare solutions"
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
           >
-            Start Now
-          </Button>
-          <AutoScrollWhoIsItFor whoIsItFor={whoIsItFor} />
+            <h2 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight mb-6">
+              <span className="block text-gray-900">Explore Our</span>
+              <span className="block bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent">
+                Integrated Solutions
+              </span>
+            </h2>
+            <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto">
+              Discover each powerful tool in our ecosystem
+            </p>
+          </motion.div>
 
-          {/* New "Who Is It For?" Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-[600px] md:min-h-[700px] ">
+            {/* Left: Spinning Wheel */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="relative h-full flex items-center justify-center"
+            >
+              <div className="relative w-full max-w-lg aspect-square">
+                {/* Outer glow ring */}
+                {/* Outer glow ring */}
+                <motion.div
+                  animate={{
+                    rotate: 360,
+                    boxShadow: [
+                      '0 0 40px rgba(0, 188, 212, 0.3)',
+                      '0 0 60px rgba(0, 188, 212, 0.5)',
+                      '0 0 40px rgba(0, 188, 212, 0.3)',
+                    ],
+                  }}
+                  transition={{
+                    rotate: { duration: 20, repeat: Infinity, ease: 'linear' },
+                    boxShadow: { duration: 3, repeat: Infinity },
+                  }}
+                  className="absolute inset-0 rounded-full border-2 border-cyan-300/30 pointer-events-none"
+                />
 
-        </div>
 
-        <div
-          className="relative mt-8 lg:mt-0 
-             lg:ml-auto xl:w-[52rem] 
-             lg:right-96 lg:top-64 
-             sm:right-0 sm:top-0 
-             px-4 sm:px-6 md:px-8"
-        >
-          <p className="text-base text-gray-600 mb-12 max-w-[24rem] mx-auto animate-content text-center lg:text-left">
-            {collabText}
-          </p>
 
-          <div className="relative mx-auto w-[20rem] sm:w-[22rem] md:w-[25rem] aspect-square scale-75 md:scale-90 lg:scale-100">
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-100 to-teal-100 rounded-full opacity-20 animate-spin-slow"></div>
+                {/* Main wheel container */}
+                <motion.div
+                  animate={{ rotate: -rotation }}
+                  transition={{
+                    // 1. Slow down the scrolling transition (Duration increased to 5.0)
+                    rotate: { duration: ROTATION_DURATION, ease: "easeInOut" },
+                  }}
+                  className="relative w-full h-full"
+                >
+                  {/* Center circle */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <motion.div
+                      animate={{ scale: [1, 1.05, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      // Center circle made non-spinning: Remove the 'rotate: rotation' animation
+                      className="absolute w-32 h-32 rounded-full bg-gradient-to-br from-white via-blue-50 to-cyan-50 
+                     border-4 border-gradient-to-r from-blue-400 to-cyan-400 shadow-2xl flex items-center justify-center"
+                    >
+                      <motion.img
+                        src={brainwave}
+                        alt="Medrox Logo"
+                        className="mx-auto w-16 sm:w-10 lg:w-20"
+                        initial={{ opacity: 0, rotateX: 60, rotateY: 30 }}
+                        animate={{
+                          opacity: 1,
+                          rotateX: 0,
+                          rotateY: 0,
+                          y: [0, -8, 0], // floating
+                          scale: [1, 1.02, 1] // subtle breathing
+                        }}
+                        transition={{
+                          delay: 0.9,
+                          duration: 1.5,
+                          ease: [0.6, 0, 0.2, 1],
+                          y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                          scale: { duration: 6, repeat: Infinity, ease: "easeInOut" }
+                        }}
+                        style={{ transformStyle: "preserve-3d" }}
+                      />
+                    </motion.div>
+                  </div>
 
-            <div className="flex aspect-square w-full border-2 border-cyan-300 rounded-full shadow-lg">
-              <div className="w-[8rem] aspect-square m-auto p-1 bg-gradient-to-br from-cyan-400 to-teal-400 rounded-full">
-                <div className="flex items-center justify-center w-full h-full bg-white rounded-full shadow-inner">
-                  <img src={logo} width={80} height={80} alt="medrox" />
-                </div>
+                  {/* Wheel items */}
+                  {wheelItems.map((item, idx) => {
+                    const angle = (idx * 360) / wheelItems.length;
+                    const radius = window.innerWidth < 768 ? 160 : 190;
+
+                    const x = radius * Math.cos((angle * Math.PI) / 180);
+                    const y = radius * Math.sin((angle * Math.PI) / 180);
+                    const IconComponent = item.icon;
+                    const isActive = idx === activeIndex;
+
+                    return (
+                      <motion.div
+                        key={item.id}
+                        className="absolute w-24 h-24"
+                        style={{
+                          left: `calc(50% + ${x}px - 3rem)`,
+                          top: `calc(50% + ${y}px - 3rem)`,
+                        }}
+                        animate={{
+                          scale: isActive ? 1.2 : 0.9,
+                          zIndex: isActive ? 50 : 10,
+                        }}
+                        transition={{ duration: 0.4 }}
+                        // 2. **CLICKABLE ICONS:** Add the onClick handler
+                        onClick={() => handleIconClick(idx)}
+                      >
+                        <motion.div
+                          className={`w-full h-full rounded-full flex items-center justify-center cursor-pointer shadow-lg border-2 ${isActive
+                            ? "bg-white border-cyan-300 shadow-2xl shadow-cyan-500/50"
+                            : "bg-white/80 border-white/60 hover:border-cyan-200"
+                            } transition-all duration-300`}
+                          whileHover={{
+                            scale: 1.1,
+                            boxShadow: "0 20px 40px rgba(0, 188, 212, 0.3)",
+                          }}
+                        >
+                          {/* To keep the icon upright while the wheel spins, we need to counter-rotate it. */}
+                          <motion.div
+                            className={`p-4 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center`}
+                            animate={{
+                              // Counter-rotate the item to keep it upright, plus the pulsing animation
+                              rotate: rotation, // This counters the parent wheel's -rotation
+                              scale: isActive ? 1.1 : 1,
+                            }}
+                            transition={{
+                              // Use the same duration as the main wheel rotation for a smooth counter-spin
+                              rotate: {
+                                duration: ROTATION_DURATION,
+                                ease: "easeInOut",
+                              },
+                              scale: { duration: 0.3 },
+                            }}
+                          >
+                            <IconComponent size={32} className="text-white" />
+                          </motion.div>
+                        </motion.div>
+                      </motion.div>
+                    );
+                  })}
+                </motion.div>
+
+
+                {/* Floating indicators */}
+                {/* Floating indicators */}
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+                  className="absolute inset-0 rounded-full border border-dashed border-blue-200/40 pointer-events-none"
+                />
               </div>
-            </div>
+            </motion.div>
 
-            <ul className="absolute inset-0 w-full h-full">
-              {collabApps.map((app, index) => {
-                const angle = (2 * Math.PI * index) / collabApps.length;
-                const radius = 190;
-
-                const x = radius * Math.cos(angle);
-                const y = radius * Math.sin(angle);
-
-                return (
-                  <li
-                    key={app.id}
-                    ref={(el) => (appsRef.current[index] = el)}
-                    onMouseEnter={() => setHoveredApp(app)}
-                    onMouseLeave={() => setHoveredApp(null)}
-                    onFocus={() => setHoveredApp(app)}
-                    onBlur={() => setHoveredApp(null)}
-                    className="absolute"
-                    style={{
-                      left: `calc(50% + ${x}px - 2rem)`,
-                      top: `calc(50% + ${y}px - 2rem)`,
-                    }}
-                    tabIndex={0}
-                    role="button"
-                    aria-label={`Learn more about ${app.title}`}
+            {/* Right: Content Panel */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeIndex}
+                  initial={{ opacity: 0, x: 30, y: 20 }}
+                  animate={{ opacity: 1, x: 0, y: 0 }}
+                  exit={{ opacity: 0, x: -30, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className={`p-8 md:p-12 rounded-3xl ${currentItem.bgColor} border-2 border-white/60 shadow-xl`}
+                >
+                  {/* Header */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.1 }}
+                    className="mb-8"
                   >
-                    <div className="relative flex items-center justify-center w-[4rem] h-[4rem] bg-white border-2 border-cyan-200 rounded-2xl shadow-md hover:scale-110 focus:scale-110 hover:shadow-xl focus:shadow-xl hover:bg-cyan-50 focus:bg-cyan-50 transition-all duration-400">
-                      <div className="w-8 h-8 text-cyan-800">{app.icon}</div>
-                      {hoveredApp?.id === app.id && (
-                        <div className="absolute top-full left-0 right-36 translate-x-1/2 mt-2 w-48 bg-white rounded-lg shadow-lg p-3 text-sm text-gray-700 animate-tooltip z-10">
-                          <p className="font-semibold text-teal-800">{app.title}</p>
-                          <p>{app.description}</p>
-                        </div>
-                      )}
+                    <div className="flex items-center gap-4 mb-6">
+                      <motion.div
+                        className={`p-4 rounded-2xl bg-gradient-to-br ${currentItem.color} shadow-lg`}
+                        animate={{
+                          rotate: [0, -10, 10, 0],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                        }}
+                      >
+                        <currentItem.icon size={32} className="text-white" />
+                      </motion.div>
+                      <div>
+                        <h3 className="text-3xl md:text-4xl font-black text-gray-900 mb-1">
+                          {currentItem.title}
+                        </h3>
+                        <p className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                          {currentItem.subtitle}
+                        </p>
+                      </div>
                     </div>
-                  </li>
-                );
-              })}
-            </ul>
 
-            <LeftCurve
-              className="absolute left-0 top-1/2 -translate-y-1/2 text-cyan-300"
-              aria-hidden="true"
-            />
-            <RightCurve
-              className="absolute right-0 top-1/2 -translate-y-1/2 text-cyan-300"
-              aria-hidden="true"
-            />
+                    <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+                      {currentItem.description}
+                    </p>
+                  </motion.div>
+
+                  {/* Features Grid */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.2 }}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8"
+                  >
+                    {currentItem.features.map((feature, idx) => (
+                      <motion.div
+                        key={feature}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.25 + idx * 0.05 }}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-white/60 hover:bg-white transition-colors duration-300"
+                      >
+                        <motion.div
+                          className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center"
+                          animate={{
+                            scale: [1, 1.1, 1],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            delay: idx * 0.1,
+                          }}
+                        >
+                          <svg
+                            className="w-3 h-3 text-white"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </motion.div>
+                        <span className="text-sm md:text-base font-semibold text-gray-700">{feature}</span>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+
+                  {/* CTA Button */}
+
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Progress indicator */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="mt-8 flex gap-2 justify-center"
+              >
+                {wheelItems.map((_, idx) => (
+                  <motion.div
+                    key={idx}
+                    animate={{
+                      scale: idx === activeIndex ? 1.2 : 1,
+                      backgroundColor: idx === activeIndex ? '#0891b2' : '#cbd5e1',
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="h-2 rounded-full cursor-pointer hover:bg-cyan-400"
+                    style={{
+                      width: idx === activeIndex ? '24px' : '8px',
+                    }}
+                    onClick={() => handleIconClick(idx)} // Clickability added to the dots
+                  />
+                ))}
+              </motion.div>
+            </motion.div>
           </div>
+
+          {/* Scroll hint */}
+          <motion.div
+            animate={{
+              y: [0, 10, 0],
+              opacity: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+            }}
+            className="mt-16 text-center text-gray-600 font-semibold flex items-center justify-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+            Scroll or **Click an Icon** to explore more integrations
+          </motion.div>
         </div>
-
-      </div>
-
-      <style jsx>{`
-        /* Enhanced Background Animation */
-        .bg-animation {
-          background: linear-gradient(180deg, #F5FCFF 0%, #E6F3FA 100%);
-          overflow: hidden;
-        }
-        .wave-layer {
-          position: absolute;
-          width: 200%;
-          height: 350px;
-          background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%2326C6DA' fill-opacity='0.45' d='M0,140C240,80,480,280,720,280C960,280,1200,80,1440,160L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E")
-            repeat-x;
-          animation: waveMove 16s linear infinite;
-          top: -80px;
-        }
-        .wave-1 {
-          animation-delay: 0s;
-          opacity: 0.55;
-        }
-        .wave-2 {
-          animation-delay: -5s;
-          opacity: 0.4;
-          top: 80px;
-        }
-        .wave-3 {
-          animation-delay: -10s;
-          opacity: 0.3;
-          top: 160px;
-        }
-        .glow-orb {
-          position: absolute;
-          width: 800px;
-          height: 800px;
-          border-radius: 50%;
-          background: radial-gradient(
-            circle at var(--mx, 50%) var(--my, 50%),
-            #26c6da 0%,
-            transparent 70%
-          );
-          filter: blur(140px);
-          opacity: 0.35;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          animation: glowFloat 10s ease-in-out infinite;
-        }
-
-        /* Section Animation */
-        .animate-in {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-        .animate-out {
-          opacity: 0;
-          transform: translateY(100px) scale(0.95);
-        }
-
-        /* Content Animation */
-        .animate-content-in {
-          opacity: 1;
-          transform: translateY(0);
-          animation: contentFade 1.6s ease-out forwards;
-        }
-
-        /* Header Animations */
-        .animate-header-glow {
-          opacity: 0;
-          transform: translateY(60px);
-          animation: headerGlow 1.4s ease-out forwards;
-          text-shadow: 0 0 12px rgba(0, 206, 209, 0.4);
-        }
-        .animate-text-flow {
-          opacity: 0;
-          transform: translateY(40px);
-          animation: textFlow 1.3s ease-out forwards;
-        }
-        .animate-text-flow.delay-100 {
-          animation-delay: 0.15s;
-        }
-        .animate-text-slide {
-          opacity: 0;
-          transform: translateX(-40px);
-          animation: textSlide 1.2s ease-out forwards;
-        }
-        .animate-text-slide.delay-100 {
-          animation-delay: 0.1s;
-        }
-
-        /* Card Animations */
-        .animate-card {
-          opacity: 0;
-          transform: translateY(50px) scale(0.94);
-          animation: cardRise 1.5s ease-out forwards;
-          animation-delay: calc(var(--delay, 0s) + 0.25s * var(--index, 0));
-        }
-        .animate-card:focus {
-          outline: 2px solid #26c6da;
-          outline-offset: 2px;
-        }
-        .animate-check-glow {
-          animation: checkGlow 1.6s ease-in-out infinite;
-        }
-        .animate-button-glow {
-          opacity: 0;
-          transform: translateY(30px);
-          animation: buttonGlow 1.4s ease-out forwards;
-          animation-delay: 0.6s;
-          box-shadow: 0 0 15px rgba(0, 206, 209, 0.4);
-        }
-        .animate-button-glow:hover,
-        .animate-button-glow:focus {
-          box-shadow: 0 0 25px rgba(0, 206, 209, 0.6);
-        }
-
-        /* App Icons Animation */
-        .animate-app-in {
-          animation: appOrbit 1.5s ease-out forwards;
-          animation-delay: var(--app-delay);
-        }
-
-        /* Tooltip Animation */
-        .animate-tooltip {
-          animation: tooltipFade 0.3s ease-out forwards;
-        }
-
-        /* Pulse Glow for Who Is It For Cards */
-        .animate-pulse-glow {
-          animation: pulseGlow 2s ease-in-out infinite;
-        }
-
-        /* Keyframes */
-        @keyframes waveMove {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-1440px);
-          }
-        }
-        @keyframes glowFloat {
-          0%,
-          100% {
-            opacity: 0.35;
-            transform: translate(-50%, -50%) scale(1);
-          }
-          50% {
-            opacity: 0.55;
-            transform: translate(-50%, -50%) scale(1.2);
-          }
-        }
-        @keyframes headerGlow {
-          from {
-            opacity: 0;
-            transform: translateY(60px);
-            text-shadow: 0 0 0 rgba(0, 206, 209, 0);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-            text-shadow: 0 0 12px rgba(0, 206, 209, 0.4);
-          }
-        }
-        @keyframes textFlow {
-          from {
-            opacity: 0;
-            transform: translateY(40px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes textSlide {
-          from {
-            opacity: 0;
-            transform: translateX(-40px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-        @keyframes cardRise {
-          from {
-            opacity: 0;
-            transform: translateY(50px) scale(0.94);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-        @keyframes checkGlow {
-          0%,
-          100% {
-            transform: scale(1);
-            filter: drop-shadow(0 0 2px rgba(0, 206, 209, 0.3));
-          }
-          50% {
-            transform: scale(1.15);
-            filter: drop-shadow(0 0 6px rgba(0, 206, 209, 0.5));
-          }
-        }
-        @keyframes buttonGlow {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-            box-shadow: 0 0 0 rgba(0, 206, 209, 0);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-            box-shadow: 0 0 15px rgba(0, 206, 209, 0.4);
-          }
-        }
-        @keyframes appOrbit {
-          from {
-            opacity: 0;
-            transform: translateY(50px) rotate(10deg);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) rotate(0deg);
-          }
-        }
-        @keyframes tooltipFade {
-          from {
-            opacity: 0;
-            transform: translate(-50%, 10px);
-          }
-          to {
-            opacity: 1;
-            transform: translate(-50%, 0);
-          }
-        }
-        @keyframes pulseGlow {
-          0%,
-          100% {
-            opacity: 0.1;
-          }
-          50% {
-            opacity: 0.3;
-          }
-        }
-        @keyframes spin-slow {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-          .wave-layer {
-            height: 200px;
-          }
-          .glow-orb {
-            width: 500px;
-            height: 500px;
-          }
-          .text-5xl {
-            font-size: 2.5rem;
-          }
-          .text-7xl {
-            font-size: 3.5rem;
-          }
-          .text-xl {
-            font-size: 1.125rem;
-          }
-          .text-2xl {
-            font-size: 1.5rem;
-          }
-          .text-base {
-            font-size: 0.875rem;
-          }
-          .grid-cols-2 {
-            grid-template-columns: 1fr;
-          }
-          .w-[25rem] {
-            width: 22rem;
-          }
-          .max-w-sm {
-            max-width: 20rem;
-          }
-        }
-
-        /* High contrast mode for accessibility */
-        @media (prefers-contrast: high) {
-          .text-teal-900 {
-            color: #004d40;
-          }
-          .text-cyan-600 {
-            color: #00695c;
-          }
-          .bg-cyan-600 {
-            background-color: #00695c;
-          }
-          .bg-cyan-700 {
-            background-color: #004d40;
-          }
-          .bg-white {
-            background-color: #ffffff;
-          }
-          .border-cyan-200 {
-            border-color: #4dd0e1;
-          }
-        }
-
-        /* Reduced motion for accessibility */
-        @media (prefers-reduced-motion: reduce) {
-          .animate-header-glow,
-          .animate-text-flow,
-          .animate-text-slide,
-          .animate-card,
-          .animate-check-glow,
-          .animate-button-glow,
-          .animate-app-in,
-          .animate-tooltip,
-          .animate-content-in,
-          .animate-pulse-glow {
-            animation: none;
-            transform: none;
-            opacity: 1;
-            transition: none;
-          }
-          .wave-layer,
-          .glow-orb,
-          .animate-spin-slow {
-            animation: none;
-          }
-        }
-      `}</style>
-    </div>
+      </section>
+    </Section>
   );
-});
-
-Collaboration.displayName = "Collaboration";
-
-export default Collaboration;
+}

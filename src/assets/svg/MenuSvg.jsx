@@ -12,7 +12,7 @@ const MenuSvg = ({ openNavigation }) => {
         width="20"
         height="2"
         rx="1"
-        fill="white"
+        fill="#06b6d4" // Tailwind cyan-500 hex
         transform={`rotate(${openNavigation ? "45" : "0"})`}
       />
       <rect
@@ -21,7 +21,7 @@ const MenuSvg = ({ openNavigation }) => {
         width="20"
         height="2"
         rx="1"
-        fill="white"
+        fill="#06b6d4" // cyan-500
         transform={`rotate(${openNavigation ? "-45" : "0"})`}
       />
     </svg>

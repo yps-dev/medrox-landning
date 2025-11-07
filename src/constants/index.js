@@ -48,32 +48,38 @@ import dev from '../assets/notification/image-1.png';
 export const navigation = [
   {
     id: "0",
-    title: "Features",
-    url: "#features",
+    title: "Services",
+    url: "#Services",
   },
   {
     id: "1",
-    title: "Pricing",
-    url: "#pricing",
+    title: "Explore",
+    url: "#explore",
   },
   {
     id: "2",
-    title: "How to use",
-    url: "#how-to-use",
+    title: "Our Edge",
+    url: "#Our-Edge",
   },
+
   {
     id: "3",
+    title: "Why Us",
+    url: "#Why-Us",
+  },
+  {
+    id: "4",
     title: "Roadmap",
     url: "#roadmap",
   },
   {
-    id: "4",
+    id: "5",
     title: "New account",
     url: "#signup",
     onlyMobile: true,
   },
   {
-    id: "5",
+    id: "6",
     title: "Sign in",
     url: "#login",
     onlyMobile: true,
@@ -148,14 +154,7 @@ export const roadmap = [
     status: "done",
     imageUrl: roadmap2,
   },
-  {
-    id: "2",
-    title: "Medicne Delivary",
-    text: "To Delivare Products with sync Adnvce gps system to  deliver in minutes and safely for partner pharmacies.",
-    date: "Q3 2024",
-    status: "progress",
-    imageUrl: dev,
-  },
+
 ];
 
 export const collabText =
