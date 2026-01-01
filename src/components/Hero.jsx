@@ -1095,6 +1095,7 @@ export default function UltraHeroSwitcher() {
                         className="w-full h-auto aspect-[4/3] object-cover transition-transform duration-700 hover:scale-105"
                         loading="eager"
                         fetchPriority="high"
+                        decoding="async"
                       />
                     </div>
                   </motion.div>
@@ -1170,6 +1171,7 @@ export default function UltraHeroSwitcher() {
                         className="w-full h-auto aspect-[4/3] object-cover transition-transform duration-700 hover:scale-105"
                         loading="eager"
                         fetchPriority="high"
+                        decoding="async"
                       />
                     </div>
                   </motion.div>

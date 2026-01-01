@@ -11,6 +11,7 @@ import Services from "./components/Services";
 import AnimatedSection from "./components/design/AnimatedSection";
 import SignupModal from "./components/modal";
 import DomeGallery from "./components/featur";
+import Preloader from "./components/Preloader";
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false };
@@ -32,6 +33,7 @@ class ErrorBoundary extends React.Component {
 
 const App = () => {
   const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const canvasRef = useRef(null);
 
   const openModal = () => setShowModal(true);
@@ -123,12 +125,28 @@ const App = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Handle global asset loading
+    const handleLoad = () => {
+      // Ensure preloader stays for at least 2 seconds for premium feel
+      setTimeout(() => setIsLoading(false), 2000);
+    };
+
+    if (document.readyState === 'complete') {
+      handleLoad();
+    } else {
+      window.addEventListener('load', handleLoad);
+    }
+
+    return () => window.removeEventListener('load', handleLoad);
+  }, []);
+
 
   return (
     <ErrorBoundary>
-      <div className=" ">
+      <Preloader isLoading={isLoading} />
+      <div className={`transition-opacity duration-1000 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
         <div
-
           className=" bg-gradient-to-br from-slate-50 via-cyan-70 to-teal-600"
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(6,182,212,0.08),transparent_50%)]" />
@@ -142,22 +160,8 @@ const App = () => {
 
           <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-x-hidden scroll-smooth">
             <Hero />
-            <div className="gallery-wrapper">
-              <DomeGallery />
-            </div>
 
-            <style jsx>{`
-  .gallery-wrapper {
-    width: 100%;
-    height: auto;
-  }
-  @media (min-width: 1700px) {
-    .gallery-wrapper {
-      width: 180vw;
-      height: 100vh;
-    }
-  }
-`}</style>
+            <DomeGallery />
 
             <Benefits />
             <AnimatedSection>
@@ -178,7 +182,6 @@ const App = () => {
           <SignupModal show={showModal} onClose={closeModal} />
         </div>
       </div>
-
     </ErrorBoundary>
   );
 };

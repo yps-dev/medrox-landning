@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Section from "./Section";
+import InteractiveHint from "./InteractiveHint";
 import { brainwave } from '../assets';
 
 import {
@@ -25,6 +26,7 @@ const wheelItems = [
     color: 'from-blue-500 to-cyan-500',
     bgColor: 'bg-blue-50',
     features: ['Instant Synchronization', 'Secure Storage', 'Real-time Updates', 'Cross-platform Access'],
+    theme: { id: 'sky', name: 'Sky Blue', primary: '#0ea5e9', secondary: '#06b6d4', bg: 'from-blue-50 to-cyan-50' },
   },
   {
     id: '1',
@@ -36,6 +38,7 @@ const wheelItems = [
     color: 'from-purple-500 to-pink-500',
     bgColor: 'bg-purple-50',
     features: ['Real-time Tracking', 'Smart Alerts', 'Analytics Dashboard', 'Automated Reports'],
+    theme: { id: 'purple', name: 'Purple', primary: '#a855f7', secondary: '#ec4899', bg: 'from-purple-50 to-pink-50' },
   },
   {
     id: '2',
@@ -47,6 +50,7 @@ const wheelItems = [
     color: 'from-green-500 to-emerald-500',
     bgColor: 'bg-green-50',
     features: ['Unified Platform', 'Full Autoamtion', 'Patient Portal', 'Secure work flows'],
+    theme: { id: 'green', name: 'Green', primary: '#10b981', secondary: '#14b8a6', bg: 'from-emerald-50 to-teal-50' },
   },
   {
     id: '3',
@@ -58,6 +62,7 @@ const wheelItems = [
     color: 'from-orange-500 to-red-500',
     bgColor: 'bg-orange-50',
     features: ['Workflow Automation', 'Task Management', 'Team Coordination', 'Performance Tracking'],
+    theme: { id: 'orange', name: 'Orange', primary: '#f97316', secondary: '#ef4444', bg: 'from-orange-50 to-red-50' },
   },
   {
     id: '4',
@@ -69,6 +74,7 @@ const wheelItems = [
     color: 'from-indigo-500 to-purple-500',
     bgColor: 'bg-indigo-50',
     features: ['Appointment Scheduling', 'Resource Management', 'Staff Planning', 'Billing Integration'],
+    theme: { id: 'indigo', name: 'Indigo', primary: '#6366f1', secondary: '#8b5cf6', bg: 'from-indigo-50 to-purple-50' },
   },
   {
     id: '5',
@@ -80,6 +86,7 @@ const wheelItems = [
     color: 'from-teal-500 to-cyan-500',
     bgColor: 'bg-teal-50',
     features: ['Prescription Tracking', 'Inventory Forecasting', 'Compliance Monitoring', 'Drug Interactions'],
+    theme: { id: 'teal', name: 'Teal', primary: '#14b8a6', secondary: '#06b6d4', bg: 'from-teal-50 to-cyan-50' },
   },
   {
     id: '6',
@@ -91,6 +98,7 @@ const wheelItems = [
     color: 'from-pink-500 to-rose-500',
     bgColor: 'bg-pink-50',
     features: ['Version Control', 'Document Archival', 'OCR Processing', 'Secure Sharing'],
+    theme: { id: 'pink', name: 'Pink', primary: '#ec4899', secondary: '#f43f5e', bg: 'from-pink-50 to-rose-50' },
   },
   {
     id: '7',
@@ -102,6 +110,7 @@ const wheelItems = [
     color: 'from-cyan-500 to-blue-500',
     bgColor: 'bg-cyan-50',
     features: ['Smart Scheduling', 'Staff Directory', 'Performance Reviews', 'Communication Tools'],
+    theme: { id: 'slate', name: 'Slate', primary: '#64748b', secondary: '#475569', bg: 'from-slate-100 to-gray-100' },
   },
 ];
 
@@ -112,19 +121,22 @@ export default function explore() {
   const containerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [rotation, setRotation] = useState(0);
+  const [selectedTheme, setSelectedTheme] = useState(wheelItems[0].theme);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const scrollVelocity = useRef(0);
-  // This ref controls the throttling, ensuring a slow scroll step.
   const lastScrollTime = useRef(Date.now());
 
   const ANGLE_PER_ITEM = 360 / wheelItems.length;
 
   // Function to handle setting the active index and rotation
   const handleNewIndex = (newIndex) => {
-    // 2. Click works: This function is the key and is used for both scroll and click.
+    setHasInteracted(true);
     const correctedIndex = (newIndex + wheelItems.length) % wheelItems.length;
     setActiveIndex(correctedIndex);
     const newRotation = correctedIndex * ANGLE_PER_ITEM;
     setRotation(newRotation);
+    // Change theme to the selected item's theme
+    setSelectedTheme(wheelItems[correctedIndex].theme);
   };
 
   // Function for click event, using the same logic as scroll
@@ -178,86 +190,126 @@ export default function explore() {
     <Section id="explore">
       <section
         ref={containerRef}
-        className="relative w-full py-20 md:py-32 overflow-hidden bg-gradient-to-br from-white via-blue-50/30 to-white"
+        className={`relative w-full py-20 md:py-32 overflow-hidden bg-gradient-to-br ${selectedTheme.bg} transition-all duration-1000`}
       >
-        {/* 3. Premium Background Animation (Wave Cutting Across) */}
-        <div className="absolute inset-0 -z-10 pointer-events-none">
-          {/* Existing blur circles for ambience */}
+        {/* ENHANCED BACKGROUND - Light Theme Animated Gradients */}
+        <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
+          {/* Floating orbs */}
           <motion.div
             animate={{
-              rotate: 360,
-              opacity: [0.2, 0.4, 0.2],
+              x: ['-10%', '110%'],
+              y: ['20%', '80%', '20%'],
+              scale: [1, 1.2, 1],
+              opacity: [0.2, 0.4, 0.2]
             }}
             transition={{
-              rotate: { duration: 80, repeat: Infinity, ease: 'linear' },
-              opacity: { duration: 15, repeat: Infinity },
+              duration: 25,
+              repeat: Infinity,
+              ease: 'easeInOut'
             }}
-            className="absolute top-1/4 right-20 w-80 h-80 bg-gradient-to-br from-blue-200/40 to-cyan-200/20 rounded-full blur-3xl"
+            className="absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl"
+            style={{ background: `linear-gradient(135deg, ${selectedTheme.primary}20, ${selectedTheme.secondary}10)` }}
           />
 
           <motion.div
             animate={{
-              rotate: -360,
-              opacity: [0.15, 0.35, 0.15],
+              x: ['110%', '-10%'],
+              y: ['80%', '20%', '80%'],
+              scale: [1.2, 1, 1.2],
+              opacity: [0.3, 0.5, 0.3]
             }}
             transition={{
-              rotate: { duration: 100, repeat: Infinity, ease: 'linear' },
-              opacity: { duration: 20, repeat: Infinity, delay: 3 },
+              duration: 30,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: 5
             }}
-            className="absolute bottom-1/4 left-20 w-96 h-96 bg-gradient-to-tl from-cyan-200/30 to-blue-200/20 rounded-full blur-3xl"
+            className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl"
+            style={{ background: `linear-gradient(135deg, ${selectedTheme.secondary}15, ${selectedTheme.primary}10)` }}
           />
 
-          {/* New Wavy Background Animation */}
-          <motion.div
-            animate={{
-              // Move from left to right and slightly oscillate Y position for a wave effect
-              x: ['-100%', '100%'],
-              y: ['-10%', '0%', '10%', '0%', '-10%'],
-            }}
-            transition={{
-              x: { duration: 25, repeat: Infinity, ease: 'linear' },
-              y: { duration: 10, repeat: Infinity, ease: 'easeInOut' },
-            }}
-            className="absolute top-1/2 left-0 w-[200%] h-32 transform -translate-y-1/2 
-                           bg-gradient-to-r from-transparent via-cyan-900/70 to-transparent 
-                           opacity-50 blur-xl"
-          />
-
-          <motion.div
-            animate={{
-              // Move from right to left and slightly oscillate Y position for a wave effect
-              x: ['100%', '-100%'],
-              y: ['10%', '0%', '-10%', '0%', '10%'],
-            }}
-            transition={{
-              x: { duration: 30, repeat: Infinity, ease: 'linear', delay: 5 },
-              y: { duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 1 },
-            }}
-            className="absolute top-1/2 left-0 w-[200%] h-24 transform -translate-y-1/2 
-                           bg-gradient-to-r from-transparent via-blue-100/80 to-transparent 
-                           opacity-40 blur-lg"
-          />
-
+          {/* Mesh gradient overlay */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)] opacity-60" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* PREMIUM ANIMATED HEADER */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-16 relative"
           >
-            <h2 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight mb-6">
-              <span className="block text-gray-900">Explore Our</span>
-              <span className="block bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent">
+            {/* Floating decorative elements */}
+            <motion.div
+              animate={{
+                y: [-10, 10, -10],
+                rotate: [0, 5, 0]
+              }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute -top-10 -left-10 w-20 h-20 rounded-full blur-2xl opacity-30"
+              style={{ background: `linear-gradient(135deg, ${selectedTheme.primary}, ${selectedTheme.secondary})` }}
+            />
+            <motion.div
+              animate={{
+                y: [10, -10, 10],
+                rotate: [0, -5, 0]
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1
+              }}
+              className="absolute -top-5 -right-10 w-32 h-32 rounded-full blur-2xl opacity-20"
+              style={{ background: `linear-gradient(135deg, ${selectedTheme.secondary}, ${selectedTheme.primary})` }}
+            />
+
+            <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight mb-6">
+              <motion.span
+                initial={{ opacity: 0, y: 30, rotateX: 90 }}
+                animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 100 }}
+                className="block text-gray-900"
+              >
+                Explore Our
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: 30, rotateX: 90 }}
+                animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                transition={{ duration: 0.8, delay: 0.4, type: "spring", stiffness: 100 }}
+                className="block bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: `linear-gradient(135deg, ${selectedTheme.primary}, ${selectedTheme.secondary})`,
+                  backgroundSize: '200% 200%',
+                  animation: 'gradient-shift 3s ease infinite'
+                }}
+              >
                 Integrated Solutions
-              </span>
+              </motion.span>
             </h2>
-            <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto">
-              Discover each powerful tool in our ecosystem
-            </p>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-semibold"
+            >
+              Click any icon to explore and see  the solutions
+            </motion.p>
           </motion.div>
+
+          <style>{`
+            @keyframes gradient-shift {
+              0%, 100% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+            }
+          `}</style>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-[600px] md:min-h-[700px] ">
             {/* Left: Spinning Wheel */}
@@ -269,7 +321,13 @@ export default function explore() {
               className="relative h-full flex items-center justify-center"
             >
               <div className="relative w-full max-w-lg aspect-square">
-                {/* Outer glow ring */}
+                {/* INTERACTIVE HINT */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none">
+                  <InteractiveHint
+                    isVisible={!hasInteracted}
+                  />
+                </div>
+
                 {/* Outer glow ring */}
                 <motion.div
                   animate={{
@@ -358,13 +416,15 @@ export default function explore() {
                         onClick={() => handleIconClick(idx)}
                       >
                         <motion.div
-                          className={`w-full h-full rounded-full flex items-center justify-center cursor-pointer shadow-lg border-2 ${isActive
-                            ? "bg-white border-cyan-300 shadow-2xl shadow-cyan-500/50"
-                            : "bg-white/80 border-white/60 hover:border-cyan-200"
-                            } transition-all duration-300`}
+                          className={`w-full h-full rounded-full flex items-center justify-center cursor-pointer shadow-lg border-4 transition-all duration-300`}
+                          style={{
+                            backgroundColor: isActive ? 'white' : 'rgba(255,255,255,0.8)',
+                            borderColor: isActive ? selectedTheme.primary : 'rgba(255,255,255,0.6)',
+                            boxShadow: isActive ? `0 20px 40px ${selectedTheme.primary}50, 0 0 30px ${selectedTheme.primary}30` : '0 10px 20px rgba(0,0,0,0.1)'
+                          }}
                           whileHover={{
                             scale: 1.1,
-                            boxShadow: "0 20px 40px rgba(0, 188, 212, 0.3)",
+                            boxShadow: `0 20px 40px ${selectedTheme.primary}40`,
                           }}
                         >
                           {/* To keep the icon upright while the wheel spins, we need to counter-rotate it. */}
@@ -394,7 +454,6 @@ export default function explore() {
 
 
                 {/* Floating indicators */}
-                {/* Floating indicators */}
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
@@ -418,7 +477,17 @@ export default function explore() {
                   animate={{ opacity: 1, x: 0, y: 0 }}
                   exit={{ opacity: 0, x: -30, y: -20 }}
                   transition={{ duration: 0.5 }}
-                  className={`p-8 md:p-12 rounded-3xl ${currentItem.bgColor} border-2 border-white/60 shadow-xl`}
+                  className="p-8 md:p-12 rounded-3xl border-8 transition-all duration-500 backdrop-blur-xl bg-white/60 shadow-2xl hover:shadow-[0_0_60px_rgba(0,0,0,0.1)]"
+                  style={{
+                    background: `linear-gradient(${currentItem.bgColor.replace('bg-', '')}, ${currentItem.bgColor.replace('bg-', '')}) padding-box, linear-gradient(135deg, ${selectedTheme.primary}, ${selectedTheme.secondary}, ${selectedTheme.primary}) border-box`,
+                    backgroundSize: '300% 300%',
+                    animation: 'gradient-border-shift 4s ease infinite',
+                    borderColor: 'transparent'
+                  }}
+                  whileHover={{
+                    scale: 1.02,
+                    boxShadow: `0 0 50px ${selectedTheme.primary}40`
+                  }}
                 >
                   {/* Header */}
                   <motion.div
@@ -544,6 +613,14 @@ export default function explore() {
             Scroll or **Click an Icon** to explore more integrations
           </motion.div>
         </div>
+
+        {/* Gradient border animation CSS */}
+        <style>{`
+          @keyframes gradient-border-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+          }
+        `}</style>
       </section>
     </Section>
   );

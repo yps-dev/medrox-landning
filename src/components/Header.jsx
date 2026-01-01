@@ -5,8 +5,56 @@ import { navigation } from "../constants";
 import Button from "./Button";
 import MenuSvg from "../assets/svg/MenuSvg";
 import { HamburgerMenu } from "./design/Header";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import SignupModal from "./modal"; // adjust path if needed
+
+const MagneticButton = ({ children, onClick, className }) => {
+  const ref = useRef(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const springConfig = { damping: 20, stiffness: 200 };
+  const springX = useSpring(x, springConfig);
+  const springY = useSpring(y, springConfig);
+
+  const handleMouseMove = (e) => {
+    if (!ref.current) return;
+    const { clientX, clientY } = e;
+    const { left, top, width, height } = ref.current.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
+    const distanceX = clientX - centerX;
+    const distanceY = clientY - centerY;
+
+    // Magnetic pull
+    x.set(distanceX * 0.4);
+    y.set(distanceY * 0.4);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ x: springX, y: springY }}
+      className="relative group"
+    >
+      <Button className={className} onClick={onClick}>
+        {children}
+      </Button>
+      <motion.div
+        className="absolute -inset-2 bg-cyan-400/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+        style={{ x: useTransform(springX, (v) => v * 0.5), y: useTransform(springY, (v) => v * 0.5) }}
+      />
+    </motion.div>
+  );
+};
 
 const Header = ({ openModal }) => {
   const pathname = useLocation();
@@ -40,81 +88,108 @@ const Header = ({ openModal }) => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-full z-50 border-b ${isDarkMode ? " " : ""} lg:backdrop-blur-sm transition-all duration-500 bg-gradient-to-br from-slate-50 via-cyan-70 to-teal-600"  sticky-header h-28`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 sticky-header ${isDarkMode
+        ? "h-30 bg-slate-900/90 backdrop-blur-xl border-b border-white/5"
+        : "h-20 lg:h-28 bg-gradient-to-br from-slate-50 via-cyan-50 to-teal-50/50 backdrop-blur-md border-b border-black/5"
+        }`}
     >
       <div className="flex items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4 relative z-10 ">
-        <a className="block w-[12rem] xl:mr-8 flex flex-row items-center group" href="#hero">
+        <a className="block w-[12rem] xl:mr-8 flex flex-row items-center group relative" href="#hero">
           <img src={brainwave} className="rounded-3xl m-2" width={70} height={40} alt="Brainwave" />
+
+          <div className="absolute inset-0 bg-cyan-400/20 blur-xl rounded-full scale-0 group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
           <h1
             className="ml-3 text-5xl font-extrabold tracking-tight 
-             bg-gradient-to-r from-cyan-400 via-teal-500 to-slate-600 
+             bg-gradient-to-r from-cyan-500 via-teal-600 to-slate-200 
              bg-clip-text text-transparent 
-             drop-shadow-[0_0_15px_rgba(6,182,212,0.5)] 
+             drop-shadow-[0_0_15px_rgba(6,182,212,0.3)] 
              animate-logo-pulse"
           >
             Medrox
           </h1>
-
         </a>
 
         <nav
           className={`${openNavigation
-            ? "flex fixed inset-0 bg-black/70 backdrop-blur-md"
+            ? "flex fixed inset-0 z-50 bg-black/95 backdrop-blur-xl transition-all duration-500"
             : "hidden"} 
-      lg:static lg:flex lg:mx-auto`}
+          lg:static lg:flex lg:mx-auto lg:bg-transparent`}
         >
-          <div className="relative z-2 flex flex-col items-center justify-center m-auto lg:flex-row">
-            {navigation.map((item) => (
-              <a
+          {/* MOBILE CLOSE (X) BUTTON */}
+          {openNavigation && (
+            <motion.button
+              initial={{ opacity: 0, rotate: -90, scale: 0.5 }}
+              animate={{ opacity: 1, rotate: 0, scale: 1 }}
+              whileHover={{ rotate: 90, scale: 1.1 }}
+              onClick={toggleNavigation}
+              className="absolute top-8 right-8 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/20 text-black z-[60] lg:hidden backdrop-blur-md"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </motion.button>
+          )}
+
+          <div className="relative z-2 flex flex-col items-center justify-center m-auto lg:flex-row gap-4 lg:gap-0">
+            {navigation.map((item, index) => (
+              <motion.a
                 key={item.id}
                 href={item.url}
-                onClick={handleClick}
+                onClick={(e) => {
+                  if (item.title === "Sign in") {
+                    e.preventDefault();
+                    openModal();
+                  }
+                  handleClick();
+                }}
+                initial={openNavigation ? { opacity: 0, y: 20 } : {}}
+                animate={openNavigation ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
                 className={`block relative font-sans uppercase 
-              text-lg xl:text-xl font-bold 
-              bg-gradient-to-r from-slate-800 via-cyan-700 to-teal-600 
-              bg-clip-text  
-              transition-all duration-500 group 
-              hover:drop-shadow-[0_0_12px_rgba(6,182,212,0.6)] 
-              ${item.onlyMobile ? "lg:hidden " : ""} 
-              px-6 py-6 md:py-8 lg:-mr-0.25 
-              ${item.url === pathname.hash ? "z-2 text-teal-600" : ""} 
-              lg:leading-6 xl:px-12 animate-nav-float`}
+                text-3xl lg:text-[1rem] xl:text-xl font-bold 
+                ${isDarkMode ? "text-white/80" : "text-slate-800/80"}
+                transition-all duration-500 group 
+                hover:text-cyan-500
+                ${item.onlyMobile ? "lg:hidden " : ""} 
+                px-6 py-4 lg:py-8 lg:px-4 xl:px-10 lg:-mr-0.25 
+                ${item.url === pathname.hash ? "z-2 !text-cyan-500" : ""} 
+                lg:leading-6 animate-nav-float`}
               >
                 <span className="relative z-10">{item.title}</span>
-                <span className="absolute inset-x-0 bottom-0 h-1 
-                   bg-gradient-to-r from-sky-400 to-teal-500 
+                {/* Holographic underline */}
+                <span className="absolute inset-x-6 bottom-4 lg:bottom-4 h-1 
+                   bg-gradient-to-r from-cyan-400 to-teal-500 
                    opacity-0 group-hover:opacity-100 
                    transform scale-x-0 group-hover:scale-x-100 
-                   transition-transform duration-500"></span>
-              </a>
+                   transition-all duration-500 shadow-[0_0_15px_rgba(34,211,238,0.8)]"></span>
 
+                {/* Mobile glow */}
+                <div className="lg:hidden absolute inset-0 bg-cyan-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              </motion.a>
             ))}
           </div>
           <HamburgerMenu />
         </nav>
 
-        <a
-          onClick={openModal}
-          className={`button hidden mr-8 transition-all duration-500 hover:text-teal-600 ${isDarkMode ? "text-n-1/50" : "text-white"} lg:block animate-nav-float`}
-        >
-          Join US
-        </a>
-        <Button
-          className={`hidden lg:flex text-lg font-semibold py-3 px-8 rounded-xl shadow-md transition-all duration-500 ${isDarkMode ? "bg-teal-700 hover:bg-teal-800 text-white" : "bg-sky-500 hover:bg-sky-600 text-white"} animate-button-orbit`}
-          onClick={openModal}
-          aria-label="Sign in to Medrox"
-        >
-          Sign in
-        </Button>
+        <div className="hidden lg:flex items-center gap-4">
+          <MagneticButton
+            className={`text-lg font-bold py-3 px-10 rounded-2xl shadow-2xl transition-all duration-500 border border-white/10 ${isDarkMode ? "bg-cyan-600 hover:bg-cyan-500 text-white" : "bg-slate-900 hover:bg-slate-800 text-white hover:scale-105 active:scale-95"} animate-button-orbit`}
+            onClick={openModal}
+          >
+            Sign in
+          </MagneticButton>
+        </div>
 
         <Button
-          className="ml-auto lg:hidden px-3 "
+          className="ml-auto lg:hidden p-2 rounded-xl bg-slate-100/10 border border-white/5"
           onClick={toggleNavigation}
-          aria-label={openNavigation ? "Close navigation menu" : "Open navigation menu "}
         >
-          <MenuSvg openNavigation={openNavigation} className="animate-icon-spin bg-slate-700" />
+          <MenuSvg openNavigation={openNavigation} className="animate-icon-spin" />
         </Button>
       </div>
+
+      {/* ULTRA SCANNER LINE BACKGROUND */}
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent animate-scanner-line" />
 
       <div className="absolute inset-0 wave-bg pointer-events-none" aria-hidden="true">
         <svg className="w-full h-full">
@@ -157,7 +232,17 @@ const Header = ({ openModal }) => {
         }
         @keyframes pulseEffect {
           0% { width: 0; height: 0; opacity: 1; }
-          100% { width: 100px; height: 100px; opacity: 0; }
+          100% { width: 150px; height: 150px; opacity: 0; }
+        }
+
+        /* Scanner Line Animation */
+        @keyframes scanner-line {
+          0% { transform: translateX(-100%) scaleX(0.5); opacity: 0; }
+          50% { opacity: 1; }
+          100% { transform: translateX(200%) scaleX(1); opacity: 0; }
+        }
+        .animate-scanner-line {
+          animation: scanner-line 6s ease-in-out infinite;
         }
 
         /* Navigation Animation */

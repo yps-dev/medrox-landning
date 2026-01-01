@@ -91,7 +91,7 @@ const RotatingText = forwardRef((props, ref) => {
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
                     className={cn(
-                        'text-lg sm:text-xl lg:text-2xl font-semibold text-white',
+                        'text-lg sm:text-2xl lg:text-4xl font-semibold text-white',
 
                     )}
                 >

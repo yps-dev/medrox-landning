@@ -64,19 +64,13 @@ export const navigation = [
 
   {
     id: "3",
-    title: "Why Us",
-    url: "#Why-Us",
+    title: "Scope",
+    url: "#features",
   },
   {
     id: "4",
-    title: "Roadmap",
-    url: "#roadmap",
-  },
-  {
-    id: "5",
-    title: "New account",
-    url: "#signup",
-    onlyMobile: true,
+    title: "Join us",
+    url: "#Join Us",
   },
   {
     id: "6",

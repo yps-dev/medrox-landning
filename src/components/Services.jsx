@@ -43,82 +43,194 @@ const Services = () => {
         animate="show"
         exit="hidden"
       >
-        <div className="absolute inset-0 -z-10 pointer-events-none">
-          {/* Existing blur circles for ambience */}
+        {/* PREMIUM ULTRA MEDICAL BACKGROUND - REFINED LIGHT THEME */}
+        <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden bg-gradient-to-b from-white via-slate-50 to-cyan-50/30">
+          {/* Base Mesh Layer: Smooth Cyan Flow */}
           <motion.div
             animate={{
-              rotate: 360,
+              x: ['-20%', '20%', '-20%'],
+              y: ['-10%', '10%', '-10%'],
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.1)_0%,transparent_70%)]"
+          />
+
+          {/* High-End Medical Glows: Floating "Silk" Orbs */}
+          <motion.div
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.3, 0.5, 0.3],
+              rotate: [0, 90, 0]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-gradient-to-tr from-cyan-100/50 via-blue-50/20 to-transparent rounded-full blur-[150px]"
+          />
+
+          <motion.div
+            animate={{
+              scale: [1.1, 1, 1.1],
               opacity: [0.2, 0.4, 0.2],
+              rotate: [0, -45, 0]
             }}
-            transition={{
-              rotate: { duration: 80, repeat: Infinity, ease: 'linear' },
-              opacity: { duration: 15, repeat: Infinity },
-            }}
-            className="absolute top-1/4 right-20 w-80 h-80 bg-gradient-to-br from-blue-200/40 to-cyan-200/20 rounded-full blur-3xl"
+            transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+            className="absolute bottom-0 -right-[15%] w-[70%] h-[70%] bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.15)_0%,transparent_60%)] rounded-full blur-[180px]"
           />
 
+          {/* Subtle Horizontal Flow Line (Ultra Medical Feel) */}
           <motion.div
             animate={{
-              rotate: -360,
-              opacity: [0.15, 0.35, 0.15],
-            }}
-            transition={{
-              rotate: { duration: 100, repeat: Infinity, ease: 'linear' },
-              opacity: { duration: 20, repeat: Infinity, delay: 3 },
-            }}
-            className="absolute bottom-1/4 left-20 w-96 h-96 bg-gradient-to-tl from-cyan-200/30 to-blue-200/20 rounded-full blur-3xl"
-          />
-
-          {/* New Wavy Background Animation */}
-          <motion.div
-            animate={{
-              // Move from left to right and slightly oscillate Y position for a wave effect
               x: ['-100%', '100%'],
-              y: ['-10%', '0%', '10%', '0%', '-10%'],
+              opacity: [0.1, 0.2, 0.1]
             }}
-            transition={{
-              x: { duration: 25, repeat: Infinity, ease: 'linear' },
-              y: { duration: 10, repeat: Infinity, ease: 'easeInOut' },
-            }}
-            className="absolute top-1/2 left-0 w-[200%] h-32 transform -translate-y-1/2 
-                           bg-gradient-to-r from-transparent via-cyan-900/70 to-transparent 
-                           opacity-50 blur-xl"
+            transition={{ x: { duration: 30, repeat: Infinity, ease: 'linear' }, opacity: { duration: 10, repeat: Infinity } }}
+            className="absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent blur-[1px]"
           />
-
-          <motion.div
-            animate={{
-              // Move from right to left and slightly oscillate Y position for a wave effect
-              x: ['100%', '-100%'],
-              y: ['10%', '0%', '-10%', '0%', '10%'],
-            }}
-            transition={{
-              x: { duration: 30, repeat: Infinity, ease: 'linear', delay: 5 },
-              y: { duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 1 },
-            }}
-            className="absolute top-1/2 left-0 w-[200%] h-24 transform -translate-y-1/2 
-                           bg-gradient-to-r from-transparent via-blue-100/80 to-transparent 
-                           opacity-40 blur-lg"
-          />
-
         </div>
 
-        <motion.div variants={fadeInUp}>
-          <Heading
-            title="Medrox Redefining Care "
-            text="The world’s first platform to unite diagnostics, access, and local care—empowering every specialist and every patient, effortlessly."
-          />
+        {/* STUNNING ANIMATED HEADER */}
+        <motion.div
+          variants={fadeInUp}
+          className="relative z-10 py-20"
+        >
+          <div className="relative">
+            {/* Floating decorative elements */}
+            <motion.div
+              animate={{
+                y: [-10, 10, -10],
+                rotate: [0, 5, 0]
+              }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute -top-10 -left-10 w-20 h-20 bg-gradient-to-br from-cyan-400 to-teal-400 rounded-full blur-2xl opacity-30"
+            />
+            <motion.div
+              animate={{
+                y: [10, -10, 10],
+                rotate: [0, -5, 0]
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1
+              }}
+              className="absolute -top-5 -right-10 w-32 h-32 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full blur-2xl opacity-20"
+            />
 
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="text-center"
+            >
+              {/* Main Title */}
+              <motion.h2
+                className="text-6xl md:text-8xl lg:text-8xl font-black mb-8 tracking-tighter leading-none"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.2 }}
+              >
+                <motion.span
+                  initial={{ opacity: 0, y: 30, rotateX: 90 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 100 }}
+                  className="inline-block bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-500 bg-clip-text text-transparent drop-shadow-2xl"
+                  style={{
+                    backgroundSize: '200% 200%',
+                    animation: 'gradient-shift 3s ease infinite'
+                  }}
+                >
+                  Medrox
+                </motion.span>
+                <br />
+                <motion.span
+                  initial={{ opacity: 0, y: 30, rotateX: 90 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ duration: 0.8, delay: 0.5, type: "spring", stiffness: 100 }}
+                  className="inline-block text-slate-900"
+                >
+                  Redefining
+                </motion.span>
+                {' '}
+                <motion.span
+                  initial={{ opacity: 0, y: 30, rotateX: 90 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ duration: 0.8, delay: 0.7, type: "spring", stiffness: 100 }}
+                  className="inline-block bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent"
+                >
+                  Care
+                </motion.span>
+              </motion.h2>
+
+              {/* Animated underline */}
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 1, delay: 1, ease: "easeOut" }}
+                className="w-32 h-1.5 bg-gradient-to-r from-cyan-500 to-teal-500 mx-auto mb-8 rounded-full"
+              />
+
+              {/* Description */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="text-xl md:text-2xl text-slate-700 max-w-4xl mx-auto font-semibold leading-relaxed px-4"
+              >
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 1.4 }}
+                  className="inline-block"
+                >
+                  The world's{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-teal-600 font-black">first platform</span>
+                  {' '}to unite diagnostics, access, and local care—
+                </motion.span>
+                <br />
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 1.6 }}
+                  className="inline-block"
+                >
+                  empowering every specialist and every patient,{' '}
+                  <span className="text-cyan-600 font-black">effortlessly</span>.
+                </motion.span>
+              </motion.p>
+
+              {/* Floating badges */}
+
+            </motion.div>
+          </div>
         </motion.div>
+
+        {/* Add gradient animation keyframes */}
+        <style>{`
+          @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+          }
+        `}</style>
 
         <motion.div variants={fadeInUp}>
           <Carousel />
         </motion.div>
 
         <div className="relative">
-          {/* Left Image Section */}
+          {/* Left Image Section - THICK ANIMATED BORDER */}
           <motion.div
-            className="relative z-1 flex items-center h-[39rem] mb-5 p-8 border border-n-1/10 rounded-3xl overflow-hidden lg:p-20 xl:h-[46rem]"
+            className="relative z-1 flex items-center h-[39rem] mb-5 p-8 border-8 border-slate-300 rounded-3xl overflow-hidden lg:p-20 xl:h-[46rem] transition-all duration-500 hover:border-transparent"
+
             variants={fadeInUp}
+            whileHover={{
+              scale: 1.02,
+              boxShadow: '0 0 40px rgba(6, 182, 212, 0.4), 0 0 80px rgba(6, 182, 212, 0.2)'
+            }}
+            transition={{ duration: 0.3 }}
           >
             <div className="absolute top-0 left-0 max-w-4xl h-full pointer-events-none md:w-3/5 xl:w-auto">
               <img
@@ -127,12 +239,14 @@ const Services = () => {
                 alt="Smartest AI"
                 height={730}
                 src={service1}
+                loading="lazy"
+                decoding="async"
               />
             </div>
 
             <div className="relative z-1 max-w-[17rem] ml-auto">
-              <h4 className="h4 mb-4"> Managable</h4>
-              <p className="body-2 mb-[3rem] text-n-2">
+              <h4 className="text-3xl font-black mb-4 text-slate-900">Manageable</h4>
+              <p className="body-2 mb-[3rem] text-slate-700 font-medium">
                 Medrox unlocks the potential of Digitalized Medical system
               </p>
               <ul className="body-2">
@@ -155,8 +269,17 @@ const Services = () => {
             variants={staggerContainer}
           >
             <motion.div
-              className="relative min-h-[39rem] border border-n-1/10 rounded-3xl overflow-hidden"
+              className="relative min-h-[39rem] border-8 border-slate-300 rounded-3xl overflow-hidden transition-all duration-500"
+              style={{
+                background: 'linear-gradient(#0a0a0f, #0a0a0f) padding-box, linear-gradient(135deg, #06b6d4, #14b8a6, #0ea5e9) border-box'
+              }}
               variants={fadeInUp}
+              whileHover={{
+                scale: 1.02,
+                boxShadow: '0 0 40px rgba(6, 182, 212, 0.5), 0 0 80px rgba(6, 182, 212, 0.3)',
+                borderColor: 'transparent'
+              }}
+              transition={{ duration: 0.3 }}
             >
               <div className="absolute inset-0">
                 <img
@@ -165,12 +288,14 @@ const Services = () => {
                   width={630}
                   height={750}
                   alt="robot"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div className="absolute inset-0 flex flex-col justify-end p-8 bg-gradient-to-b from-n-8/0 to-n-8/90 lg:p-15">
 
-                <h4 className="h4 mb-4">Smart Diagnostic Tool </h4>
-                <p className="body-2 mb-[3rem] text-n-3">
+                <h4 className="text-3xl font-black mb-4 text-white">Smart Diagnostic Tool</h4>
+                <p className="body-2 mb-[3rem] text-slate-200 font-medium">
                   Medrox includes a smart diagnostic assistant designed for specialists—helping support high medical decisions faster and more accurately.
                 </p>
                 <ul className="body-2">
@@ -188,20 +313,29 @@ const Services = () => {
                   </li>
                   <li className="flex items-start py-4 border-t border-n-6">
                     <img width={24} height={24} src={check} />
-                    <p className="ml-4 font-bold text-lg">The world’s first AI diagnostic assistant—powering smarter decisions with precision data.</p>
+                    <p className="ml-4 font-bold text-lg text-cyan-300">The world's first AI diagnostic assistant—powering smarter decisions with precision data.</p>
                   </li>
                 </ul>
               </div>
             </motion.div>
 
-            {/* Smart Staff & Medical Management */}
+            {/* Smart Staff & Medical Management - THICK ANIMATED BORDER */}
             <motion.div
-              className="p-4 bg-n-7 rounded-3xl overflow-hidden lg:min-h-[46rem]"
+              className="p-4 bg-n-7 rounded-3xl overflow-hidden lg:min-h-[46rem] border-8 border-slate-600 transition-all duration-500"
+              style={{
+                background: 'linear-gradient(#0a0a0f, #0a0a0f) padding-box, linear-gradient(135deg, #06b6d4, #14b8a6, #0ea5e9) border-box'
+              }}
               variants={fadeInUp}
+              whileHover={{
+                scale: 1.02,
+                boxShadow: '0 0 40px rgba(6, 182, 212, 0.5), 0 0 80px rgba(6, 182, 212, 0.3)',
+                borderColor: 'transparent'
+              }}
+              transition={{ duration: 0.3 }}
             >
               <div className="py-12 px-4 xl:px-8">
-                <h4 class="h4 mb-4">Smarter Pharmacy Operations with Full Product Lifecycle Management</h4>
-                <p className="body-2 mb-[2rem] text-n-3">
+                <h4 className="text-3xl font-black mb-4 text-white">Smarter Pharmacy Operations with Full Product Lifecycle Management</h4>
+                <p className="body-2 mb-[2rem] text-slate-200 font-medium">
                   Manage your staff, shifts, inventory, and prescriptions all in one dashboard. Medrox empowers your healthcare team with the tools they need.
                 </p>
                 <ul className="flex items-center justify-between">
@@ -238,6 +372,8 @@ const Services = () => {
                   width={520}
                   height={400}
                   alt="Scary robot"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <VideoBar />
               </motion.div>

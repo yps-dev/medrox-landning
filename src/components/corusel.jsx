@@ -33,9 +33,15 @@ const Carousel = () => {
         loop: true,
         slides: { perView: 1 },
         mode: "snap",
-        renderMode: "performance", // Keen slider perf mode
-        dragSpeed: 0.8,
-        defaultAnimation: { duration: 800, easing: (t) => t }, // smoother easing
+        renderMode: "performance",
+        dragSpeed: 1.2, // Increased for smoother drag
+        defaultAnimation: {
+            duration: 600, // Faster transitions
+            easing: (t) => 1 - Math.pow(1 - t, 3) // Smooth cubic easing
+        },
+        // Performance optimizations
+        rubberband: false, // Disable rubberband for better performance
+        vertical: false,
     });
 
     // Auto scroll with tab visibility check
@@ -43,7 +49,7 @@ const Carousel = () => {
         let interval;
         const startAutoScroll = () => {
             interval = setInterval(() => {
-                if (document.hidden) return; // pause when tab not visible
+                if (document.hidden) return;
                 instanceRef.current?.next();
             }, 5000);
         };
@@ -54,29 +60,49 @@ const Carousel = () => {
     return (
         <div
             ref={sliderRef}
-            className="keen-slider mb-10 rounded-3xl overflow-hidden shadow-lg border border-teal-200 will-change-transform"
+            className="keen-slider mb-10 rounded-3xl overflow-hidden shadow-2xl border-8 border-cyan-700 transition-all duration-500 hover:border-transparent hover:shadow-[0_0_50px_rgba(6,182,212,0.5)]"
+            style={{
+                background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, #06b6d4, #14b8a6, #0ea5e9, #06b6d4) border-box',
+                backgroundSize: '300% 300%',
+                animation: 'gradient-border-shift 4s ease infinite',
+                transform: 'translateZ(0)', // GPU acceleration
+                willChange: 'transform',
+                backfaceVisibility: 'hidden',
+                perspective: 1000
+            }}
         >
             {slides.map((slide, index) => (
                 <div
                     key={index}
                     className="keen-slider__slide relative h-[400px] md:h-[550px] w-full"
+                    style={{
+                        transform: 'translateZ(0)', // GPU acceleration for each slide
+                        willChange: 'transform',
+                        backfaceVisibility: 'hidden'
+                    }}
                 >
-                    {/* Optimized Image */}
+                    {/* Optimized Image with GPU acceleration */}
                     <img
                         src={slide.img}
                         alt={slide.title}
-                        className="object-cover w-full h-full transition-transform duration-500 ease-out hover:scale-[1.02] will-change-transform"
-                        loading="lazy"
+                        className="object-cover w-full h-full"
+                        style={{
+                            transform: 'translateZ(0)',
+                            willChange: 'transform',
+                            backfaceVisibility: 'hidden',
+                            imageRendering: 'crisp-edges'
+                        }}
+                        loading={index === 0 ? "eager" : "lazy"}
                         decoding="async"
-                        fetchpriority={index === 0 ? "high" : "low"} // first slide loads first
+                        fetchpriority={index === 0 ? "high" : "low"}
                     />
 
-                    {/* Overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent text-white p-4 sm:p-6 backdrop-blur-sm">
-                        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 text-teal-300 drop-shadow-sm">
+                    {/* Overlay with better contrast */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white p-4 sm:p-6 backdrop-blur-md">
+                        <h3 className="text-xl sm:text-2xl md:text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-teal-300 drop-shadow-lg">
                             {slide.title}
                         </h3>
-                        <p className="text-xs sm:text-sm md:text-base text-cyan-100 max-w-[90%]">
+                        <p className="text-sm sm:text-base md:text-lg text-cyan-100 max-w-[90%] font-medium">
                             {slide.desc}
                         </p>
                     </div>
@@ -85,5 +111,17 @@ const Carousel = () => {
         </div>
     );
 };
+
+// Add gradient border animation
+if (typeof document !== 'undefined') {
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes gradient-border-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+    `;
+    document.head.appendChild(style);
+}
 
 export default Carousel;
