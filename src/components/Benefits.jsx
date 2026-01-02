@@ -219,14 +219,49 @@ class ArcballControl {
     this.snapDirection = vec3.fromValues(0, 0, -1); this.snapTargetDirection = null;
     this.pointerPos = vec2.create(); this.previousPointerPos = vec2.create();
     this._rotationVelocity = 0; this._combinedQuat = quat.create();
+    this.touchStartPoint = vec2.create(); this.isScrolling = false;
+    this.isAutoRotating = true; // --- ATTRACTOR MODE ENABLED ---
+
     canvas.addEventListener('pointerdown', e => {
-      vec2.set(this.pointerPos, e.clientX, e.clientY); vec2.copy(this.previousPointerPos, this.pointerPos);
+      this.isAutoRotating = false; // --- STOP AUTO ON INTERACTION ---
+      vec2.set(this.pointerPos, e.clientX, e.clientY);
+      vec2.copy(this.previousPointerPos, this.pointerPos);
+      vec2.copy(this.touchStartPoint, this.pointerPos);
       this.isPointerDown = true;
+      this.isScrolling = false;
     });
-    canvas.addEventListener('pointerup', () => this.isPointerDown = false);
-    canvas.addEventListener('pointerleave', () => this.isPointerDown = false);
-    canvas.addEventListener('pointermove', e => { if (this.isPointerDown) vec2.set(this.pointerPos, e.clientX, e.clientY); });
-    canvas.style.touchAction = 'none';
+    canvas.addEventListener('pointerup', () => {
+      this.isPointerDown = false;
+      this.isScrolling = false;
+    });
+    canvas.addEventListener('pointerleave', () => {
+      this.isPointerDown = false;
+      this.isScrolling = false;
+    });
+    canvas.addEventListener('pointermove', e => {
+      if (!this.isPointerDown) return;
+
+      // Gesture Intent Detection
+      const currentPos = vec2.fromValues(e.clientX, e.clientY);
+      const diffX = Math.abs(currentPos[0] - this.touchStartPoint[0]);
+      const diffY = Math.abs(currentPos[1] - this.touchStartPoint[1]);
+
+      // If movement is primarily vertical and significant, we treat it as a scroll
+      if (!this.isScrolling && diffY > diffX && diffY > 10) {
+        this.isScrolling = true;
+        this.isPointerDown = false; // Stop updating the sphere
+        return;
+      }
+
+      if (!this.isScrolling) {
+        vec2.set(this.pointerPos, e.clientX, e.clientY);
+      }
+    });
+
+    // Strategy: Allow vertical scrolling, but catch horizontal interaction
+    canvas.style.touchAction = 'pan-y';
+    canvas.style.userSelect = 'none';
+    canvas.style.webkitUserSelect = 'none';
   }
   update(deltaTime, targetFrameDuration = 16) {
     const timeScale = deltaTime / targetFrameDuration + 0.00001;
@@ -245,7 +280,8 @@ class ArcballControl {
       } else { quat.slerp(this.pointerRotation, this.pointerRotation, quat.create(), INTENSITY); }
     } else {
       const INTENSITY = 0.1 * timeScale; quat.slerp(this.pointerRotation, this.pointerRotation, quat.create(), INTENSITY);
-      if (this.snapTargetDirection) {
+      // --- FIX JITTER: Skip snapping during auto-rotation to prevent fighting forces ---
+      if (this.snapTargetDirection && !this.isAutoRotating) {
         const SNAPPING_INTENSITY = 0.2; const a = this.snapTargetDirection; const b = this.snapDirection;
         const sqrDist = vec3.squaredDistance(a, b);
         angleFactor *= SNAPPING_INTENSITY * Math.max(0.1, 1 - sqrDist * 10);
@@ -253,6 +289,15 @@ class ArcballControl {
       }
     }
     const combinedQuat = quat.multiply(quat.create(), snapRotation, this.pointerRotation);
+
+    // --- APPLY AUTO-ROTATION IF IDLE ---
+    if (this.isAutoRotating && !this.isPointerDown) {
+      const autoQuat = quat.create();
+      // Optimization: Very slow and smooth increment
+      quat.setAxisAngle(autoQuat, [0, 1, 0], 0.003 * timeScale);
+      quat.multiply(this.orientation, autoQuat, this.orientation);
+    }
+
     this.orientation = quat.multiply(quat.create(), combinedQuat, this.orientation); quat.normalize(this.orientation, this.orientation);
     quat.slerp(this._combinedQuat, this._combinedQuat, combinedQuat, 0.8 * timeScale); quat.normalize(this._combinedQuat, this._combinedQuat);
     const rad = Math.acos(this._combinedQuat[3]) * 2.0; const s = Math.sin(rad / 2.0);
@@ -351,8 +396,15 @@ class InfiniteGridMenu {
       const n = this.control.snapDirection; const nt = vec3.transformQuat(vec3.create(), n, quat.conjugate(quat.create(), this.control.orientation));
       let maxD = -1, nearestIdx;
       for (let i = 0; i < this.icoGeo.vertices.length; ++i) { const d = vec3.dot(nt, this.icoGeo.vertices[i].position); if (d > maxD) { maxD = d; nearestIdx = i; } }
+
       this.onActiveItemChange(nearestIdx % this.items.length);
-      this.control.snapTargetDirection = vec3.normalize(vec3.create(), vec3.transformQuat(vec3.create(), this.icoGeo.vertices[nearestIdx].position, this.control.orientation));
+
+      // Only update snap target if NOT in auto-rotating mode
+      if (!this.control.isAutoRotating) {
+        this.control.snapTargetDirection = vec3.normalize(vec3.create(), vec3.transformQuat(vec3.create(), this.icoGeo.vertices[nearestIdx].position, this.control.orientation));
+      } else {
+        this.control.snapTargetDirection = null;
+      }
     }
     this.camera.position[2] += ((this.control.isPointerDown ? (3 * this.scaleFactor + this.control.rotationVelocity * 80 + 2.5) : (3 * this.scaleFactor)) - this.camera.position[2]) / (this.control.isPointerDown ? 7 : 5);
     mat4.targetTo(this.camera.matrix, this.camera.position, [0, 0, 0], this.camera.up); mat4.invert(this.camera.matrices.view, this.camera.matrix);
@@ -386,7 +438,25 @@ export default function Benefits() {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const sketch = new InfiniteGridMenu(canvas, menuItems, idx => setActiveItem(menuItems[idx]), setIsMoving, sk => sk.run(), scale);
+
+    // --- VIEWPORT OPTIMIZATION: Only auto-spin when visible ---
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) {
+        sketch.control.isAutoRotating = false;
+      } else if (entry.isIntersecting && !sketch.control._touchedOnce) {
+        sketch.control.isAutoRotating = true;
+      }
+    }, { threshold: 0.1 });
+
+    observer.observe(canvas);
+
+    // Add a flag to track if user ever touched it
+    canvas.addEventListener('pointerdown', () => {
+      sketch.control._touchedOnce = true;
+      sketch.control.isAutoRotating = false;
+    }, { once: true });
     const handleResize = () => sketch.resize();
     window.addEventListener('resize', handleResize);
 
@@ -399,7 +469,7 @@ export default function Benefits() {
   return (
     <Section id="Services">
       <div className="relative w-full h-[850px] md:h-[800px] bg-white overflow-hidden py-10">
-        <div className="absolute top-8 left-0 w-full z-30 pointer-events-none px-4">
+        <div className="absolute top-0 left-0 w-full z-30 pointer-events-auto md:pointer-events-none px-4 pt-10">
           <AnimatedHeading />
         </div>
 

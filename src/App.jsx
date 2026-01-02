@@ -10,8 +10,9 @@ import Roadmap from "./components/Roadmap";
 import Services from "./components/Services";
 import AnimatedSection from "./components/design/AnimatedSection";
 import SignupModal from "./components/modal";
+
 import DomeGallery from "./components/featur";
-import Preloader from "./components/Preloader";
+// Preloader removed for instant load performance
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false };
@@ -111,12 +112,7 @@ const App = () => {
     window.addEventListener("mousemove", moveHandler);
     window.addEventListener("touchmove", touchHandler);
 
-    function animate() {
-      ctx.clearRect(0, 0, width, height);
-      orbs.forEach(orb => orb.update());
-      requestAnimationFrame(animate);
-    }
-    animate();
+    // animate(); // DISABLED Canvas Orbs for 60FPS Mobile Performance
 
     return () => {
       window.removeEventListener("resize", resize);
@@ -125,62 +121,39 @@ const App = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // Handle global asset loading
-    const handleLoad = () => {
-      // Ensure preloader stays for at least 2 seconds for premium feel
-      setTimeout(() => setIsLoading(false), 2000);
-    };
-
-    if (document.readyState === 'complete') {
-      handleLoad();
-    } else {
-      window.addEventListener('load', handleLoad);
-    }
-
-    return () => window.removeEventListener('load', handleLoad);
-  }, []);
+  // Preloader logic removed for instant start
 
 
   return (
     <ErrorBoundary>
-      <Preloader isLoading={isLoading} />
-      <div className={`transition-opacity duration-1000 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
-        <div
-          className=" bg-gradient-to-br from-slate-50 via-cyan-70 to-teal-600"
-        >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(6,182,212,0.08),transparent_50%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(20,184,166,0.06),transparent_50%)]" />
+      <div className="bg-gradient-to-br from-slate-50 via-cyan-50 to-teal-50 min-h-screen">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(6,182,212,0.08),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(20,184,166,0.06),transparent_50%)]" />
 
-
-          <Header openModal={openModal} />
-          <div className="fixed inset-0 -z-10 pointer-events-none">
-            <canvas ref={canvasRef} id="orbCanvas" className="w-full h-full"></canvas>
-          </div>
-
-          <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-x-hidden scroll-smooth">
-            <Hero />
-
-            <DomeGallery />
-
-            <Benefits />
-            <AnimatedSection>
-              <Collaboration />
-            </AnimatedSection>
-
-
-            <AnimatedSection>
-              <Services />
-            </AnimatedSection>
-
-            <Pricing />
-            <AnimatedSection>
-              <Roadmap />
-            </AnimatedSection>
-            <Footer />
-          </div>
-          <SignupModal show={showModal} onClose={closeModal} />
+        <Header openModal={openModal} />
+        <div className="fixed inset-0 -z-10 pointer-events-none opacity-20">
+          <canvas ref={canvasRef} id="orbCanvas" className="w-full h-full"></canvas>
         </div>
+
+        <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-x-hidden transform-gpu will-change-transform">
+          <Hero />
+          <DomeGallery />
+          <Benefits />
+          <AnimatedSection>
+            <Collaboration />
+          </AnimatedSection>
+
+          <AnimatedSection>
+            <Services />
+          </AnimatedSection>
+
+          <Pricing />
+          <AnimatedSection>
+            <Roadmap />
+          </AnimatedSection>
+          <Footer />
+        </div>
+        <SignupModal show={showModal} onClose={closeModal} />
       </div>
     </ErrorBoundary>
   );

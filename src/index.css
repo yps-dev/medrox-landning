@@ -32,7 +32,7 @@
 }
 
 * {
-  scroll-behavior: smooth;
+  /* instant scroll for snappiness */
 }
 
 @layer base {
