@@ -31,6 +31,24 @@ import med77 from "../assets/med77.png"
 import med88 from "../assets/med88.png"
 import med99 from "../assets/med99.png"
 
+// --- MARQUEE COMPONENT ---
+const Marquee = ({ items, direction = "left", speed = "normal" }) => {
+  const scrollClass = direction === "left" ? "animate-scroll" : "animate-scroll-reverse";
+
+  // Duplicate items for seamless loop
+  const duplicatedItems = [...items, ...items];
+
+  return (
+    <div className="flex w-full overflow-hidden select-none mask-linear-fade">
+      <div className={`flex flex-shrink-0 gap-8 py-4 ${scrollClass} will-change-transform`}>
+        {duplicatedItems.map((product, idx) => (
+          <ProductCard product={product} key={`${product.title}-${idx}`} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
@@ -67,58 +85,20 @@ export default function FeatureSection() {
   return <HeroParallax products={PRODUCTS} />;
 }
 
-export const HeroParallax = ({
-  products
-}) => {
-  // Split products into rows (distribute all 25 images)
-  const firstRow = products.slice(0, 9);
-  const secondRow = products.slice(9, 17);
-  const thirdRow = products.slice(17, 25);
-
-  const ref = React.useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
-
-  const translateX = useSpring(useTransform(scrollYProgress, [0, 1], [0, 1000]), springConfig);
-  const translateXReverse = useSpring(useTransform(scrollYProgress, [0, 1], [0, -1000]), springConfig);
-  const rotateX = useSpring(useTransform(scrollYProgress, [0, 0.2], [15, 0]), springConfig);
-  const opacity = useSpring(useTransform(scrollYProgress, [0, 0.2], [0.1, 1]), springConfig);
-  const rotateZ = useSpring(useTransform(scrollYProgress, [0, 0.2], [20, 0]), springConfig);
-  const translateY = useSpring(useTransform(scrollYProgress, [0, 0.2], [-700, 500]), springConfig);
+const HeroParallax = ({ products }) => {
+  const firstRow = products.slice(0, 8);
+  const secondRow = products.slice(8, 16);
+  const thirdRow = products.slice(16, 24);
 
   return (
-    <div
-      ref={ref}
-      className="h-[300vh] py-20 overflow-hidden bg-[#020617] antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]">
+    <div className="relative w-full py-20 bg-[#020617] antialiased overflow-hidden flex flex-col gap-16">
       <Header />
-      <motion.div
-        style={{
-          rotateX,
-          rotateZ,
-          translateY,
-          opacity,
-        }}
-        className="">
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20 mb-20">
-          {firstRow.map((product) => (
-            <ProductCard product={product} translate={translateX} key={product.title} />
-          ))}
-        </motion.div>
-        <motion.div className="flex flex-row  mb-20 space-x-20 ">
-          {secondRow.map((product) => (
-            <ProductCard product={product} translate={translateXReverse} key={product.title} />
-          ))}
-        </motion.div>
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-20">
-          {thirdRow.map((product) => (
-            <ProductCard product={product} translate={translateX} key={product.title} />
-          ))}
-        </motion.div>
-      </motion.div>
+
+      <div className="flex flex-col gap-12 -rotate-[2deg] scale-105 origin-center">
+        <Marquee items={firstRow} direction="left" />
+        <Marquee items={secondRow} direction="right" />
+        <Marquee items={thirdRow} direction="left" />
+      </div>
     </div>
   );
 };
@@ -157,31 +137,23 @@ export const Header = () => {
   );
 };
 
-export const ProductCard = ({
-  product,
-  translate
-}) => {
+const ProductCard = ({ product }) => {
   return (
-    <motion.div
-      style={{
-        x: translate,
-      }}
-      whileHover={{
-        y: -30,
-        scale: 1.05,
-      }}
-      key={product.title}
-      className="group/product h-80 w-[24rem] md:h-96 md:w-[32rem] relative shrink-0 transition-transform duration-500">
-      <div className="block h-full w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+    <div
+      className="group/product h-72 w-[28rem] relative shrink-0 transform-gpu"
+    >
+      <div className="block h-full w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-n-8/40 backdrop-blur-sm">
         <img
           src={product.thumbnail}
           className="object-cover object-center absolute h-full w-full inset-0 transition-transform duration-700 group-hover/product:scale-110"
           alt={product.title}
+          loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60 group-hover/product:opacity-80 transition-opacity duration-500" />
       </div>
 
-      <div className="absolute bottom-10 left-10 right-10 z-20">
+      <div className="absolute bottom-6 left-6 right-6 z-20">
         <h2 className="text-xl md:text-2xl font-bold text-white mb-2 translate-y-4 group-hover/product:translate-y-0 opacity-0 group-hover/product:opacity-100 transition-all duration-500">
           {product.title}
         </h2>
@@ -190,6 +162,6 @@ export const ProductCard = ({
 
       {/* Decorative glow */}
       <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl opacity-0 group-hover/product:opacity-20 blur-xl transition-opacity duration-500" />
-    </motion.div>
+    </div>
   );
 };
