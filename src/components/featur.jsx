@@ -121,14 +121,29 @@ export const Header = () => {
         <div className="text-base md:text-2xl mt-8 text-neutral-400 min-h-[100px] font-medium leading-relaxed">
           <RotatingText
             texts={[
-              "Supporting over 60+ specialists workflows",
-              "Experience the future of healthcare today.",
-              "Experience the future of full Pharmacy Management today.",
-              "Full Owner admin control with AI-Driven Handler.",
-              "All-in-one seamless pharmacy & healthcare system.",
-              "Designed with care. Built for performance.",
-              "Efficient. Secure. Broad. The next generation of Healthcare.",
-              "More than 30+ Features in each platform.",
+              "Supporting 60+ specialist workflows in one unified platform.",
+
+
+              "Experience the future of connected healthcare today.",
+
+
+              "Experience the future of full pharmacy management today.",
+
+
+              "Full owner and admin control with an AI‑driven command center.",
+
+
+              "All‑in‑one, seamless system for clinics, hospitals, and pharmacies.",
+
+
+              "Designed with care. Built for real‑world performance.",
+
+
+              "Efficient, secure, and scalable — the next generation of healthcare.",
+
+
+              "30+ powerful features in every Medrox platform.",
+
             ]}
           />
         </div>
@@ -142,12 +157,13 @@ const ProductCard = ({ product }) => {
     <div
       className="group/product h-72 w-[28rem] relative shrink-0 transform-gpu"
     >
-      <div className="block h-full w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-n-8/40 backdrop-blur-sm">
+      <div className="block h-full w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-[#020617] md:bg-n-8/40 md:backdrop-blur-sm">
         <img
           src={product.thumbnail}
           className="object-cover object-center absolute h-full w-full inset-0 transition-transform duration-700 group-hover/product:scale-110"
           alt={product.title}
-          loading="lazy"
+          loading="eager"
+          fetchPriority="high"
           decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60 group-hover/product:opacity-80 transition-opacity duration-500" />
@@ -160,8 +176,8 @@ const ProductCard = ({ product }) => {
         <div className="h-1 w-0 bg-cyan-500 group-hover/product:w-full transition-all duration-700 delay-100" />
       </div>
 
-      {/* Decorative glow */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl opacity-0 group-hover/product:opacity-20 blur-xl transition-opacity duration-500" />
+      {/* Decorative glow - Desktop Only */}
+      <div className="hidden md:block absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl opacity-0 group-hover/product:opacity-20 blur-xl transition-opacity duration-500" />
     </div>
   );
 };

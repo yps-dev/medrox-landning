@@ -198,7 +198,7 @@ const VideoCard = ({ video, isMain, onColorChange, onFocus, onBlur, focusedId, o
                     e.stopPropagation();
                     onClick(video, currentTime);
                 }}
-                className="w-full h-full relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-300 transform-gpu will-change-transform cursor-pointer"
+                className="w-full h-full relative overflow-hidden rounded-3xl border border-white/10 bg-[#0b1221] md:bg-white/5 md:backdrop-blur-md transition-all duration-300 transform-gpu will-change-transform cursor-pointer"
                 style={{
                     scale: isHovered && !isModalOpen ? 1.02 : isDimmed ? 0.98 : 1,
                     opacity: isDimmed ? 0.4 : 1,
@@ -209,10 +209,10 @@ const VideoCard = ({ video, isMain, onColorChange, onFocus, onBlur, focusedId, o
                     <div className="absolute inset-0 bg-black/40 z-40 pointer-events-none" />
                 )}
                 {/* SPOTLIGHT EFFECT */}
-                {/* SPOTLIGHT EFFECT (Optimized) */}
+                {/* SPOTLIGHT EFFECT (Optimized - Desktop Only) */}
                 {!isDimmed && (
                     <motion.div
-                        className="absolute -inset-full z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        className="hidden md:block absolute -inset-full z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                         style={{
                             background: `radial-gradient(400px circle at center, rgba(255,255,255,0.12), transparent 70%)`,
                             x: spotlightX,
