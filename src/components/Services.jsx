@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Section from "./Section";
 import Heading from "./Heading";
+import React from 'react';
 import { service1, service2, service3, check } from "../assets";
 import Carousel from "./corusel";
 import { brainwaveServices, brainwaveServicesIcons } from "../constants";
@@ -33,6 +34,12 @@ const staggerContainer = {
 };
 
 const Services = () => {
+  const [loadedImages, setLoadedImages] = React.useState({});
+
+  const handleImageLoad = (id) => {
+    setLoadedImages(prev => ({ ...prev, [id]: true }));
+  };
+
   return (
     <Section id="Our-Edge" className="">
 
@@ -232,15 +239,28 @@ const Services = () => {
             }}
             transition={{ duration: 0.3 }}
           >
-            <div className="absolute top-0 left-0 max-w-4xl h-full pointer-events-none md:w-3/5 xl:w-auto">
+            <div className="absolute top-0 left-0 max-w-4xl h-full pointer-events-none md:w-3/5 xl:w-auto overflow-hidden bg-slate-900 rounded-2xl">
+              {/* Neural Placeholder */}
+              {!loadedImages['service1'] && (
+                <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900">
+                  <motion.div
+                    animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="w-full h-full bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.15),transparent_70%)]"
+                  />
+                </div>
+              )}
               <img
-                className="w-full h-full object-cover md:object-right"
+                className={`w-full h-full object-cover md:object-right transition-all duration-700 transform-gpu will-change-transform ${loadedImages['service1'] ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
                 width={800}
                 alt="Smartest AI"
                 height={730}
                 src={service1}
-                loading="lazy"
+                fetchPriority="high"
+                loading="eager"
                 decoding="async"
+                onLoad={() => handleImageLoad('service1')}
+                style={{ backfaceVisibility: 'hidden' }}
               />
             </div>
 
@@ -281,15 +301,27 @@ const Services = () => {
               }}
               transition={{ duration: 0.3 }}
             >
-              <div className="absolute inset-0">
+              <div className="absolute inset-0 bg-slate-900 overflow-hidden">
+                {/* Neural Placeholder */}
+                {!loadedImages['service2'] && (
+                  <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-900 via-teal-900/20 to-slate-900">
+                    <motion.div
+                      animate={{ opacity: [0.3, 0.6, 0.3] }}
+                      transition={{ duration: 4, repeat: Infinity }}
+                      className="w-full h-full bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.15),transparent_70%)]"
+                    />
+                  </div>
+                )}
                 <img
                   src={service2}
-                  className="h-full w-full object-cover"
+                  className={`h-full w-full object-cover transition-all duration-700 transform-gpu ${loadedImages['service2'] ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
                   width={630}
                   height={750}
                   alt="robot"
-                  loading="lazy"
+                  fetchPriority="high"
+                  loading="eager"
                   decoding="async"
+                  onLoad={() => handleImageLoad('service2')}
                 />
               </div>
               <div className="absolute inset-0 flex flex-col justify-end p-8 bg-gradient-to-b from-n-8/0 to-n-8/90 lg:p-15">
@@ -366,15 +398,28 @@ const Services = () => {
                 whileHover={{ scale: 1.01 }}
                 transition={{ duration: 0.4 }}
               >
-                <img
-                  src={service3}
-                  className="w-full h-full object-cover"
-                  width={520}
-                  height={400}
-                  alt="Scary robot"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <div className="w-full h-full bg-slate-900">
+                  {/* Neural Placeholder */}
+                  {!loadedImages['service3'] && (
+                    <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
+                      <motion.div
+                        animate={{ opacity: [0.3, 0.5, 0.3], rotate: [0, 5, -5, 0] }}
+                        transition={{ duration: 5, repeat: Infinity }}
+                        className="w-full h-full bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.1),transparent_70%)]"
+                      />
+                    </div>
+                  )}
+                  <img
+                    src={service3}
+                    className={`w-full h-full object-cover transition-all duration-700 transform-gpu ${loadedImages['service3'] ? 'opacity-100' : 'opacity-0'}`}
+                    width={520}
+                    height={400}
+                    alt="Scary robot"
+                    loading="eager"
+                    decoding="async"
+                    onLoad={() => handleImageLoad('service3')}
+                  />
+                </div>
                 <VideoBar />
               </motion.div>
             </motion.div>
