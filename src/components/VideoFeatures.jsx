@@ -11,7 +11,7 @@ const videos = [
     {
         id: 'main',
         title: 'System Core Logic',
-        src: '/videos/main.mp4',
+        src: 'https://www.dropbox.com/scl/fi/3xlusyip6jc2b9qdtpj6k/main.mp4?rlkey=4o04resyer6vmjixos1adyq96&st=5qr1i145&raw=1',
         length: '02:15',
         type: 'Main Module',
         description: 'Deep dive into the neural architecture backbone.',
@@ -20,7 +20,7 @@ const videos = [
     {
         id: 'sub1',
         title: 'Real-time Metrics',
-        src: '/videos/doc.mp4',
+        src: 'https://www.dropbox.com/scl/fi/jgf10xbl272vsnznrjzwv/doc.mp4?rlkey=bdkm9649d65e4lllkeidivnyt&st=04a0nozo&raw=1',
         length: '00:45',
         type: 'Analytics',
         description: 'Live data stream visualization.',
@@ -29,7 +29,7 @@ const videos = [
     {
         id: 'sub2',
         title: 'Security Protocols',
-        src: '/videos/rep.mp4',
+        src: 'https://www.dropbox.com/scl/fi/pszsxxhydsntvhhnjhzcv/user.mp4?rlkey=1lkv3yo74jokhkbivkg547z4t&st=txthefr2&raw=1',
         length: '00:30',
         type: 'Security',
         description: 'Bank-grade encryption layers.',
@@ -38,7 +38,7 @@ const videos = [
     {
         id: 'sub3',
         title: 'Global Sync',
-        src: '/videos/user.mp4',
+        src: 'https://www.dropbox.com/scl/fi/rrsonhhw7sos5hhfvio87/rep.mp4?rlkey=08e9t1ikt044ibgul7va90y6d&st=tm7ncgt9&raw=1',
         length: '00:50',
         type: 'Network',
         description: 'Instant node propagation demo.',
@@ -51,6 +51,64 @@ const VideoCard = ({ video, isMain, onColorChange, onFocus, onBlur, focusedId, o
     const isDimmed = (focusedId && !isHovered) || isModalOpen;
     const videoRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [isReadyToPlay, setIsReadyToPlay] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
+
+    // --- HYPER-SPEED BUFFER PRIMING ---
+    useEffect(() => {
+        if (!videoRef.current) return;
+
+        const primeBuffer = async () => {
+            try {
+                // Force a tiny play/pause to fill the GPU and network buffer
+                await videoRef.current.play();
+                videoRef.current.pause();
+                // If it successfully plays and pauses, it's essentially ready
+                setIsReadyToPlay(true);
+            } catch (err) {
+                // Autoplay might be blocked, but the buffer will still fill
+                console.log("Buffer priming ready state pending...");
+            }
+        };
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    primeBuffer();
+                    observer.disconnect();
+                }
+            },
+            { rootMargin: '400px' } // Start priming 400px before it enters
+        );
+
+        observer.observe(videoRef.current);
+        return () => observer.disconnect();
+    }, []);
+
+    // Sync time for seamless transition
+    useEffect(() => {
+        if (!videoRef.current) return;
+        const interval = setInterval(() => {
+            if (videoRef.current && isPlaying) {
+                setCurrentTime(videoRef.current.currentTime);
+            }
+        }, 500);
+        return () => clearInterval(interval);
+    }, [isPlaying]);
+
+    // Speed Optimization: Only play sub-videos on hover
+    useEffect(() => {
+        if (!videoRef.current) return;
+
+        if (isHovered && !isModalOpen) {
+            videoRef.current.play().catch(() => { });
+            setIsPlaying(true);
+        } else if (!isMain) {
+            videoRef.current.pause();
+            setIsPlaying(false);
+        }
+    }, [isHovered, isMain, isModalOpen]);
 
     // --- 3D TILT & SPOTLIGHT LOGIC ---
     const x = useMotionValue(0);
@@ -122,8 +180,6 @@ const VideoCard = ({ video, isMain, onColorChange, onFocus, onBlur, focusedId, o
 
     return (
         <motion.div
-            layoutId={`card-${video.id}`}
-            onClick={() => onClick(video)}
             className={`relative rounded-3xl group cursor-pointer 
                 ${typeof className !== 'undefined' ? className : (isMain ? 'col-span-1 lg:col-span-3 lg:row-span-2 min-h-[400px] lg:min-h-[500px]' : 'col-span-1 min-h-[200px]')}
             `}
@@ -137,7 +193,12 @@ const VideoCard = ({ video, isMain, onColorChange, onFocus, onBlur, focusedId, o
         >
             {/* INNER CARD (TRANSFORM TARGET) */}
             <motion.div
-                className="w-full h-full relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-300 transform-gpu will-change-transform"
+                layoutId={`card-${video.id}`}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onClick(video, currentTime);
+                }}
+                className="w-full h-full relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-300 transform-gpu will-change-transform cursor-pointer"
                 style={{
                     scale: isHovered && !isModalOpen ? 1.02 : isDimmed ? 0.98 : 1,
                     opacity: isDimmed ? 0.4 : 1,
@@ -190,15 +251,30 @@ const VideoCard = ({ video, isMain, onColorChange, onFocus, onBlur, focusedId, o
                 )}
 
                 {/* PREVIEW VIDEO */}
-                <div className="absolute inset-0 z-0 select-none">
+                <div className="absolute inset-0 z-0 select-none bg-slate-900 overflow-hidden">
+                    {/* Neural Poster (Fast Placeholder) */}
+                    <div
+                        className={`absolute inset-0 z-0 transition-opacity duration-1000 bg-gradient-to-br from-slate-900 via-slate-800 to-black ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
+                    >
+                        <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
+                        <motion.div
+                            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+                            transition={{ duration: 5, repeat: Infinity }}
+                            className="absolute inset-0 bg-radial-gradient from-cyan-500/10 via-transparent to-transparent"
+                        />
+                    </div>
+
                     <video
                         ref={videoRef}
                         src={video.src}
                         muted
                         loop
                         playsInline
-                        preload={isMain ? "auto" : "metadata"}
-                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 will-change-transform transform-gpu"
+                        preload="auto"
+                        onLoadedData={() => setIsLoaded(true)}
+                        onCanPlayThrough={() => setIsReadyToPlay(true)}
+                        className={`w-full h-full object-cover transition-all duration-700 will-change-transform transform-gpu ${isLoaded && isReadyToPlay ? 'opacity-90' : 'opacity-0'} group-hover:opacity-100`}
+                        style={{ backfaceVisibility: 'hidden', transform: 'translate3d(0,0,0) translateZ(0)' }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
                 </div>
@@ -224,6 +300,10 @@ const VideoCard = ({ video, isMain, onColorChange, onFocus, onBlur, focusedId, o
                         </div>
                         <motion.button
                             whileHover={{ scale: 1.1, rotate: 90 }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onClick(video, currentTime);
+                            }}
                             className="p-2 rounded-full bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-colors"
                         >
                             <Maximize2 size={16} />
@@ -279,8 +359,8 @@ export default function VideoFeatures({ onColorChange, onFocusChange }) {
         if (onFocusChange) onFocusChange(false);
     };
 
-    const handleCardClick = (video) => {
-        setSelectedVideo(video);
+    const handleCardClick = (video, time = 0) => {
+        setSelectedVideo({ ...video, startTime: time });
         if (onFocusChange) onFocusChange(true); // Keep focus mode ON when modal is open
     };
 
@@ -366,8 +446,15 @@ export default function VideoFeatures({ onColorChange, onFocusChange }) {
                                 <video
                                     src={selectedVideo.src}
                                     autoPlay
-                                    loop // Should likely loop
-                                    controls // ENABLE CONTROLS
+                                    loop
+                                    controls
+                                    playsInline
+                                    muted={false}
+                                    onLoadedMetadata={(e) => {
+                                        if (selectedVideo.startTime) {
+                                            e.target.currentTime = selectedVideo.startTime;
+                                        }
+                                    }}
                                     className="w-full h-full object-contain"
                                 />
 
