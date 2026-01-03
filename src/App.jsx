@@ -12,6 +12,7 @@ import AnimatedSection from "./components/design/AnimatedSection";
 import SignupModal from "./components/modal";
 
 import DomeGallery from "./components/featur";
+import ContactModal, { useModal as useContactModal } from "./components/contact";
 // Preloader removed for instant load performance
 
 class ErrorBoundary extends React.Component {
@@ -34,6 +35,7 @@ class ErrorBoundary extends React.Component {
 
 const App = () => {
   const [showModal, setShowModal] = useState(false);
+  const contactModal = useContactModal();
   const [isLoading, setIsLoading] = useState(true);
   const canvasRef = useRef(null);
 
@@ -136,7 +138,7 @@ const App = () => {
         </div>
 
         <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-x-hidden transform-gpu will-change-transform">
-          <Hero />
+          <Hero openContact={contactModal.openModal} />
           <DomeGallery />
           <Benefits />
           <AnimatedSection>
@@ -154,6 +156,7 @@ const App = () => {
           <Footer />
         </div>
         <SignupModal show={showModal} onClose={closeModal} />
+        <ContactModal isOpen={contactModal.isOpen} closeModal={contactModal.closeModal} />
       </div>
     </ErrorBoundary>
   );

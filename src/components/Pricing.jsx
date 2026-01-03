@@ -1,248 +1,144 @@
-import React, { useRef, useState, useEffect } from 'react';
+"use client";
+import React, { useState, useRef } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
 import Section from "./Section";
-import PricingList from "./PricingList";
-import { motion, useScroll, useTransform, animate, useMotionValue, useMotionTemplate, useVelocity, useSpring } from 'framer-motion';
-import InfinityGrid from './InfinityGrid';
 import VideoFeatures from './VideoFeatures';
-import Threads from './Threads'; // IMPORT THREADS
-import LaserFlow from './LaserFlow';
-import DataTicker from './DataTicker'; // NEW
-import EnergyPool from './EnergyPool'; // NEW
-// --- HELPER: Hex to RGB ---
-function hexToRgb(hex) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? [
-    parseInt(result[1], 16) / 255,
-    parseInt(result[2], 16) / 255,
-    parseInt(result[3], 16) / 255
-  ] : [1, 1, 1];
-}
+import DataTicker from './DataTicker';
+import Rox from '../assets/Rox.png';
+import Globe from '../assets/Globe.png';
 
-const ShootingStars = React.memo(() => {
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {[...Array(10)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute h-px w-[100px] bg-gradient-to-r from-transparent via-white to-transparent will-change-transform" // HINT FOR COMPOSITOR
-          style={{
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            opacity: Math.random(),
-          }}
-          animate={{
-            x: [-200, 1500],
-            opacity: [0, 1, 0],
-          }}
-          transition={{
-            duration: Math.random() * 5 + 3,
-            repeat: Infinity,
-            delay: Math.random() * 5,
-            ease: "linear",
-          }}
-        />
-      ))}
-      {/* Soft dust */}
-      {[...Array(15)].map((_, i) => (
-        <motion.div
-          key={`dust-${i}`}
-          className="absolute w-1 h-1 bg-white rounded-full opacity-20 will-change-transform" // ADD WILL-CHANGE
-          style={{
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            opacity: [0.1, 0.4, 0.1],
-            scale: [1, 1.5, 1],
-          }}
-          transition={{
-            duration: Math.random() * 3 + 2,
-            repeat: Infinity,
-          }}
-        />
-      ))}
-    </div>
-  );
-});
-
-// --- MAIN COMPONENT ---
 export default function FeaturesShowcase() {
+  const [isFocusMode, setIsFocusMode] = useState(false);
   const containerRef = useRef(null);
-  const [activeColor, setActiveColor] = useState('#3b82f6');
-  const [isFocusMode, setIsFocusMode] = useState(false); // New Focus State
 
-  const color1 = useMotionValue('#3b82f6');
-  const color2 = useMotionValue('#06b6d4');
+  // 3D MAGNETIC SETUP
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["17.5deg", "-17.5deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-17.5deg", "17.5deg"]);
 
-  const { scrollY } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
 
-  // WARP SCROLL EFFECT: Skew y based on velocity
-  // Max skew 5 deg for subtle effect
-  const skewY = useTransform(smoothVelocity, [-1000, 0, 1000], [-5, 0, 5]);
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
-  // Smooth Focus Mode Opacity
-  // When focused, background elements fade to 0.1
-  const bgOpacity = isFocusMode ? 0.1 : 1;
-  const contentOpacity = isFocusMode ? 0.2 : 1;
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
-  useEffect(() => {
-    animate(color1, activeColor, { duration: 1.0 });
-    animate(color2, activeColor, { duration: 1.5, delay: 0.1 });
-  }, [activeColor]);
-
-  // Convert activeColor to RGB for Threads
-  const threadsColor = hexToRgb(activeColor);
+  // Apple-style parallax: Header moves slower than content
+  const headerY = useTransform(scrollYProgress, [0, 0.2], [40, -50]);
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
   return (
-    <Section id="features" className="relative bg-gradient-to-br from-cyan-100 via-gray-100 to-cyan-100/70 pt-0 pb-0 overflow-hidden min-h-screen">
+    <Section id="scope" className="relative bg-[#FBFBFB] min-h-screen overflow-visible py-0">
 
-      {/* --- BACKGROUND (Dims on Focus) --- */}
-      <motion.div
-        className="absolute bg-gradient-to-br from-cyan-900/70  to-cyan-900/70 inset-0 z-0 transition-opacity duration-700 ease-in-out will-change-transform"
-        style={{ opacity: bgOpacity }}
-      >
-        {/* THREADS WEBGL ANIMATION */}
-        {/* <Threads ... />  REPLACED WITH LASERFLOW AS REQUESTED OR ADDED ALONGSIDE? 
-            User said "so amzing what ytou didi but lets rake itto teh next levevand add thsi".
-            User also said "dont chnag eother thing ins my ui".
-            So I should KEEP InfinityGrid if possible or overlay this.
-            Let's add it ON TOP of InfinityGrid but behind content.
-        */}
-        <InfinityGrid activeColor={activeColor} />
-
-        {/* GLOBAL LASER FEED (Page Top -> Video) */}
+      {/* ROX AI PERMANENT BRANDING SECTION (UPGRADED) */}
+      <div className="w-full py-32 flex flex-col items-center justify-center bg-white border-b border-slate-50 overflow-hidden">
         <div
-          className="absolute inset-x-0 mt-5 top-0  h-[111vh]          /* default for very large screens */
-  2xl:h-[111vh]      /* screens ≥1536px (big desktops) */
-  xl:h-[115vh]       /* screens ≥1280px */
-  lg:h-[118vh]       /* screens ≥1024px */
-  md:h-[108vh]        /* screens ≥768px */
-  sm:h-[90vh]
-  xs:h-[60vh]        /* screens ≥640px */ mix-blend-screen pointer-events-none z-0"
-          style={{
-            maskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 60%, transparent 100%)'
-          }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          className="relative w-full max-w-6xl flex items-center justify-center perspective-[1000px] mb-12"
         >
-
-          <LaserFlow
-            color="#FFFFFF"         // ULTRA BRIGHT WHITE
-            dpr={0}
-            horizontalBeamOffset={0}
-            verticalBeamOffset={0}
-            verticalSizing={20.0}
-            horizontalSizing={1.0}
-            wispIntensity={7.0}
-            fogIntensity={2.5}
-            wispDensity={2.5}
-            fogScale={0.5}
-            wispSpeed={25}
-            flowSpeed={0.35}
-          />
-        </div>
-
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/50 pointer-events-none" />
-      </motion.div>
-
-      {/* Layer Shooting Stars ON TOP of Threads for depth */}
-      <div className={`transition-opacity duration-500 ${isFocusMode ? 'opacity-0' : 'opacity-100'}`}>
-        <ShootingStars />
-      </div>
-
-      {/* --- TRUNK --- */}
-
-      {/* --- CONTENT (Warps on Scroll) --- */}
-      <motion.div
-        ref={containerRef}
-        className="container relative z-10 py-20 md:py-32 will-change-transform" // PERFORMANCE FIX: Re-added for smooth scroll
-        style={{ skewY }} // APPLY WARP IT HERE
-      >
-        <div className="max-w-4xl mx-auto text-center mb-24 md:mb-32 transition-all duration-500 will-change-transform"
-          style={{ opacity: contentOpacity, filter: isFocusMode ? 'blur(5px)' : 'blur(0px)', transform: isFocusMode ? 'scale(0.95)' : 'scale(1)' }}
-        >
+          {/* 3D TILT CONTAINER */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
+            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            className="relative z-10 flex items-center justify-center"
           >
-            {/* HOLOGRAPHIC HEADER */}
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-6xl md:text-9xl font-black tracking-tighter text-white/10 mb-[-1.5rem] md:mb-[-3.5rem] select-none mix-blend-overlay"
-            >
-              CAPABILITIES
-            </motion.h2>
-
-            <p className="text-4xl mt-11 md:text-6xl font-black tracking-tight text-white mb-6 relative z-10 drop-shadow-2xl">
-              Everything you need to{' '}
-              <span
-                className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-400 animate-text"
-                style={{
-                  backgroundSize: '200% auto',
-                  textShadow: `0 0 30px ${activeColor}55`
-                }}
-              >
-                Scale
-                {/* SPARKLES WOW EFFECT */}
-                <motion.span
-                  className="absolute -top-6 -right-6 w-4 h-4 bg-white rounded-full blur-[1px]"
-                  animate={{ scale: [0, 1, 0], opacity: [0, 1, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
-                />
-                <motion.span
-                  className="absolute -bottom-4 -left-4 w-2 h-2 bg-cyan-200 rounded-full blur-[1px]"
-                  animate={{ scale: [0, 1, 0], opacity: [0, 1, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.5 }}
-                />
-                <motion.span
-                  className="absolute top-0 -right-8 w-1 h-1 bg-teal-200 rounded-full"
-                  animate={{ scale: [0, 1, 0], opacity: [0, 1, 0] }}
-                  transition={{ duration: 1, repeat: Infinity, repeatDelay: 2 }}
-                />
-              </span>
-            </p>
-            <style jsx>{`
-              @keyframes text {
-                to { background-position: 200% center; }
-              }
-              .animate-text {
-                animation: text 3s linear infinite;
-              }
-            `}</style>
-
-            <p className="text-lg md:text-xl text-slate-300 font-medium max-w-2xl mx-auto drop-shadow-lg mb-16">
-              Built for the future. Robust, secure, and incredibly fast.
-            </p>
+            {/* NEURAL ORBITALS */}
 
 
+            <img
+              src={Rox}
+              alt="Rox AI Core"
+              className="w-48 h-48 md:w-72 md:h-72 lg:w-96 lg:h-96 drop-shadow-[0_25px_50px_rgba(0,0,0,0.1)] select-none pointer-events-none relative z-10"
+            />
 
+            {/* FLOATING INTELLIGENCE NODES (Parallax Depth Points) */}
+            <motion.div
+              className="absolute w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.8)]"
+              style={{ top: '20%', left: '30%', x: useTransform(mouseXSpring, [-0.5, 0.5], [-40, 40]), y: useTransform(mouseYSpring, [-0.5, 0.5], [-40, 40]), translateZ: 50 }}
+            />
+            <motion.div
+              className="absolute w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.8)]"
+              style={{ top: '60%', right: '25%', x: useTransform(mouseXSpring, [-0.5, 0.5], [60, -60]), y: useTransform(mouseYSpring, [-0.5, 0.5], [60, -60]), translateZ: 80 }}
+            />
+            <motion.div
+              className="absolute w-2.5 h-2.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,0.8)]"
+              style={{ bottom: '15%', left: '45%', x: useTransform(mouseXSpring, [-0.5, 0.5], [-20, 20]), y: useTransform(mouseYSpring, [-0.5, 0.5], [-20, 20]), translateZ: 30 }}
+            />
+
+            {/* Inner Glow */}
+            <div className="absolute inset-0 bg-cyan-400/10 rounded-full blur-[80px] -z-10 animate-pulse" />
           </motion.div>
+
+          {/* Large Ambient Background Glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-gradient-to-r from-cyan-100/20 to-blue-100/20 rounded-full blur-[120px] -z-20 pointer-events-none" />
         </div>
 
-        <div className="relative mb-32">
-          {/* PASS FOCUS HANDLER */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
+          className="text-center px-4"
+        >
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-[-0.04em] text-slate-900 mb-6 drop-shadow-sm">
+            ROX <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-500">AI</span>
+          </h2>
+          <div className="w-16 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 mx-auto mb-6 rounded-full" />
+          <p className="max-w-2xl text-lg md:text-2xl text-slate-500 font-medium leading-relaxed tracking-tight italic">
+            "The world&apos;s first autonomous Healthcare AI <br className="hidden md:block" /> for unified global healthcare intelligence."
+          </p>
+        </motion.div>
 
-          <VideoFeatures
-            onColorChange={setActiveColor}
-            onFocusChange={setIsFocusMode}
-          />
-        </div>
+        {/* BLURRED GLOBE BACKGROUND ELEMENT */}
 
-
-
-        {/* FOOTER FINALE */}
-
-      </motion.div>
-
-      {/* DATA TICKER (Unwarped, Sticky Bottom or just at end) */}
-      <div className="relative z-20 border-t border-white/10">
-        <DataTicker />
       </div>
 
+
+      <div ref={containerRef} className="container relative z-10">
+
+        {/* MAGNIFICENT HEADER */}
+        <motion.div
+          style={{ y: headerY, opacity: isFocusMode ? 0 : headerOpacity }}
+          className="sticky top-0 h-screen flex flex-col items-center justify-center text-center pointer-events-none"
+        >
+
+          <h1 className="text-[13vw] lg:text-[9vw] font-semibold tracking-[-0.04em] leading-[0.85] text-slate-900 mb-10">
+            Absolute <br /> <span className="text-slate-300">Precision.</span>
+          </h1>
+
+          <p className="max-w-xl text-lg md:text-xl text-slate-400 font-medium leading-relaxed">
+            Smarter diagnostics and care, <br /> powered by Medrox Rox AI.
+          </p>
+
+        </motion.div>
+
+        {/* INTERACTIVE CONTENT GRID */}
+        <div className="relative z-20 -mt-[30vh] pb-40">
+          <VideoFeatures onFocusChange={setIsFocusMode} />
+        </div>
+      </div>
+
+      <DataTicker />
     </Section>
   );
 }

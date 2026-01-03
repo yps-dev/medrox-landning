@@ -49,7 +49,7 @@ export const navigation = [
   {
     id: "0",
     title: "Services",
-    url: "#Services",
+    url: "#services",
   },
   {
     id: "1",
@@ -65,7 +65,7 @@ export const navigation = [
   {
     id: "3",
     title: "Scope",
-    url: "#features",
+    url: "#scope",
   },
   {
     id: "4",
@@ -277,16 +277,16 @@ export const benefits = [
   {
     id: "0",
     title: "Precision & Efficiency at Scale",
-    text: "Automated Appointment Mastery — AI-driven scheduling that slashes wait times and boosts clinic efficiency.24/7 Secure Operations — Offline-safe and encrypted, ensuring reliability even in non-stop care environments.",
+    text: "Let Medrox handle the heavy work behind the scenes. Smart scheduling tools cut waiting times and keep every room, doctor, and resource fully utilized, while secure, always-on infrastructure keeps your operations running smoothly—even in busy, 24/7 environments.",
     backgroundUrl: card8,
     iconUrl: benefitIcon1,
     imageUrl: benefitImage2,
-    light: false,
+    light: true,
   },
   {
     id: "1",
-    title: "Intelligent Tools for Smart Specialists",
-    text: "Smart Specialist Dashboards — Real-time access to critical insights for optimized patient care  Analytics-Powered Admin — Financial and operational analytics to drive smart decisions   AI- Driven Diagnosis — Predictive precision with advanced data analysis",
+    title: "Built for Every Specialist",
+    text: "Medrox gives each doctor and specialist a workspace designed for their field — from general practice and dermatology to dental and pathology. Structured workflows, procedural assistants, and decision-support tools help you see blind spots, review medical data clearly, and make faster, more accurate diagnoses for every patient.",
     backgroundUrl: card2,
     iconUrl: benefitIcon2,
     imageUrl: benefitImage2,
@@ -294,8 +294,8 @@ export const benefits = [
   },
   {
     id: "2",
-    title: "Real-Time Patient Engagement",
-    text: "Live Patient Monitoring — Track vitals in real-time to ensure fast interventions.Digital Records & E-Prescriptions — Seamless and secure access to documentation and meds.Full Medical History Access — Empower staff with instant insights into patient journeys.",
+    title: "Real-Time Connection With Patients",
+    text: "Stay close to your patients with secure remote access to their records, full medical history, and e‑prescriptions anytime you need. Real-time updates, digital documentation, and follow-up tools let nurses, specialists, and surgeons monitor progress, answer questions, and manage care without needing patients to be on-site.",
     backgroundUrl: card3,
     iconUrl: benefitIcon3,
     imageUrl: benefitImage2,
@@ -304,7 +304,7 @@ export const benefits = [
   {
     id: "3",
     title: "Visibility & Reputation Building",
-    text: "Popularity Tracking — Showcase top-performing staff and sentiment metrics.Global Healthcare Branding — Extend reach with targeted advertising and a trusted digital presence.",
+    text: "Give your best people and services the spotlight they deserve. Medrox tracks performance and patient sentiment, helping you highlight top staff and departments, grow your digital presence, and build a trusted healthcare brand in your city and beyond.",
     backgroundUrl: card9,
     iconUrl: benefitIcon2,
     imageUrl: benefitImage2,

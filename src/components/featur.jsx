@@ -40,7 +40,7 @@ const Marquee = ({ items, direction = "left", speed = "normal" }) => {
 
   return (
     <div className="flex w-full overflow-hidden select-none mask-linear-fade">
-      <div className={`flex flex-shrink-0 gap-8 py-4 ${scrollClass} will-change-transform`}>
+      <div className={`flex flex-shrink-0 gap-4 md:gap-8 py-4 ${scrollClass} will-change-transform`}>
         {duplicatedItems.map((product, idx) => (
           <ProductCard product={product} key={`${product.title}-${idx}`} />
         ))}
@@ -54,31 +54,32 @@ export function cn(...inputs) {
 }
 
 const PRODUCTS = [
-  { title: "Medrox Core", link: "#", thumbnail: med1 },
-  { title: "Smart Diagnostics", link: "#", thumbnail: med2 },
-  { title: "Pharmacy Sync", link: "#", thumbnail: med3 },
-  { title: "Patient Nexus", link: "#", thumbnail: med4 },
-  { title: "Cloud Care", link: "#", thumbnail: med5 },
-  { title: "Neural Analytics", link: "#", thumbnail: med6 },
-  { title: "Quantum Health", link: "#", thumbnail: med7 },
-  { title: "Global Network", link: "#", thumbnail: med8 },
-  { title: "Medrox Pulse", link: "#", thumbnail: med44 },
-  { title: "Owner Control", link: "#", thumbnail: med9 },
-  { title: "Sales Engine", link: "#", thumbnail: med10 },
-  { title: "Inventory IQ", link: "#", thumbnail: med11 },
-  { title: "Prescription Flow", link: "#", thumbnail: med12 },
-  { title: "Specialist Hub", link: "#", thumbnail: med13 },
-  { title: "Holographic Records", link: "#", thumbnail: med14 },
-  { title: "Neural Lab", link: "#", thumbnail: med15 },
-  { title: "Adaptive Guard", link: "#", thumbnail: med16 },
-  { title: "Precision Med", link: "#", thumbnail: med17 },
-  { title: "E-Sales Pro", link: "#", thumbnail: med18 },
-  { title: "Smart Inventory", link: "#", thumbnail: med19 },
-  { title: "Pulse X", link: "#", thumbnail: med55 },
-  { title: "Nexus Drive", link: "#", thumbnail: med66 },
-  { title: "Quantum Sync", link: "#", thumbnail: med77 },
-  { title: "Analytics Plus", link: "#", thumbnail: med88 },
-  { title: "Next-Gen Med", link: "#", thumbnail: med99 },
+  { title: "Medrox Core Platform", link: "#", thumbnail: med1 },
+  { title: "Smart Diagnostic Assistant", link: "#", thumbnail: med2 },
+  { title: "Integrated Pharmacy Management", link: "#", thumbnail: med3 },
+  { title: "Unified Patient Records", link: "#", thumbnail: med4 },
+  { title: "Cloud-Based Care Access", link: "#", thumbnail: med5 },
+  { title: "Clinical & Business Analytics", link: "#", thumbnail: med6 },
+  { title: "Hospital & Clinic Operations", link: "#", thumbnail: med7 },
+  { title: "Multi-Branch & Network Support", link: "#", thumbnail: med8 },
+  { title: "Medrox Pulse Dashboard", link: "#", thumbnail: med44 },
+  { title: "Owner & Admin Control Center", link: "#", thumbnail: med9 },
+  { title: "Billing & Revenue Tools", link: "#", thumbnail: med10 },
+  { title: "Smart Stock & Inventory", link: "#", thumbnail: med11 },
+  { title: "End-to-End Prescription Flow", link: "#", thumbnail: med12 },
+  { title: "60+ specilait  workflow ", link: "#", thumbnail: med13 },
+  { title: "360° Patient Record View", link: "#", thumbnail: med14 },
+  { title: "Lab & Diagnostics Management", link: "#", thumbnail: med15 },
+  { title: "Security & Access Control", link: "#", thumbnail: med16 },
+  { title: "Treatment & Follow-Up Tools", link: "#", thumbnail: med17 },
+  { title: "Point-of-Sale & Invoicing", link: "#", thumbnail: med18 },
+  { title: "Advanced Inventory Tracking", link: "#", thumbnail: med19 },
+  { title: "Executive Overview Dashboard", link: "#", thumbnail: med55 },
+  { title: "patinet Data & Document Storage", link: "#", thumbnail: med66 },
+  { title: "Real-Time Data Sync", link: "#", thumbnail: med77 },
+  { title: "Advanced Reports & KPIs", link: "#", thumbnail: med88 },
+  { title: "Next-Generation Healthcare Suite", link: "#", thumbnail: med99 },
+
 ];
 
 export default function FeatureSection() {
@@ -121,29 +122,28 @@ export const Header = () => {
         <div className="text-base md:text-2xl mt-8 text-neutral-400 min-h-[100px] font-medium leading-relaxed">
           <RotatingText
             texts={[
-              "Supporting 60+ specialist workflows in one unified platform.",
+              "Supporting 60+ specialist workflows in one unified platform, from analyzing to decision making and Full diagnostics.",
 
 
-              "Experience the future of connected healthcare today.",
+              "Experience the future of connected healthcare today with real-time appointments, records, and medication control.",
 
 
-              "Experience the future of full pharmacy management today.",
+              "Experience the future of full pharmacy management today with end‑to‑end stock, prescriptions, and sales in one place.",
 
 
-              "Full owner and admin control with an AI‑driven command center.",
+              "Full owner and admin control with an AI‑driven command center for staff, branches, and daily operations.",
 
 
-              "All‑in‑one, seamless system for clinics, hospitals, and pharmacies.",
+              "All‑in‑one, seamless system for clinics, hospitals, and pharmacies—built to connect every sector of care.",
 
 
-              "Designed with care. Built for real‑world performance.",
+              "Designed with care. Built for real‑world performance in busy hospitals, clinics, and pharmacies.",
 
 
-              "Efficient, secure, and scalable — the next generation of healthcare.",
+              "Efficient, secure, and scalable — the next generation of healthcare for single sites and growing networks.",
 
 
-              "30+ powerful features in every Medrox platform.",
-
+              "30+ powerful features in every Medrox platform, from smart diagnostics to full pharmacy and operations control.",
             ]}
           />
         </div>
@@ -155,12 +155,12 @@ export const Header = () => {
 const ProductCard = ({ product }) => {
   return (
     <div
-      className="group/product h-72 w-[28rem] relative shrink-0 transform-gpu"
+      className="group/product h-36 w-[14rem] md:h-72 md:w-[28rem] relative shrink-0 transform-gpu"
     >
-      <div className="block h-full w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-[#020617] md:bg-n-8/40 md:backdrop-blur-sm">
+      <div className="relative block h-full w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-[#020617] md:bg-n-8/40 md:backdrop-blur-sm">
         <img
           src={product.thumbnail}
-          className="object-cover object-center absolute h-full w-full inset-0 transition-transform duration-700 group-hover/product:scale-110"
+          className="object-cover object-center absolute h-full w-full inset-0 rounded-3xl transition-transform duration-700 group-hover/product:scale-110"
           alt={product.title}
           loading="eager"
           fetchPriority="high"
@@ -168,6 +168,7 @@ const ProductCard = ({ product }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60 group-hover/product:opacity-80 transition-opacity duration-500" />
       </div>
+
 
       <div className="absolute bottom-6 left-6 right-6 z-20">
         <h2 className="text-xl md:text-2xl font-bold text-white mb-2 translate-y-4 group-hover/product:translate-y-0 opacity-0 group-hover/product:opacity-100 transition-all duration-500">

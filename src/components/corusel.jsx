@@ -60,7 +60,7 @@ const Carousel = () => {
     return (
         <div
             ref={sliderRef}
-            className="keen-slider mb-10 rounded-3xl overflow-hidden shadow-2xl border-8 border-cyan-700 transition-all duration-500 hover:border-transparent hover:shadow-[0_0_50px_rgba(6,182,212,0.5)]"
+            className="keen-slider mb-10 rounded-3xl overflow-hidden shadow-xl border-8 border-cyan-700 transition-all duration-500 hover:border-transparent" // Removed expensive hover shadow and reduced base shadow
             style={{
                 background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, #06b6d4, #14b8a6, #0ea5e9, #06b6d4) border-box',
                 backgroundSize: '300% 300%',
@@ -76,30 +76,27 @@ const Carousel = () => {
                     key={index}
                     className="keen-slider__slide relative h-[400px] md:h-[550px] w-full"
                     style={{
-                        transform: 'translateZ(0)', // GPU acceleration for each slide
+                        transform: 'translateZ(0)',
                         willChange: 'transform',
                         backfaceVisibility: 'hidden'
                     }}
                 >
-                    {/* Optimized Image with GPU acceleration */}
+                    {/* Optimized Image */}
                     <img
                         src={slide.img}
                         alt={slide.title}
                         className="object-cover w-full h-full"
                         style={{
-                            transform: 'translateZ(0)',
-                            willChange: 'transform',
                             backfaceVisibility: 'hidden',
-                            imageRendering: 'crisp-edges'
                         }}
                         loading={index === 0 ? "eager" : "lazy"}
                         decoding="async"
                         fetchpriority={index === 0 ? "high" : "low"}
                     />
 
-                    {/* Overlay with better contrast */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white p-4 sm:p-6 backdrop-blur-md">
-                        <h3 className="text-xl sm:text-2xl md:text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-teal-300 drop-shadow-lg">
+                    {/* Overlay - Removed Blur for Performance */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent text-white p-4 sm:p-6">
+                        <h3 className="text-xl sm:text-2xl md:text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-teal-300 drop-shadow-md">
                             {slide.title}
                         </h3>
                         <p className="text-sm sm:text-base md:text-lg text-cyan-100 max-w-[90%] font-medium">

@@ -44,59 +44,66 @@ const Services = () => {
     <Section id="Our-Edge" className="">
 
       <motion.div
-        className="container mb-24 "
         variants={staggerContainer}
         initial="hidden"
-        animate="show"
-        exit="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.25 }}
+        className="container mb-24 "
       >
         {/* PREMIUM ULTRA MEDICAL BACKGROUND - REFINED LIGHT THEME */}
         <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden bg-gradient-to-b from-white via-slate-50 to-cyan-50/30">
           {/* Base Mesh Layer: Smooth Cyan Flow */}
           <motion.div
-            animate={{
+            whileInView={{
               x: ['-20%', '20%', '-20%'],
               y: ['-10%', '10%', '-10%'],
             }}
+            viewport={{ amount: 0 }}
             transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.1)_0%,transparent_70%)]"
+            className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.1)_0%,transparent_70%)] will-change-transform transform-gpu"
           />
 
           {/* High-End Medical Glows: Floating "Silk" Orbs */}
           <motion.div
-            animate={{
+            whileInView={{
               scale: [1, 1.1, 1],
               opacity: [0.3, 0.5, 0.3],
               rotate: [0, 90, 0]
             }}
+            viewport={{ amount: 0 }}
             transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-gradient-to-tr from-cyan-100/50 via-blue-50/20 to-transparent rounded-full blur-[150px]"
+            className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-gradient-to-tr from-cyan-100/50 via-blue-50/20 to-transparent rounded-full blur-[100px] will-change-transform transform-gpu"
           />
 
           <motion.div
-            animate={{
+            whileInView={{
               scale: [1.1, 1, 1.1],
               opacity: [0.2, 0.4, 0.2],
               rotate: [0, -45, 0]
             }}
+            viewport={{ amount: 0 }}
             transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-            className="absolute bottom-0 -right-[15%] w-[70%] h-[70%] bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.15)_0%,transparent_60%)] rounded-full blur-[180px]"
+            className="absolute bottom-0 -right-[15%] w-[70%] h-[70%] bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.15)_0%,transparent_60%)] rounded-full blur-[120px] will-change-transform transform-gpu"
           />
 
           {/* Subtle Horizontal Flow Line (Ultra Medical Feel) */}
           <motion.div
-            animate={{
+            whileInView={{
               x: ['-100%', '100%'],
               opacity: [0.1, 0.2, 0.1]
             }}
+            viewport={{ amount: 0 }}
             transition={{ x: { duration: 30, repeat: Infinity, ease: 'linear' }, opacity: { duration: 10, repeat: Infinity } }}
-            className="absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent blur-[1px]"
+            className="absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent blur-[1px] will-change-transform transform-gpu"
           />
         </div>
 
         {/* STUNNING ANIMATED HEADER */}
         <motion.div
           variants={fadeInUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
           className="relative z-10 py-20"
         >
           <div className="relative">
@@ -223,23 +230,31 @@ const Services = () => {
           }
         `}</style>
 
-        <motion.div variants={fadeInUp}>
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <Carousel />
         </motion.div>
 
         <div className="relative">
           {/* Left Image Section - THICK ANIMATED BORDER */}
           <motion.div
-            className="relative z-1 flex items-center h-[39rem] mb-5 p-8 border-8 border-slate-300 rounded-3xl overflow-hidden lg:p-20 xl:h-[46rem] transition-all duration-500 hover:border-transparent"
+            className="relative z-1 flex flex-col lg:flex-row items-center h-auto lg:h-[39rem] mb-5 p-4 lg:p-20 border-8 border-slate-300 rounded-3xl overflow-hidden xl:h-[46rem] transition-all duration-500 hover:border-transparent"
 
             variants={fadeInUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
             whileHover={{
               scale: 1.02,
               boxShadow: '0 0 40px rgba(6, 182, 212, 0.4), 0 0 80px rgba(6, 182, 212, 0.2)'
             }}
             transition={{ duration: 0.3 }}
           >
-            <div className="absolute top-0 left-0 max-w-4xl h-full pointer-events-none md:w-3/5 xl:w-auto overflow-hidden bg-slate-900 rounded-2xl">
+            <div className="relative w-full h-[20rem] mb-8 lg:mb-0 lg:absolute lg:top-0 lg:left-0 lg:max-w-4xl lg:h-full pointer-events-none lg:w-3/5 xl:w-auto overflow-hidden bg-slate-900 rounded-2xl">
               {/* Neural Placeholder */}
               {!loadedImages['service1'] && (
                 <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900">
@@ -264,7 +279,7 @@ const Services = () => {
               />
             </div>
 
-            <div className="relative z-1 max-w-[17rem] ml-auto">
+            <div className="relative z-1 w-full lg:max-w-[17rem] ml-0 lg:ml-auto">
               <h4 className="text-3xl font-black mb-4 text-slate-900">Manageable</h4>
               <p className="body-2 mb-[3rem] text-slate-700 font-medium">
                 Medrox unlocks the potential of Digitalized Medical system
@@ -287,9 +302,12 @@ const Services = () => {
           <motion.div
             className="relative z-1 grid gap-5 lg:grid-cols-2"
             variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
           >
             <motion.div
-              className="relative min-h-[39rem] border-8 border-slate-300 rounded-3xl overflow-hidden transition-all duration-500"
+              className="relative min-h-auto lg:min-h-[39rem] flex flex-col lg:block border-8 border-slate-300 rounded-3xl overflow-hidden transition-all duration-500"
               style={{
                 background: 'linear-gradient(#0a0a0f, #0a0a0f) padding-box, linear-gradient(135deg, #06b6d4, #14b8a6, #0ea5e9) border-box'
               }}
@@ -301,7 +319,7 @@ const Services = () => {
               }}
               transition={{ duration: 0.3 }}
             >
-              <div className="absolute inset-0 bg-slate-900 overflow-hidden">
+              <div className="relative lg:absolute inset-0 h-[250px] md:h-[400px] lg:h-full bg-slate-900 overflow-hidden">
                 {/* Neural Placeholder */}
                 {!loadedImages['service2'] && (
                   <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-900 via-teal-900/20 to-slate-900">
@@ -324,7 +342,7 @@ const Services = () => {
                   onLoad={() => handleImageLoad('service2')}
                 />
               </div>
-              <div className="absolute inset-0 flex flex-col justify-end p-8 bg-gradient-to-b from-n-8/0 to-n-8/90 lg:p-15">
+              <div className="relative lg:absolute inset-0 flex flex-col justify-end p-6 lg:p-15 bg-slate-900/95 lg:bg-transparent lg:bg-gradient-to-b from-n-8/0 to-n-8/90">
 
                 <h4 className="text-3xl font-black mb-4 text-white">Smart Diagnostic Tool</h4>
                 <p className="body-2 mb-[3rem] text-slate-200 font-medium">
@@ -358,6 +376,9 @@ const Services = () => {
                 background: 'linear-gradient(#0a0a0f, #0a0a0f) padding-box, linear-gradient(135deg, #06b6d4, #14b8a6, #0ea5e9) border-box'
               }}
               variants={fadeInUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.2 }}
               whileHover={{
                 scale: 1.02,
                 boxShadow: '0 0 40px rgba(6, 182, 212, 0.5), 0 0 80px rgba(6, 182, 212, 0.3)',
