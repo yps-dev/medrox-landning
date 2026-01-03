@@ -183,6 +183,7 @@ const VideoThumbnail = ({ video, className, onClick }) => {
                 muted={isMuted}
                 loop
                 playsInline
+                preload="none"
                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
 
@@ -252,6 +253,7 @@ const HeroVideo = ({ video, onClick }) => {
                 muted={isMuted}
                 loop
                 playsInline
+                preload="metadata"
                 className="mx-auto rounded-2xl object-cover h-full w-full object-left-top"
                 draggable={false}
             />

@@ -69,6 +69,7 @@ export default function FeaturesShowcase() {
             <img
               src={Rox}
               alt="Rox AI Core"
+              loading="lazy"
               className="w-48 h-48 md:w-72 md:h-72 lg:w-96 lg:h-96 drop-shadow-[0_25px_50px_rgba(0,0,0,0.1)] select-none pointer-events-none relative z-10"
             />
 

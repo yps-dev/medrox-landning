@@ -271,8 +271,7 @@ const Services = () => {
                 alt="Smartest AI"
                 height={730}
                 src={service1}
-                fetchPriority="high"
-                loading="eager"
+                loading="lazy"
                 decoding="async"
                 onLoad={() => handleImageLoad('service1')}
                 style={{ backfaceVisibility: 'hidden' }}
@@ -336,8 +335,7 @@ const Services = () => {
                   width={630}
                   height={750}
                   alt="robot"
-                  fetchPriority="high"
-                  loading="eager"
+                  loading="lazy"
                   decoding="async"
                   onLoad={() => handleImageLoad('service2')}
                 />
@@ -436,7 +434,7 @@ const Services = () => {
                     width={520}
                     height={400}
                     alt="Scary robot"
-                    loading="eager"
+                    loading="lazy"
                     decoding="async"
                     onLoad={() => handleImageLoad('service3')}
                   />

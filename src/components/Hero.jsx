@@ -2,7 +2,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import { brainwave } from "../assets";
-import medroxHero from "../assets/medrox-hero.mp4";
 import Button from './Button';
 import Section from './Section';
 import { MouseParallax } from 'react-just-parallax';
@@ -213,6 +212,8 @@ const Hero = ({ openContact }) => {
                   <motion.img
                     src={brainwave}
                     alt="Medrox"
+                    loading="eager"
+                    fetchpriority="high"
                     className="w-24 sm:w-40 lg:w-32 drop-shadow-2xl"
                     animate={{
                       y: [0, -12, 0],
@@ -291,12 +292,13 @@ const Hero = ({ openContact }) => {
               <div className="relative rounded-[2rem] p-0.5 bg-gradient-to-b from-slate-200 to-transparent shadow-2xl overflow-hidden ring-1 ring-black/5">
                 <div className="relative bg-white rounded-[1.8rem] overflow-hidden aspect-video">
                   <video
-                    src={medroxHero}
+                    src="https://www.dropbox.com/scl/fi/z3c8mvvyw5pcyao7wbwzv/medrox-hero.mp4?rlkey=3znvs4f40lb9rpiqgl45n2tqc&st=nqicld7c&raw=1"
                     className="w-full h-full object-cover"
                     autoPlay
                     muted
                     loop
                     playsInline
+                    preload="auto"
                   />
                   {/* Glass Shine */}
                   <motion.div

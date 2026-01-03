@@ -60,6 +60,7 @@ const Footer = () => {
                       width={22}
                       height={22}
                       alt={item.title}
+                      loading="lazy"
                       className="opacity-50 group-hover:opacity-100 transition-opacity grayscale group-hover:grayscale-0"
                     />
                   </a>

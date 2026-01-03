@@ -336,7 +336,7 @@ export default function ExploreSection() {
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                     className="w-32 h-32 rounded-full bg-white/80 backdrop-blur-lg shadow-2xl border border-white flex items-center justify-center z-20"
                   >
-                    <img src={brainwave} alt="Logo" className="w-16" />
+                    <img src={brainwave} alt="Logo" loading="lazy" className="w-16" />
                   </motion.div>
                 </div>
               </div>

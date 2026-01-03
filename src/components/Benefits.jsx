@@ -132,6 +132,7 @@ const BenefitCard = ({ item, index }) => {
             <img
               src={item.iconUrl}
               alt={item.title}
+              loading="lazy"
               className="w-8 h-8 opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
             />
           </motion.div>
@@ -162,7 +163,7 @@ const BenefitCard = ({ item, index }) => {
 
       {/* --- DECORATIVE GRID LINES (Restored Full Texture) --- */}
       <div className="absolute inset-0">
-        <img src={grid} className="w-full h-full object-cover" alt="" />
+        <img src={grid} className="w-full h-full object-cover" loading="lazy" alt="" />
       </div>
 
     </motion.div>
