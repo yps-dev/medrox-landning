@@ -226,7 +226,7 @@ const Hero = ({ openContact }) => {
                   />
 
                   <video
-                    src="/Medrox-Hero.mp4"
+                    src="/user.mp4"
                     autoPlay
                     muted
                     loop
