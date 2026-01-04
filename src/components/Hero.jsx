@@ -68,7 +68,7 @@ const HeroHeadline = ({ text, className }) => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.03, delayChildren: 0.2 },
+      transition: { staggerChildren: 0.015, delayChildren: 0.05 },
     },
   };
 
@@ -79,7 +79,7 @@ const HeroHeadline = ({ text, className }) => {
       y: 0,
       filter: "blur(0px)",
       scale: 1,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
@@ -201,7 +201,7 @@ const Hero = ({ openContact }) => {
                 className="relative cursor-pointer group mb-4"
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0 }}
               >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -239,7 +239,7 @@ const Hero = ({ openContact }) => {
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.6 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
               className="text-center mb-6"
             >
               <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-6xl font-black leading-none">
@@ -260,7 +260,7 @@ const Hero = ({ openContact }) => {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 1 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
             className="body-1 max-w-2xl mx-auto mb-10 text-slate-500 font-medium text-lg"
           >
             Experience the world's most advanced healthcare ecosystem. Built with proprietary AI to unify global healthcare worldwide.
@@ -276,12 +276,12 @@ const Hero = ({ openContact }) => {
 
           {/* Floating Feature Pills (Surrounding) */}
           <div className="absolute -left-12 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-6 z-30">
-            <FeatureChip icon={ShieldCheck} text="Unified care, one platform" delay={1.2} />
-            <FeatureChip icon={Activity} text="Faster journeys, less waiting" delay={1.4} />
+            <FeatureChip icon={ShieldCheck} text="Unified care, one platform" delay={0.4} />
+            <FeatureChip icon={Activity} text="Faster journeys, less waiting" delay={0.5} />
           </div>
           <div className="absolute -right-12 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-6 z-30 items-end">
-            <FeatureChip icon={Globe} text="Insightful data, clear decisions" delay={1.6} />
-            <FeatureChip icon={Cpu} text="Everywhere, for every one" delay={1.8} />
+            <FeatureChip icon={Globe} text="Insightful data, clear decisions" delay={0.6} />
+            <FeatureChip icon={Cpu} text="Everywhere, for every one" delay={0.7} />
           </div>
 
           <motion.div
@@ -290,10 +290,10 @@ const Hero = ({ openContact }) => {
           >
             <MouseParallax strength={0.03}>
               <div className="relative rounded-[2rem] p-0.5 bg-gradient-to-b from-slate-200 to-transparent shadow-2xl overflow-hidden ring-1 ring-black/5">
-                <div className="relative bg-white rounded-[1.8rem] overflow-hidden aspect-video">
+                <div className="relative bg-black rounded-[1.8rem] overflow-hidden aspect-video">
                   <video
-                    src="https://www.dropbox.com/scl/fi/z3c8mvvyw5pcyao7wbwzv/medrox-hero.mp4?rlkey=3znvs4f40lb9rpiqgl45n2tqc&st=nqicld7c&raw=1"
-                    className="w-full h-full object-cover"
+                    src="/Medrox-Hero.mp4"
+                    className="w-full h-full object-cover transform-gpu"
                     autoPlay
                     muted
                     loop

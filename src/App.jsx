@@ -124,6 +124,18 @@ const App = () => {
   }, []);
 
   // Preloader logic removed for instant start
+  useEffect(() => {
+    // EXTREME PERFORMANCE: Preload the hero video as early as possible
+    const videoUrl = "https://www.dropbox.com/scl/fi/z3c8mvvyw5pcyao7wbwzv/Medrox-Hero.mp4?rlkey=3znvs4f40lb9rpiqgl45n2tqc&st=zujiwnqu&raw=1";
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'video';
+    link.href = videoUrl;
+    document.head.appendChild(link);
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
 
 
   return (
