@@ -224,6 +224,17 @@ const Hero = ({ openContact }) => {
                       ease: "easeInOut",
                     }}
                   />
+
+                  <video
+                    src="/Medrox-Hero.mp4"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="w-full h-full object-cover"
+                  />
+
                 </motion.div>
                 {/* REflection & Shine */}
                 <div className="absolute top-[120%] left-0 w-full h-full scale-y-[-0.5] opacity-10 blur-sm grayscale pointer-events-none">
