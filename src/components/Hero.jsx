@@ -210,7 +210,7 @@ const Hero = ({ openContact }) => {
                   className="mb-12"
                 >
                   <motion.img
-                    src={brainwave}
+                    src="/robot.png"
                     alt="Medrox"
                     loading="eager"
                     fetchpriority="high"
