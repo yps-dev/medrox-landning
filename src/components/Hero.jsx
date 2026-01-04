@@ -210,7 +210,7 @@ const Hero = ({ openContact }) => {
                   className="mb-12"
                 >
                   <motion.img
-                    src="/robot.png"
+                    src={brainwave}
                     alt="Medrox"
                     loading="eager"
                     fetchpriority="high"
@@ -224,17 +224,6 @@ const Hero = ({ openContact }) => {
                       ease: "easeInOut",
                     }}
                   />
-
-                  <video
-                    src="/user.mp4"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    className="w-full h-full object-cover"
-                  />
-
                 </motion.div>
                 {/* REflection & Shine */}
                 <div className="absolute top-[120%] left-0 w-full h-full scale-y-[-0.5] opacity-10 blur-sm grayscale pointer-events-none">
@@ -303,14 +292,15 @@ const Hero = ({ openContact }) => {
               <div className="relative rounded-[2rem] p-0.5 bg-gradient-to-b from-slate-200 to-transparent shadow-2xl overflow-hidden ring-1 ring-black/5">
                 <div className="relative bg-black rounded-[1.8rem] overflow-hidden aspect-video">
                   <video
-                    src="/Medrox-Hero.mp4"
+                    src="https://www.dropbox.com/scl/fi/z3c8mvvyw5pcyao7wbwzv/Medrox-Hero.mp4?rlkey=3znvs4f40lb9rpiqgl45n2tqc&raw=1"
                     className="w-full h-full object-cover transform-gpu"
                     autoPlay
                     muted
                     loop
                     playsInline
-                    preload="auto"
+                    preload="metadata"
                   />
+
                   {/* Glass Shine */}
                   <motion.div
                     className="absolute inset-0 z-20 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none"

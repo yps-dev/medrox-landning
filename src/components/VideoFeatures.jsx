@@ -41,7 +41,7 @@ const videos = [
     },
 ];
 // --- APPLE SPATIAL TYPING COMPONENT ---
-const TypingShineText = ({ text, subtext, className }) => {
+const TypingShineText = React.memo(({ text, subtext, className }) => {
     const letters = Array.from(text || "");
 
     const container = {
@@ -49,7 +49,7 @@ const TypingShineText = ({ text, subtext, className }) => {
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.03, // Fast, sequential reveal
+                staggerChildren: 0.03,
                 delayChildren: 0.1
             },
         },
@@ -69,13 +69,13 @@ const TypingShineText = ({ text, subtext, className }) => {
             scale: 1,
             transition: {
                 duration: 0.8,
-                ease: [0.16, 1, 0.3, 1], // Cinematic Apple Easing
+                ease: [0.16, 1, 0.3, 1],
             },
         },
     };
 
     return (
-        <div className={`flex flex-col ${className}`}>
+        <div className={cn("flex flex-col transform-gpu will-change-transform", className)}>
             <motion.div
                 className="relative flex flex-wrap"
                 variants={container}
@@ -89,12 +89,10 @@ const TypingShineText = ({ text, subtext, className }) => {
                         key={index}
                         className="relative inline-block"
                     >
-                        {/* THE MAIN TEXT */}
                         <span className="relative z-10 text-slate-900">
                             {letter === " " ? "\u00A0" : letter}
                         </span>
 
-                        {/* THE MIRROR REFLECTION (Faint, Blurry, Below) */}
                         <span
                             className="absolute top-full left-0 opacity-[0.08] blur-[2px] scale-y-[-1] select-none pointer-events-none"
                             aria-hidden="true"
@@ -102,7 +100,6 @@ const TypingShineText = ({ text, subtext, className }) => {
                             {letter === " " ? "\u00A0" : letter}
                         </span>
 
-                        {/* SWEEPING SHINE LIGHT EFFECT */}
                         <motion.span
                             className="absolute inset-0 z-20 pointer-events-none"
                             style={{
@@ -123,7 +120,6 @@ const TypingShineText = ({ text, subtext, className }) => {
                 ))}
             </motion.div>
 
-            {/* SUBTEXT: Elegant Blur-in */}
             {subtext && (
                 <motion.p
                     initial={{ opacity: 0, filter: 'blur(8px)', y: 5 }}
@@ -137,15 +133,36 @@ const TypingShineText = ({ text, subtext, className }) => {
             )}
         </div>
     );
-};
+});
 
+TypingShineText.displayName = "TypingShineText";
 
 // --- THUMBNAIL WITH CONTROLS ---
-const VideoThumbnail = ({ video, className, onClick }) => {
+const VideoThumbnail = React.memo(({ video, className, onClick }) => {
     const videoRef = useRef(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
     const [isPlaying, setIsPlaying] = useState(true);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (videoRef.current) {
+                    if (entry.isIntersecting) {
+                        videoRef.current.play().catch(() => { });
+                        setIsPlaying(true);
+                    } else {
+                        videoRef.current.pause();
+                        setIsPlaying(false);
+                    }
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        if (videoRef.current) observer.observe(videoRef.current);
+        return () => observer.disconnect();
+    }, []);
 
     const togglePlay = (e) => {
         e.stopPropagation();
@@ -167,7 +184,7 @@ const VideoThumbnail = ({ video, className, onClick }) => {
     return (
         <motion.div
             className={cn(
-                "group relative overflow-hidden cursor-pointer rounded-3xl bg-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500",
+                "group relative overflow-hidden cursor-pointer rounded-3xl bg-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500 transform-gpu will-change-transform",
                 className
             )}
             layoutId={`video-container-${video.id}`}
@@ -187,7 +204,6 @@ const VideoThumbnail = ({ video, className, onClick }) => {
                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
 
-            {/* CONTROLS (Floating Center) */}
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 pointer-events-none">
                 <div className="flex gap-2 pointer-events-auto">
                     <button onClick={togglePlay} className="w-10 h-10 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-black/70 border border-white/10 transition-all">
@@ -199,14 +215,12 @@ const VideoThumbnail = ({ video, className, onClick }) => {
                 </div>
             </div>
 
-            {/* EXPAND ICON (Top Right) */}
             <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
                 <div className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow-sm">
                     <ArrowUpRight className="text-slate-900 w-4 h-4" />
                 </div>
             </div>
 
-            {/* PROGRESS (Only visual) */}
             <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200/20">
                 {isPlaying && (
                     <motion.div
@@ -220,13 +234,35 @@ const VideoThumbnail = ({ video, className, onClick }) => {
             </div>
         </motion.div>
     );
-};
+});
+
+VideoThumbnail.displayName = "VideoThumbnail";
 
 // --- HERO VIDEO CONTROL WRAPPER ---
-const HeroVideo = ({ video, onClick }) => {
+const HeroVideo = React.memo(({ video, onClick }) => {
     const videoRef = useRef(null);
     const [isMuted, setIsMuted] = useState(true);
     const [isPlaying, setIsPlaying] = useState(true);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (videoRef.current) {
+                    if (entry.isIntersecting) {
+                        videoRef.current.play().catch(() => { });
+                        setIsPlaying(true);
+                    } else {
+                        videoRef.current.pause();
+                        setIsPlaying(false);
+                    }
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        if (videoRef.current) observer.observe(videoRef.current);
+        return () => observer.disconnect();
+    }, []);
 
     const togglePlay = (e) => {
         e.stopPropagation();
@@ -245,7 +281,7 @@ const HeroVideo = ({ video, onClick }) => {
     };
 
     return (
-        <div className="relative w-full h-full group" onClick={() => onClick(video)}>
+        <div className="relative w-full h-full group transform-gpu will-change-transform" onClick={() => onClick(video)}>
             <video
                 ref={videoRef}
                 src={video.src}
@@ -258,7 +294,6 @@ const HeroVideo = ({ video, onClick }) => {
                 draggable={false}
             />
 
-            {/* CIRCULAR CONTROLS (Bottom Center) */}
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <button onClick={togglePlay} className="w-12 h-12 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-black/70 border border-white/10 transition-all">
                     {isPlaying ? <Pause className="fill-white text-white" size={18} /> : <Play className="fill-white text-white ml-1" size={18} />}
@@ -271,22 +306,21 @@ const HeroVideo = ({ video, onClick }) => {
             <div className="absolute inset-0 bg-transparent cursor-pointer" />
         </div>
     )
-}
+});
+
+HeroVideo.displayName = "HeroVideo";
 
 // --- MAIN HUB ---
 export default function VideoFeatures({ onColorChange }) {
     const [selectedVideo, setSelectedVideo] = useState(null);
 
     return (
-        <section className="w-full relative overflow-hidden">
-
-            {/* BACKGROUND ILLUSION */}
+        <section className="w-full relative overflow-hidden transform-gpu will-change-transform">
             <div className="absolute inset-0 pointer-events-none opacity-30 select-none">
                 <div className="absolute inset-0 bg-gray-50 mix-blend-multiply" />
                 <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150" />
             </div>
 
-            {/* CONTAINER SCROLL HERO (Video 0) */}
             <div className="-mt-20 md:-mt-32 lg:mb-20 md:mb-20">
                 <ContainerScroll
                     titleComponent={
@@ -304,11 +338,8 @@ export default function VideoFeatures({ onColorChange }) {
                 </ContainerScroll>
             </div>
 
-            {/* BENTO GRID */}
             <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-40 relative z-10 -mt-[10rem] md:-mt-[20rem]">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-                    {/* Item 1 */}
                     <div className="md:col-span-1 flex flex-col gap-3">
                         <TypingShineText
                             text={videos[1].title}
@@ -322,7 +353,6 @@ export default function VideoFeatures({ onColorChange }) {
                         />
                     </div>
 
-                    {/* Item 2 */}
                     <div className="md:col-span-1 flex flex-col gap-3 md:mt-12">
                         <TypingShineText
                             text={videos[2].title}
@@ -336,7 +366,6 @@ export default function VideoFeatures({ onColorChange }) {
                         />
                     </div>
 
-                    {/* Item 3 */}
                     <div className="md:col-span-1 flex flex-col gap-3">
                         <TypingShineText
                             text={videos[3].title}
@@ -349,11 +378,9 @@ export default function VideoFeatures({ onColorChange }) {
                             onClick={setSelectedVideo}
                         />
                     </div>
-
                 </div>
             </div>
 
-            {/* PORTAL LIGHTBOX */}
             <AnimatePresence>
                 {selectedVideo && (
                     <VideoModal
@@ -416,7 +443,6 @@ const VideoModal = ({ video, onClose }) => {
             exit={{ opacity: 0 }}
             onClick={onClose}
         >
-            {/* FOCUS LIGHT BACKDROP */}
             <div className="absolute inset-0 bg-black/90 backdrop-blur-2xl">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-blue-500/20 rounded-full blur-[150px] pointer-events-none" />
             </div>
@@ -426,7 +452,6 @@ const VideoModal = ({ video, onClose }) => {
                 className="relative w-full max-w-7xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl ring-1 ring-white/10 z-10"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* CLOSE BTN */}
                 <button
                     onClick={onClose}
                     className="absolute top-6 right-6 z-50 w-12 h-12 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 group"
@@ -434,7 +459,6 @@ const VideoModal = ({ video, onClose }) => {
                     <X size={24} className="group-hover:scale-110 transition-transform" />
                 </button>
 
-                {/* CIRCULAR CONTROLS (Bottom Center) */}
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-black/50 backdrop-blur-xl px-6 py-3 rounded-full border border-white/10 shadow-xl">
                     <button onClick={togglePlay} className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all">
                         {isPlaying ? <Pause className="fill-white text-white" size={16} /> : <Play className="fill-white text-white ml-1" size={16} />}
@@ -456,7 +480,6 @@ const VideoModal = ({ video, onClose }) => {
                     loop
                 />
 
-                {/* PROGRESS BAR */}
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
                     <motion.div
                         className="h-full bg-blue-500"
@@ -465,7 +488,6 @@ const VideoModal = ({ video, onClose }) => {
                     />
                 </div>
 
-                {/* TEXT INFO */}
                 <motion.div
                     className="absolute top-8 left-8 z-40 pointer-events-none"
                     initial={{ opacity: 0, y: -20 }}
